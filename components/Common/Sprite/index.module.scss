@@ -1,0 +1,9 @@
+.sprite {
+  user-select: none;
+  flex-shrink: 0;
+  outline: none;
+  transition: all 1s ease, opacity 0.2s ease;
+}
+.crisp {
+  image-rendering: pixelated;
+}

@@ -1,0 +1,103 @@
+:root {
+  --color-primary-lightest: #fddda4;
+  --color-primary-lighter: #fccb75;
+  --color-primary-light: #fcc565;
+  --color-primary: #fbb946;
+  --color-primary-dark: #faad27;
+  --color-primary-darker: #faa717;
+  --color-primary-darkest: #dc8d05;
+  --color-primary-contrast: #503301;
+
+  --color-main: var(--color-gray-400);
+
+  --color-secondary-lightest: var(--color-gray-500);
+  --color-secondary-lighter: #afb5bc; // 530
+  --color-secondary-light: #979da7; // 580
+  --color-secondary: var(--color-gray-600);
+  --color-secondary-dark: #7b828c; // 640
+  --color-secondary-darker: #697079; // 680
+  --color-secondary-darkest: var(--color-gray-700);
+
+  --color-background-lightest: var(--color-gray-700);
+  --color-background-lighter: #525860; // 750
+  --color-background-light: var(--color-gray-800);
+  --color-background: #2c2f34; // 860
+  --color-background-dark: #24272a; // 880
+  --color-background-darker: var(--color-gray-900);
+  --color-background-darkest: #111214; // 940
+
+  --color-white: #ffffff;
+  --color-gray-100: #f5f6f7;
+  --color-gray-200: #ebedf0;
+  --color-gray-300: #dadde1;
+  --color-gray-400: #ccd0d5;
+  --color-gray-500: #bec3c9;
+  --color-gray-600: #8d949e;
+  --color-gray-700: #606770;
+  --color-gray-800: #444950;
+  --color-gray-900: #1c1e21;
+  --color-black: #000000;
+
+  // Copied from Docusaurus' stylesheet
+  --color-success-lightest: #80d280;
+  --color-success-lighter: #4dbf4d;
+  --color-success-light: #26b226;
+  --color-success: #00a400;
+  --color-success-dark: #009400;
+  --color-success-darker: #008b00;
+  --color-success-darkest: #007300;
+  --color-success-contrast: #003100;
+
+  --color-info-lightest: #aae3f6;
+  --color-info-lighter: #87d8f2;
+  --color-info-light: #6ecfef;
+  --color-info: #54c7ec;
+  --color-info-dark: #4cb3d4;
+  --color-info-darker: #47a9c9;
+  --color-info-darkest: #3b8ba5;
+  --color-info-contrast: #193c47;
+
+  --color-warning-lightest: #ffdd80;
+  --color-warning-lighter: #ffcf4d;
+  --color-warning-light: #ffc426;
+  --color-warning: #ffba00;
+  --color-warning-dark: #e6a700;
+  --color-warning-darker: #d99e00;
+  --color-warning-darkest: #b38200;
+  --color-warning-contrast: #4d3800;
+
+  --color-danger-lightest: #fd9c9f;
+  --color-danger-lighter: #fb7478;
+  --color-danger-light: #fb565b;
+  --color-danger: #fa383e;
+  --color-danger-dark: #e13238;
+  --color-danger-darker: #d53035;
+  --color-danger-darkest: #af272b;
+  --color-danger-contrast: #4b1113;
+  // Copied from Docusaurus' stylesheet
+
+  --text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  --text-shadow-2: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000,
+                   -2px 0px 0 #000, 2px 0px 0 #000, 0px -2px 0 #000, 0px 2px 0 #000;
+
+  --custom-font: 'Munro', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  --custom-mono-font: Consolas, "Andale Mono WT", "Andale Mono",
+    "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono",
+    "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco,
+    "Courier New", Courier, monospace;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  color: var(--color-main);
+  background-color: var(--color-background-darker);
+
+  font-family: var(--custom-font);
+  font-size: 1rem;
+}
