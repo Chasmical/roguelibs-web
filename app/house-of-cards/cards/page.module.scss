@@ -1,0 +1,51 @@
+.table {
+  border: 1px solid var(--color-secondary);
+
+  th span {
+    text-decoration: underline dotted;
+  }
+
+  td, th {
+    border: 1px solid var(--color-secondary);
+    padding: 0.25rem 0.5rem;
+
+    &.image-cell {
+      position: relative;
+      padding: 0;
+      overflow: hidden;
+      width: 96px;
+
+      .image-wrapper {
+        height: 32px;
+        width: 100%;
+        .image {
+          position: absolute;
+          top: 50%; left: 50%;
+          width: 100%;
+          pointer-events: none;
+          transform: translate(-50%, -50%);
+          transition: all 0.5s ease-in-out;
+          border: 0.5px solid transparent;
+        }
+      }
+      &:hover {
+        overflow: visible;
+        .image-wrapper .image {
+          position: absolute;
+          z-index: 999;
+          image-rendering: pixelated;
+          transform: translate3d(100%, -50%, -50px) scale(4);
+          border: 0.5px solid var(--color-secondary);
+        }
+      }
+    }
+    &.align-right {
+      text-align: right;
+    }
+    &.stat {
+      text-align: center;
+      font-size: 1.5rem;
+    }
+
+  }
+}

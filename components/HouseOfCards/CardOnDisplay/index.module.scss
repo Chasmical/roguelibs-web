@@ -1,0 +1,69 @@
+.card {
+  position: relative;
+  display: inline-flex;
+  flex-flow: column nowrap;
+  padding: 8px;
+  border: 4px solid;
+  border-image: url('/frame-3.png') 8 / 8px;
+  background-color: var(--color-background-dark);
+  background-clip: padding-box;
+  width: 160px;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    scale: 1.1;
+    transition: all 0.2s ease, transform 0s;
+  }
+}
+.image {
+  aspect-ratio: 1;
+  border: 4px solid;
+  border-image: url('/border-3.png') 8 / 8px;
+}
+.name {
+  text-align: center;
+  font-size: 1.2rem;
+  margin: 4px 0;
+  color: var(--color-primary-lightest);
+}
+.description {
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+.nugget-cost, .attack-points, .health-points {
+  position: absolute;
+  background-color: var(--color-background);
+  background-clip: padding-box;
+  width: 32px;
+  height: 32px;
+  text-align: center;
+  line-height: 24px;
+  font-size: 24px;
+  border: 4px solid;
+  border-image: url('/frame-3.png') 8 / 8px;
+
+  .stat-text {
+    margin-left: 4px;
+    color: white;
+    text-shadow: var(--text-shadow-2);
+  }
+}
+
+.nugget-cost {
+  top: -4px;
+  right: -4px;
+  background-color: var(--color-warning-dark);
+}
+.attack-points {
+  top: 120px;
+  left: 8px;
+  background-color: var(--color-danger);
+}
+.health-points {
+  top: 120px;
+  right: 8px;
+  background-color: var(--color-success);
+}
