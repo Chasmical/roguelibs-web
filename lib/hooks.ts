@@ -1,6 +1,8 @@
-import { DependencyList, useCallback, useEffect, useRef, useState } from "react";
+import { DependencyList, Ref, useCallback, useEffect, useRef, useState } from "react";
 import { produce, Draft } from "immer";
 import lodashThrottle from "lodash/throttle";
+
+export { useSession as useSupabaseSession } from "@supabase/auth-helpers-react";
 
 export type ImmerStateRecipe<T> = (draft: Draft<T>) => T | undefined;
 export type ImmerStateSetter<T> = (recipe: ImmerStateRecipe<T>) => void;
@@ -26,7 +28,7 @@ export function useImmerSlice<T, Key extends keyof T>(setter: ImmerStateSetter<T
         }
         return void 0;
       }),
-    [setter],
+    [setter, key],
   );
 }
 
@@ -36,9 +38,8 @@ export function useLocation(): Location | null {
   return location;
 }
 
-export function useThrottle<Func extends Function>(cb: Func, dependencies: [delay: number, ...deps: DependencyList]) {
+export function useThrottle<Func extends Function>(cb: Func, [delay, ...deps]: [number, ...DependencyList]) {
   const cbRef = useRef(cb);
-  const [delay, ...deps] = dependencies;
 
   const throttledCb = useCallback(
     lodashThrottle((...args) => cbRef.current(...args), delay, { leading: true, trailing: true }),
@@ -67,4 +68,16 @@ export function useEvent<K extends keyof EventMap>(
     element.addEventListener(eventName, listener);
     return () => element.removeEventListener(eventName, listener);
   }, [element, eventName]);
+}
+
+export function useMergedRefs<T>(...refs: Ref<T>[]): React.RefCallback<T> {
+  return useCallback<React.RefCallback<T>>(value => {
+    for (const ref of refs) {
+      if (typeof ref === "function") {
+        ref(value);
+      } else if (ref != null) {
+        (ref as React.MutableRefObject<T | null>).current = value;
+      }
+    }
+  }, refs);
 }

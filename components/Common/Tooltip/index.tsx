@@ -5,6 +5,7 @@ import "./index.scss";
 export type ReactTooltipProps = Parameters<typeof ReactTooltip>[0];
 type TooltipRenderProp = NonNullable<ReactTooltipProps["render"]>;
 
+// safer props type (to prevent ambigious usage of content-rendering props)
 export type TooltipProps = Omit<ReactTooltipProps, "content" | "children" | "render" | "html" | "variant"> &
   (
     | { content: string; children?: never; render?: never; html?: never }
@@ -15,8 +16,9 @@ export type TooltipProps = Omit<ReactTooltipProps, "content" | "children" | "ren
 
 export default function Tooltip({ ...props }: TooltipProps) {
   if (typeof props.children === "function") {
+    // allow passing a render function inside of a component tag
     (props as ReactTooltipProps).render = props.children;
     delete props.children;
   }
-  return ReactTooltip(props as ReactTooltipProps);
+  return ReactTooltip(props as ReactTooltipProps); // don't mount another component
 }

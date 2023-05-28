@@ -11,6 +11,7 @@ export interface SeparatorProps {
   // ...props
   style?: React.CSSProperties;
 }
+
 export default function Separator({ className, primary, thin, bold, full, vertical, ...props }: SeparatorProps) {
   return (
     <div

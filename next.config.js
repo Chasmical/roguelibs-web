@@ -3,7 +3,12 @@ const nextConfig = {
   reactStrictMode: true,
   experimental: {
     appDir: true,
+    serverActions: true,
   },
+
+  rewrites: async () => [
+    { source: "/m/:mod_slug", destination: "/mods/:mod_slug" },
+  ],
 
   // https://stackoverflow.com/a/69166434/16397889
   webpack: (config, { dev }) => {
@@ -14,7 +19,8 @@ const nextConfig = {
     rules.forEach(rule => {
       rule.use.forEach(moduleLoader => {
         if (moduleLoader.loader?.includes("css-loader") && !moduleLoader.loader?.includes("postcss-loader")) {
-          const options = moduleLoader.options.modules;
+          const options = moduleLoader.options?.modules;
+          if (!options) return;
           // if (!dev) options.getLocalIdent = optimizedIdent;
           options.exportLocalsConvention = "camelCaseOnly";
         }

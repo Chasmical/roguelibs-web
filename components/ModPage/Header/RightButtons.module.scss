@@ -1,0 +1,74 @@
+.container {
+  position: absolute;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-end;
+  justify-content: flex-end;
+  right: 0; top: 0; bottom: 0;
+  padding: 0.5rem 1rem;
+  gap: 0.25rem;
+}
+
+.panel {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  backdrop-filter: brightness(0.5);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nugget-button {
+  font-size: 1.5rem;
+  padding: 0.5rem 1rem;
+
+  color: var(--color-white);
+  text-shadow: var(--text-shadow);
+
+  border: 2px solid var(--color-primary-contrast);
+
+  background-color: var(--color-primary-lightest);
+  &:hover { background-color: var(--color-primary); }
+  &:active { background-color: var(--color-primary-darker); }
+
+  &.set-nugget {
+    background-color: var(--color-primary-darker);
+    &:hover { background-color: var(--color-primary); }
+    &:active { background-color: var(--color-primary-darker); }
+  }
+}
+
+.subscription-button {
+  font-size: 1.5rem;
+  padding: 0.5rem 1rem;
+
+  color: var(--color-white);
+  text-shadow: var(--text-shadow);
+
+  border: 2px solid var(--color-success-contrast);
+
+  background-color: var(--color-success-lightest);
+  &:hover { background-color: var(--color-success); }
+  &:active { background-color: var(--color-success-darker); }
+
+  &.set-subscription {
+    background-color: var(--color-success-darker);
+    &:hover { background-color: var(--color-success); }
+    &:active { background-color: var(--color-success-darker); }
+  }
+
+}
+
+.misc-button {
+  padding: 8px 0;
+}
+.misc-menu {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 0.5rem;
+}

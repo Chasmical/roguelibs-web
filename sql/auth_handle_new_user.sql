@@ -1,4 +1,4 @@
-create or replace function public.auth_handle_new_user()
+create or replace function auth_users_handle_new_user()
 returns trigger security definer as
 $$
 declare
@@ -24,8 +24,8 @@ begin
 end;
 $$ language plpgsql;
 
-drop trigger if exists auth_handle_new_user on auth.users;
+drop trigger if exists auth_users_handle_new_user on auth.users;
 
-create trigger auth_handle_new_user
+create trigger auth_users_handle_new_user
 after insert on auth.users
-for each row execute function auth_handle_new_user();
+for each row execute function auth_users_handle_new_user();

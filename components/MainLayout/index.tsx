@@ -1,6 +1,7 @@
-import Link from "../Link";
+import Link from "@components/Common/Link";
 import styles from "./index.module.scss";
 import clsx from "clsx";
+import AccountPanel from "@components/MainLayout/AccountPanel";
 
 export interface MainLayoutProps {
   className?: string;
@@ -8,6 +9,7 @@ export interface MainLayoutProps {
   // ...props
   style?: React.CSSProperties;
 }
+
 export default function MainLayout({ className, children, ...props }: MainLayoutProps) {
   return (
     <div className={styles.container}>
@@ -15,6 +17,7 @@ export default function MainLayout({ className, children, ...props }: MainLayout
         <Link href="/" underline={false} className={styles.logo}>
           <img src="/logo-long.png" alt="RogueLibs' logo" />
         </Link>
+        <AccountPanel />
       </div>
       <div className={clsx(styles.body, className)} {...props}>
         {children}

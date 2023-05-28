@@ -22,7 +22,7 @@ export default function SvgSprite({
   if (color == null) color = "white";
 
   const id = useId();
-  const filterStyle = useMemo(() => ({ filter: `url(#${id})` }), [id]);
+  const filterStyle = useMemo(() => ({ filter: `url(#${id})` }), []);
 
   return (
     <svg

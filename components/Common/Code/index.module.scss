@@ -1,0 +1,12 @@
+.code {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: var(--color-background-darker);
+  border: 2px solid;
+  border-image: url("/frame-3.png") 8 / 4px;
+  background-clip: padding-box;
+  padding: 2px 6px;
+  color: var(--color-secondary-lighter);
+  font-size: 0.8rem;
+}

@@ -1,0 +1,16 @@
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 2rem;
+  margin-left: 1rem;
+  margin-bottom: 0.5rem;
+
+  .breadcrumb {
+    font-size: 1.5rem;
+    background-color: var(--color-background);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-background-light);
+  }
+}

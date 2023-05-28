@@ -1,0 +1,48 @@
+.icon-button {
+  display: grid;
+  padding: 0.25rem;
+  width: min-content;
+  height: min-content;
+
+  background-color: transparent;
+  border-radius: 9999px;
+
+  cursor: pointer;
+  transition: all 0.1s ease;
+
+  > img, > svg {
+    align-self: center;
+    justify-self: center;
+    transition: opacity 0.5s ease, scale 0.1s ease;
+  }
+
+  &:hover, &:focus-within {
+    background-color: var(--color-overlay-4);
+    > img, > svg {
+      opacity: 1 !important;
+    }
+  }
+  &:active, &.fake-active {
+    background-color: var(--color-overlay-8);
+    outline: 1px solid var(--color-overlay-4);
+    > img, > svg {
+      scale: 1.25;
+    }
+  }
+
+  &[disabled], &.disabled {
+    &:hover {
+      background-color: var(--color-overlay-2);
+      > img, > svg {
+        opacity: 0.5 !important;
+      }
+    }
+    &:active {
+      background-color: var(--color-overlay-2);
+      outline: none;
+      > img, > svg {
+        scale: 1;
+      }
+    }
+  }
+}

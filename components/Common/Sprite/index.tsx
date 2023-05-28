@@ -12,6 +12,7 @@ export interface SpriteProps {
   className?: string;
   style?: React.CSSProperties;
 }
+
 export default function Sprite(props: SpriteProps) {
   const SpriteComponent = props.color == null ? ImgSprite : SvgSprite;
   return <SpriteComponent {...props} />;

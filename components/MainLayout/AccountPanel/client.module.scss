@@ -1,0 +1,35 @@
+
+.avatar {
+  display: flex;
+  flex-flow: column nowrap;
+}
+.details {
+  display: flex;
+  flex-flow: column nowrap;
+  min-width: 140px;
+  max-width: 228px;
+  .name {
+    font-size: 1.2rem;
+    margin: -0.25rem 0 0.25rem 0.5rem;
+    line-height: 20px;
+    min-height: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .badges {
+    display: flex;
+    flex-flow: row wrap;
+    padding: 4px;
+    gap: 4px;
+    width: fit-content;
+    background-color: var(--color-background-dark);
+    border-radius: 16px;
+  }
+}
+
+.account-actions {
+  display: flex;
+  flex-flow: column nowrap;
+  background-color: var(--color-overlay);
+  border-radius: 9999px;
+}
