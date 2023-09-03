@@ -5,4 +5,6 @@ import clsx from "clsx";
 export interface DownloadsListProps {
   files: DbReleaseFile[];
 }
-export default function DownloadsListProps({ files }: DownloadsListProps) {}
+export default function DownloadsList({ files }: DownloadsListProps) {
+  return null;
+}

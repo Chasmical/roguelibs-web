@@ -1,0 +1,15 @@
+.wrapper {
+  min-width: 300px;
+  max-width: 350px;
+  &.expanded {
+    min-width: 332px;
+    max-width: 382px;
+  }
+
+  display: flex;
+  flex-flow: column nowrap;
+  padding: 1rem;
+  gap: 1rem;
+  background-color: var(--color-background);
+  border-radius: 1rem;
+}

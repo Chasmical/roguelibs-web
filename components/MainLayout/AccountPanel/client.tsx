@@ -1,17 +1,17 @@
 "use client";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 import styles from "./client.module.scss";
 import Avatar from "@components/Common/Avatar";
 import Button from "@components/Common/Button";
 import Icon from "@components/Common/Icon";
 import IconButton from "@components/Common/IconButton";
-import { useSupabaseSession } from "@lib/hooks";
+import { useSupabase } from "@lib/hooks";
 import Tooltip from "@components/Common/Tooltip";
 import { useId } from "react";
+import { useApi } from "@lib/API.Hooks";
 
 export function SignInPanel() {
-  const supabase = createClientComponentClient();
+  const supabase = useSupabase();
   const router = useRouter();
 
   async function handleSignIn() {
@@ -33,27 +33,24 @@ export function SignInPanel() {
 }
 
 export function AccountInfo() {
-  const supabase = createClientComponentClient();
-  const session = useSupabaseSession();
+  const supabase = useSupabase();
   const router = useRouter();
+  const user = useApi().currentUser;
 
   async function handleSignOut() {
     await supabase.auth.signOut();
     router.refresh();
   }
 
-  const metadata = session?.user.user_metadata;
-  const name = metadata?.custom_claims?.global_name ?? metadata?.full_name;
-
   const badgesId = useId();
 
   return (
     <>
       <div className={styles.avatar}>
-        <Avatar src={metadata?.avatar_url} size={72} />
+        <Avatar src={user?.avatar_url} uid={user?.id} size={72} />
       </div>
       <div className={styles.details}>
-        <span className={styles.name}>{name}</span>
+        <span className={styles.name}>{user?.username}</span>
         <div className={styles.badges}>
           {Array.from({ length: 15 }).map((_, i) => (
             <Icon key={i} type="nugget" size={24} />

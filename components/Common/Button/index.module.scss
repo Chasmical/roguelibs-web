@@ -11,8 +11,10 @@
   background-color: var(--color-background);
   background-clip: padding-box;
 
-  border: 4px solid;
-  border-image: url("/frame-3.png") 8 / 8px;
+  border: 2px solid var(--color-background-lightest);
+  border-radius: 0.5rem;
+  // border: 4px solid;
+  // border-image: url("/frame-3.png") 8 / 8px;
   overflow-wrap: anywhere;
 
   cursor: pointer;
@@ -35,8 +37,4 @@
     }
   }
 
-}
-.sleek {
-  border: 2px solid var(--color-background-lightest);
-  border-radius: 0.5rem;
 }

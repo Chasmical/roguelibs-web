@@ -1,0 +1,9 @@
+.wrapper {
+  flex-grow: 1;
+  display: flex;
+  flex-flow: column nowrap;
+  padding: 1rem;
+  gap: 1rem;
+  background-color: var(--color-background);
+  border-radius: 1rem;
+}

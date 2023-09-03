@@ -46,7 +46,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: React.PropsWithChildren) {
   return (
-    <html lang="en" className={munroFont.className}>
+    <html lang="en" className={munroFont.className} suppressHydrationWarning>
       <body>
         <ApiProvider>
           <MainLayout>{children}</MainLayout>

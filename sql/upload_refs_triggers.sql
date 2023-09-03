@@ -18,14 +18,14 @@ begin
   if _new_upload_id is distinct from _old_upload_id then
 
     if _old_upload_id is not null then
-      delete from upload_refs
+      delete from public.upload_refs
       where upload_id = _old_upload_id
         and resource_type = _resource_type
         and resource_id = old.id;
     end if;
 
     if _new_upload_id is not null then
-      insert into upload_refs(upload_id, resource_type, resource_id)
+      insert into public.upload_refs(upload_id, resource_type, resource_id)
         values(_new_upload_id, _resource_type, new.id);
     end if;
 

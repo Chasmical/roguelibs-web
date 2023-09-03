@@ -7,6 +7,7 @@ import ModPageBreadcrumbs from "./Breadcrumbs";
 import { useId } from "react";
 import ModPageLeftButtons from "@components/ModPage/Header/LeftButtons";
 import ModPageRightButtons from "@components/ModPage/Header/RightButtons";
+import clsx from "clsx";
 
 export default function ModPageHeader() {
   const { mod } = useModPage();
@@ -16,7 +17,7 @@ export default function ModPageHeader() {
       <ModPageBreadcrumbs />
       <div className={styles.wrapper}>
         <img
-          className={styles.banner}
+          className={clsx(styles.banner, styles[bannerLayouts[mod.banner_layout - 1]])}
           src={mod.banner_url ?? "/placeholder.png"}
           alt=""
           onDragStart={e => e.preventDefault()}
@@ -31,6 +32,15 @@ export default function ModPageHeader() {
     </>
   );
 }
+const bannerLayouts = [
+  "widthTop",
+  "widthMiddle",
+  "widthBottom",
+  "heightLeft",
+  "heightCenter",
+  "heightRight",
+  "stretch",
+] as const;
 
 export function CopyPermanentLink() {
   const { mod } = useModPage();

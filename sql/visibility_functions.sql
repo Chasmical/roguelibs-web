@@ -2,11 +2,11 @@ create or replace function is_mod_visible(_mod_id int8, _user_id uuid)
 returns boolean security definer as
 $$
 declare
-  _mod mods;
-  _author mod_authors;
+  _mod public.mods;
+  _author public.mod_authors;
 begin
 
-  select * from mods
+  select * from public.mods
   where id = _mod_id
   into _mod;
 
@@ -14,7 +14,7 @@ begin
 
   if _mod.is_public then return true; end if;
 
-  select * from mod_authors
+  select * from public.mod_authors
   where mod_id = _mod_id and user_id = _user_id
   into _author;
 
@@ -27,11 +27,12 @@ create or replace function is_release_visible(_release_id int8, _user_id uuid)
 returns boolean security definer as
 $$
 declare
-  _release releases;
-  _author release_authors;
+  _mod public.mods;
+  _release public.releases;
+  _author public.mod_authors;
 begin
 
-  select * from releases
+  select * from public.releases
   where id = _release_id
   into _release;
 
@@ -41,8 +42,8 @@ begin
 
   if _release.is_public then return true; end if;
 
-  select * from release_authors
-  where release_id = _release_id and user_id = _user_id
+  select * from public.mod_authors
+  where mod_id = _release.mod_id and user_id = _user_id
   into _author;
 
   return found and _author.can_see;

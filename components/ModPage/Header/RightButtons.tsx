@@ -3,7 +3,7 @@ import styles from "./RightButtons.module.scss";
 import Button from "@components/Common/Button";
 import Icon from "@components/Common/Icon";
 import clsx from "clsx";
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import Popup from "@components/Common/Popup";
 import { useApi } from "@lib/API.Hooks";
 
@@ -26,7 +26,11 @@ export function NuggetButton() {
   const api = useApi();
 
   const [loading, setLoading] = useState(false);
-  const [myNugget, setMyNugget] = useState(false); // TODO
+  const [myNugget, setMyNugget] = useState(api.currentUser?.nuggets.includes(mod.id));
+
+  useEffect(() => {
+    setMyNugget(api.currentUser?.nuggets.includes(mod.id));
+  }, [api.currentUser]);
 
   async function toggleNugget() {
     if (loading) return;
@@ -43,7 +47,7 @@ export function NuggetButton() {
   }
 
   return (
-    <Button sleek className={clsx(styles.nuggetButton, myNugget && styles.setNugget)} onClick={toggleNugget}>
+    <Button className={clsx(styles.nuggetButton, myNugget && styles.setNugget)} onClick={toggleNugget}>
       <Icon type={loading ? "loading" : "nugget"} alpha={loading || myNugget ? 1 : 0.5} />
       {mod.nugget_count}
     </Button>
@@ -71,7 +75,6 @@ export function SubscriptionButton() {
 
   return (
     <Button
-      sleek
       className={clsx(styles.subscriptionButton, subscribed && styles.setSubscription)}
       onClick={toggleSubscription}
     >
@@ -88,16 +91,21 @@ export function MiscButton() {
 
   return (
     <>
-      <Button sleek data-tooltip-id={id} className={styles.miscButton} onClick={() => setIsOpen(b => !b)}>
+      <Button data-tooltip-id={id} className={styles.miscButton} onClick={() => setIsOpen(b => !b)}>
         <Icon type="options_vert" />
       </Button>
-      <Popup id={id} open={[isOpen, setIsOpen]}>
+      <Popup id={id} open={[isOpen, setIsOpen]} className={styles.miscMenu} noArrow offset={4}>
         {() => (
-          <div className={styles.miscMenu}>
-            <span>Woah</span>
-            <span>A hidden menu</span>
-            <span>Incredible</span>
-          </div>
+          <>
+            <Button>
+              <Icon type="edit" size={16} />
+              {"Report mod"}
+            </Button>
+            <Button>
+              <Icon type="copy" size={16} />
+              {"View JSON data"}
+            </Button>
+          </>
         )}
       </Popup>
     </>

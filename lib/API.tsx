@@ -1,11 +1,13 @@
 import { createRouteHandlerClient, createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { SupabaseClient, createClient as createSupabaseClient } from "@supabase/supabase-js";
-import { DbMod, DbModAuthor, DbRelease, DbReleaseAuthor, DbReleaseFile, DbUser } from "./Database";
+import { DbMod, DbModAuthor, DbRelease, DbReleaseFile, DbUser } from "./Database";
 import { WrappedSupabaseClient, from } from "./API.Statement";
 
 export { useApi, ApiProvider, type ApiProviderProps } from "./API.Hooks";
 
-export interface RestUser extends DbUser {}
+export interface RestUser extends DbUser {
+  nuggets: number[];
+}
 
 export interface RestMod extends DbMod {
   authors: RestModAuthor[];
@@ -18,14 +20,10 @@ export interface RestModAuthor extends DbModAuthor {
 }
 
 export interface RestRelease extends DbRelease {
-  authors: RestReleaseAuthor[];
   files: RestReleaseFile[];
 }
 export interface RestReleaseWithMod extends RestRelease {
   mod: RestMod;
-}
-export interface RestReleaseAuthor extends DbReleaseAuthor {
-  user: RestUser;
 }
 export interface RestReleaseFile extends DbReleaseFile {}
 
@@ -33,7 +31,9 @@ export interface RestReleaseFile extends DbReleaseFile {}
 
 //
 
-const selectUser = from("users").select<RestUser>({});
+const selectUser = from("users").select<RestUser>("*", {
+  nuggets: "get_user_nuggets",
+});
 
 const selectModAuthor = from("mod_authors").select<RestModAuthor>({
   user: selectUser,
@@ -42,17 +42,12 @@ const selectMod = from("mods").select<RestMod>({
   authors: selectModAuthor.multiple,
 });
 
-const selectReleaseAuthor = from("release_authors").select<RestReleaseAuthor>({
-  user: selectUser,
-});
 const selectReleaseFile = from("release_files").select<RestReleaseFile>({});
 const selectRelease = from("releases").select<RestRelease>({
-  authors: selectReleaseAuthor.multiple,
   files: selectReleaseFile.multiple,
 });
 
 const selectReleaseWithMod = from("releases").select<RestReleaseWithMod>({
-  authors: selectReleaseAuthor.multiple,
   files: selectReleaseFile.multiple,
   mod: selectMod,
 });
@@ -66,9 +61,12 @@ const selectModWithReleases = from("mods").select<RestModWithReleases>({
 //
 
 export class RogueLibsApi extends WrappedSupabaseClient {
-  public constructor(Supabase: SupabaseClient) {
+  public constructor(Supabase: SupabaseClient, currentUser: RestUser | null) {
     super(Supabase);
+    this.currentUser = currentUser;
   }
+
+  currentUser: RestUser | null = null;
 
   public fetchModById(id: number) {
     return this.selectOne(selectMod, m => m.eq("id", id));
@@ -100,6 +98,10 @@ export class RogueLibsApi extends WrappedSupabaseClient {
     return this.selectMany(selectRelease, r => r.eq("mod_id", mod_id));
   }
 
+  public fetchUserById(user_id: string) {
+    return this.selectOne(selectUser, u => u.eq("id", user_id));
+  }
+
   public setModNugget(mod_id: number, nugget: boolean) {
     return this.rpc("set_mod_nugget", { _mod_id: mod_id, _nugget: nugget });
   }
@@ -121,7 +123,7 @@ export function createServerApi(
   } else {
     supabase = createRouteHandlerClient(cxt, { options: { global: { fetch: customFetch } } });
   }
-  return new RogueLibsApi(supabase);
+  return new RogueLibsApi(supabase, null);
 }
 
 export function createServiceApi(service: "SERVICE_ROLE_API") {
@@ -129,5 +131,5 @@ export function createServiceApi(service: "SERVICE_ROLE_API") {
   const supabase = createSupabaseClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_KEY!, {
     auth: { flowType: "pkce" },
   });
-  return new RogueLibsApi(supabase);
+  return new RogueLibsApi(supabase, null);
 }

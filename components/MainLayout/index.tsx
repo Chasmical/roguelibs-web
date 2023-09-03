@@ -2,6 +2,7 @@ import Link from "@components/Common/Link";
 import styles from "./index.module.scss";
 import clsx from "clsx";
 import AccountPanel from "@components/MainLayout/AccountPanel";
+import DiscordLink from "@components/MainLayout/DiscordLink";
 
 export interface MainLayoutProps {
   className?: string;
@@ -37,7 +38,7 @@ export default function MainLayout({ className, children, ...props }: MainLayout
         </div>
         <div>
           <label>{"Streets of Rogue"}</label>
-          <Link href="https://discord.com/invite/streetsofrogue">{"SoR on Discord"}</Link>
+          <DiscordLink>{"SoR on Discord"}</DiscordLink>
           <Link href="https://store.steampowered.com/app/512900">{"SoR on Steam"}</Link>
           <Link href="https://gamebanana.com/games/8455">{"SoR on GameBanana"}</Link>
           <Link href="https://streetsofrogue.fandom.com">{"SoR wiki"}</Link>

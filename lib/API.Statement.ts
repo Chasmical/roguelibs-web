@@ -1,8 +1,8 @@
-import Database, { DatabaseFunctions } from "./Database";
+import { DatabaseTables, DatabaseFunctions } from "./Database";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 
-export interface TableStatement<TableName extends keyof Database> {
+export interface TableStatement<TableName extends keyof DatabaseTables> {
   name: TableName;
   select<Return extends object>(relatedSelects: GetRelatedSelects<Return>): SelectStatement<TableName, Return>;
   select<Return extends object>(
@@ -10,7 +10,7 @@ export interface TableStatement<TableName extends keyof Database> {
     relatedSelects: GetRelatedSelects<Return>,
   ): SelectStatement<TableName, Return>;
 }
-export interface SelectStatement<TableName extends keyof Database, Return extends object> {
+export interface SelectStatement<TableName extends keyof DatabaseTables, Return extends object> {
   tableName: TableName;
   select: string;
   toString(): string;
@@ -19,16 +19,18 @@ export interface SelectStatement<TableName extends keyof Database, Return extend
 }
 
 type GetRelatedSelects<T extends object> = {
-  [N in keyof T as T[N] extends object ? N : never]: T[N] extends object ? SelectStatement<any, T[N]> : never;
+  [N in keyof T as T[N] extends object ? N : never]: T[N] extends object
+    ? SelectStatement<any, T[N]> | keyof DatabaseFunctions
+    : never;
 };
 
 type CoerceObj<T> = { [N in keyof T]: T[N] };
 
-export type FilterFunc<TableName extends keyof Database> = (
-  builder: PostgrestFilterBuilder<any, CoerceObj<Database[TableName][number]>, any>,
+export type FilterFunc<TableName extends keyof DatabaseTables> = (
+  builder: PostgrestFilterBuilder<any, CoerceObj<DatabaseTables[TableName][number]>, any>,
 ) => void;
 
-export function from<TableName extends keyof Database>(tableName: TableName): TableStatement<TableName> {
+export function from<TableName extends keyof DatabaseTables>(tableName: TableName): TableStatement<TableName> {
   function select<Return extends object>(
     selectStatement?: string | GetRelatedSelects<Return>,
     relatedSelects?: GetRelatedSelects<Return>,
@@ -63,23 +65,27 @@ export function from<TableName extends keyof Database>(tableName: TableName): Ta
 export class WrappedSupabaseClient {
   public constructor(public readonly Supabase: SupabaseClient) {}
 
-  public selectOne<TableName extends keyof Database, Return extends object>(
+  public selectOne<TableName extends keyof DatabaseTables, Return extends object>(
     statement: SelectStatement<TableName, Return>,
     filter: FilterFunc<TableName>,
   ): Promise<Return | null> {
-    const builder = this.Supabase.from(statement.tableName).select<any, Database[TableName][number]>(statement.select);
+    const builder = this.Supabase.from(statement.tableName).select<any, DatabaseTables[TableName][number]>(
+      statement.select,
+    );
     filter(builder);
     return builder
       .maybeSingle()
       .throwOnError()
       .then(res => res.data!) as Promise<Return>;
   }
-  public selectMany<TableName extends keyof Database, Return extends object>(
+  public selectMany<TableName extends keyof DatabaseTables, Return extends object>(
     statement: SelectStatement<TableName, Return>,
     filter: FilterFunc<TableName>,
     limit?: number | [start: number, end: number],
   ): Promise<Return[]> {
-    const builder = this.Supabase.from(statement.tableName).select<any, Database[TableName][number]>(statement.select);
+    const builder = this.Supabase.from(statement.tableName).select<any, DatabaseTables[TableName][number]>(
+      statement.select,
+    );
     filter(builder);
     if (typeof limit === "number") {
       builder.limit(limit);

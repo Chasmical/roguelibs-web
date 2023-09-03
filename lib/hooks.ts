@@ -2,7 +2,8 @@ import { DependencyList, Ref, useCallback, useEffect, useRef, useState } from "r
 import { produce, Draft } from "immer";
 import lodashThrottle from "lodash/throttle";
 
-export { useSession as useSupabaseSession } from "@supabase/auth-helpers-react";
+export { useSession as useSupabaseSession, useSupabaseClient as useSupabase } from "@supabase/auth-helpers-react";
+export { useApi } from "./API.Hooks";
 
 export type ImmerStateRecipe<T> = (draft: Draft<T>) => T | undefined;
 export type ImmerStateSetter<T> = (recipe: ImmerStateRecipe<T>) => void;
