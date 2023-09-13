@@ -6,9 +6,12 @@ import Button from "@components/Common/Button";
 import Icon from "@components/Common/Icon";
 import IconButton from "@components/Common/IconButton";
 import { useSupabase } from "@lib/hooks";
-import Tooltip from "@components/Common/Tooltip";
-import { useId } from "react";
+import { MouseEvent, useId, useState } from "react";
 import { useApi } from "@lib/API.Hooks";
+import Popup from "@components/Common/Popup";
+import Separator from "@components/Common/Separator";
+import clsx from "clsx";
+import Tooltip from "@components/Common/Tooltip";
 
 export function SignInPanel() {
   const supabase = useSupabase();
@@ -23,7 +26,7 @@ export function SignInPanel() {
   }
 
   return (
-    <div>
+    <div className={styles.panel}>
       <Button onClick={handleSignIn}>
         <Icon type="discord" />
         {"Sign In"}
@@ -37,34 +40,90 @@ export function AccountInfo() {
   const router = useRouter();
   const user = useApi().currentUser;
 
+  const [signingOut, setSigningOut] = useState(false);
+
   async function handleSignOut() {
-    await supabase.auth.signOut();
-    router.refresh();
+    if (signingOut) return;
+    setSigningOut(true);
+    try {
+      await supabase.auth.signOut();
+      router.refresh();
+    } finally {
+      setSigningOut(false);
+    }
   }
 
-  const badgesId = useId();
+  const popupId = useId();
+  const signOutId = useId();
+
+  const accountInfoOpen = useState(false);
+  const notificationsOpen = useState(false);
+  const [unread, setUnread] = useState(true);
+
+  function toggleAccountInfo(e: MouseEvent<HTMLElement>) {
+    e.stopPropagation();
+    notificationsOpen[1](false);
+    accountInfoOpen[1](v => !v);
+  }
+  function toggleNotifications(e: MouseEvent<HTMLElement>) {
+    e.stopPropagation();
+    accountInfoOpen[1](false);
+    notificationsOpen[1](v => !v);
+    setUnread(false);
+  }
 
   return (
-    <>
-      <div className={styles.avatar}>
-        <Avatar src={user?.avatar_url} uid={user?.id} size={72} />
+    <div className={styles.panel}>
+      <Avatar data-tooltip-id={popupId} src={user?.avatar_url} uid={user?.id} size={72} onClick={toggleAccountInfo} />
+      <div className={styles.actions}>
+        <IconButton type="options" size={16} onClick={toggleAccountInfo} />
+        <IconButton onClick={toggleNotifications}>
+          <Icon
+            type="bell"
+            color={unread ? "yellow" : "white"}
+            alpha={unread ? 1 : 0.5}
+            size={16}
+            className={clsx(unread && styles.bellWiggle)}
+          />
+        </IconButton>
+        <IconButton
+          data-tooltip-id={signOutId}
+          type={signingOut ? "loading" : "door"}
+          size={16}
+          onClick={handleSignOut}
+        />
+        <Tooltip id={signOutId} place="left" content="Sign out" />
       </div>
-      <div className={styles.details}>
-        <span className={styles.name}>{user?.username}</span>
-        <div className={styles.badges}>
-          {Array.from({ length: 15 }).map((_, i) => (
-            <Icon key={i} type="nugget" size={24} />
-          ))}
-          <Icon data-tooltip-id={badgesId} type="add" size={16} style={{ alignSelf: "center", margin: "0 auto" }} />
-          <Tooltip id={badgesId} place="bottom">
-            {"24 more"}
-          </Tooltip>
-        </div>
-      </div>
-      <div className={styles.accountActions}>
-        <IconButton type="edit" size={16} onClick={handleSignOut} />
-        <IconButton type="door" size={16} onClick={handleSignOut} />
-      </div>
-    </>
+      <Popup
+        id={popupId}
+        open={accountInfoOpen}
+        place="left"
+        offset={16}
+        className={clsx(styles.popup, styles.accountInfo)}
+        noArrow
+      >
+        {() => (
+          <div>
+            <div className={styles.username}>{user?.username}</div>
+            <Separator />
+          </div>
+        )}
+      </Popup>
+      <Popup
+        id={popupId}
+        open={notificationsOpen}
+        place="left"
+        offset={16}
+        className={clsx(styles.popup, styles.notifications)}
+        noArrow
+      >
+        {() => (
+          <div>
+            <div>{"New Notifications"}</div>
+            <Separator />
+          </div>
+        )}
+      </Popup>
+    </div>
   );
 }

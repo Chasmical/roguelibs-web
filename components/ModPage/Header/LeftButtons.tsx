@@ -11,12 +11,12 @@ export default function ModPageLeftButtons() {
     <div className={styles.container}>
       <div className={styles.panel}>
         <b>{"Created at:"}</b>
-        <span>{new Date(mod.created_at).toLocaleString()}</span>
+        <span>{new Date(mod.created_at).toISOString()}</span>
       </div>
       {mod.edited_at && (
         <div className={styles.panel}>
           <b>{"Edited at:"}</b>
-          <span>{new Date(mod.edited_at).toLocaleString()}</span>
+          <span>{new Date(mod.edited_at).toISOString()}</span>
         </div>
       )}
       <CopyGuidButton />

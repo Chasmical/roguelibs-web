@@ -1,4 +1,4 @@
-import { DependencyList, Ref, useCallback, useEffect, useRef, useState } from "react";
+import { DependencyList, Dispatch, Ref, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import { produce, Draft } from "immer";
 import lodashThrottle from "lodash/throttle";
 
@@ -81,4 +81,34 @@ export function useMergedRefs<T>(...refs: Ref<T>[]): React.RefCallback<T> {
       }
     }
   }, refs);
+}
+
+export function useLocalStorage(
+  key: string,
+  defaultValue: string | null | undefined,
+): [value: string | null | undefined, setValue: Dispatch<SetStateAction<string | null | undefined>>] {
+  const ref = useRef<LocalStorageRef>();
+  const [state, setState] = useState(defaultValue);
+  ref.current = { key, state };
+
+  const setValue = useCallback<Dispatch<SetStateAction<string | null | undefined>>>(e => {
+    if (ref.current!.state === undefined) return;
+    setState(prev => {
+      if (prev === undefined) return prev;
+      const newValue = (typeof e === "function" ? e(prev) : e) ?? null;
+      newValue !== null ? localStorage.setItem(ref.current!.key, newValue) : localStorage.removeItem(ref.current!.key);
+      return newValue;
+    });
+  }, []);
+
+  useEffect(() => {
+    setState(window.localStorage.getItem(key) ?? null);
+  }, [key]);
+
+  return [state, setValue];
+}
+
+interface LocalStorageRef {
+  key: string;
+  state: string | null | undefined;
 }

@@ -6,7 +6,10 @@ declare
   _avatar_url text;
 begin
 
-  _username := left(new.raw_user_meta_data->>'full_name', 64);
+  _username := left(new.raw_user_meta_data#>>'{custom_claims,global_name}', 64);
+  if _username is null or length(_username) = 0 then
+    _username := left(new.raw_user_meta_data->>'full_name', 64);
+  end if;
   if _username is null or length(_username) = 0 then
     _username := new.id;
   end if;

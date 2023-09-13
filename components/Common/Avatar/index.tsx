@@ -1,7 +1,8 @@
 import Link from "@components/Common/Link";
 import styles from "./index.module.scss";
+import { HTMLProps } from "react";
 
-export interface AvatarProps {
+export interface AvatarProps extends Omit<HTMLProps<HTMLDivElement>, "size" | "src"> {
   src: string | null | undefined;
   uid?: string | number;
   size?: string | number;
@@ -22,13 +23,14 @@ export default function Avatar({
 
   src ??= undefined;
   if (!src && uid) {
+    // TODO: get default pre-generated avatar
   }
 
   const avatar = (
     <div className={styles.wrapper} style={{ width: size }} {...props}>
       <img className={styles.avatar} src={src} width={size} alt="" />
       {children && <div className={styles.overlay}>{children}</div>}
-      {(!!children || href) && <div className={styles.overlayBackdrop} />}
+      {(!!children || href || props.onClick) && <div className={styles.overlayBackdrop} />}
     </div>
   );
 

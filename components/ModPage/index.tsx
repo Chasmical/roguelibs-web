@@ -21,7 +21,6 @@ export default function ModPage({ mod: original, releases }: ModPageProps) {
       nugget_count: false,
       authors: { idBy: "user_id", user: false },
     });
-    console.log(changes);
     return { mod, original, mutateMod, releases, isEditing, setIsEditing, hasChanges: !!changes.length };
   }, [mod, releases, isEditing]);
 

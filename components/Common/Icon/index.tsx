@@ -29,6 +29,7 @@ export const IconPaths = {
   add: "/icons/add.png",
   options: "/icons/options.png",
   options_vert: "/icons/options_vert.png",
+  bell: "/icons/bell.png",
 } as const;
 
 export type IconType = keyof typeof IconPaths;

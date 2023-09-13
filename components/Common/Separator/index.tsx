@@ -6,13 +6,12 @@ export interface SeparatorProps {
   primary?: boolean;
   thin?: boolean;
   bold?: boolean;
-  full?: boolean;
   vertical?: boolean;
   // ...props
   style?: React.CSSProperties;
 }
 
-export default function Separator({ className, primary, thin, bold, full, vertical, ...props }: SeparatorProps) {
+export default function Separator({ className, primary, thin, bold, vertical, ...props }: SeparatorProps) {
   return (
     <div
       className={clsx(
@@ -20,7 +19,6 @@ export default function Separator({ className, primary, thin, bold, full, vertic
         primary && styles.primary,
         thin && styles.thin,
         bold && styles.bold,
-        full && styles.full,
         vertical ? styles.vertical : styles.horizontal,
         className,
       )}
