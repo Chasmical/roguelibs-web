@@ -1,0 +1,28 @@
+.admonition {
+  background-color: var(--color-background-dark);
+  // border: 2px solid;
+  // border-image: url("/frame-3.png") 8 / 4px;
+  padding: 8px 16px;
+  border-left: 5px solid var(--admonition-color);
+  border-radius: 5px;
+}
+.note {
+  --admonition-color: white;
+  background-color: #474748;
+}
+.tip {
+  --admonition-color: var(--color-success);
+  background-color: var(--color-success-contrast);
+}
+.info {
+  --admonition-color: var(--color-info);
+  background-color: var(--color-info-contrast);
+}
+.caution {
+  --admonition-color: var(--color-warning);
+  background-color: var(--color-warning-contrast);
+}
+.danger {
+  --admonition-color: var(--color-danger);
+  background-color: var(--color-danger-contrast);
+}

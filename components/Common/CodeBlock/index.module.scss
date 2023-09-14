@@ -1,8 +1,12 @@
-.code {
+.pre {
   background-color: var(--color-background-darker);
-  background-clip: padding-box;
   border: 2px solid;
   border-image: url("/frame-3.png") 8 / 4px;
-  padding: 2px 4px;
-  font-size: 0.8em;
+  padding: 8px 12px;
+
+  > code {
+    background: none;
+    border: none;
+    padding: 0;
+  }
 }

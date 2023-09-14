@@ -8,8 +8,6 @@ import Popup from "@components/Common/Popup";
 import { useApi } from "@lib/API.Hooks";
 
 export default function ModPageRightButtons() {
-  const { mod } = useModPage();
-
   return (
     <div className={styles.container}>
       <div className={styles.row}>
