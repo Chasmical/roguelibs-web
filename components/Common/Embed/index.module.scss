@@ -1,0 +1,45 @@
+.embed {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+
+  .thumbnail {
+    position: absolute;
+    top: 50%; left: 0;
+    width: 100%;
+    transform: translate(0, -50%);
+    cursor: pointer;
+    height: auto;
+    transition: filter 0.2s ease;
+    &:hover { filter: brightness(1.15); }
+  }
+  .title {
+    position: absolute;
+    pointer-events: none;
+    left: 62px; right: 60px; top: 21px;
+    height: 52px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    font-size: 18px;
+    font-family: "YouTube Noto", Roboto, Arial, Helvetica, sans-serif;
+    text-shadow: 0 0 2px #0008;
+    color: #eee;
+  }
+  .gradient {
+    position: absolute;
+    pointer-events: none;
+    left: 0; right: 0; top: -50px;
+    height: 50px;
+    box-shadow: 0 50px 60px black;
+  }
+  .play-button {
+    position: absolute;
+    pointer-events: none;
+    top: 50%; left: 50%;
+    width: 68px; height: 48px;
+    margin-left: -34px; margin-top: -24px;
+  }
+}
