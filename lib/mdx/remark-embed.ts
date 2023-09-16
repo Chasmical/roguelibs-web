@@ -28,6 +28,7 @@ export async function fetchOEmbedProviders() {
 
 export interface RemarkEmbedOptions {
   providers?: oEmbedProvider[] | (() => oEmbedProvider[] | Promise<oEmbedProvider[]>);
+  extraProviders?: oEmbedProvider[] | (() => oEmbedProvider[]);
   componentNames?: [provider_name: string, componentName: string][];
   size?: [width: number, height: number];
 }
@@ -37,6 +38,11 @@ export default function remarkEmbed(options?: RemarkEmbedOptions): Transformer {
     options ??= {};
     const getProviders = options.providers ?? fetchOEmbedProviders;
     const providers = processProviders(Array.isArray(getProviders) ? getProviders : await getProviders());
+
+    const extraProviders = options.extraProviders;
+    if (extraProviders != null) {
+      providers.push(...processProviders(Array.isArray(extraProviders) ? extraProviders : extraProviders()));
+    }
 
     for (const pair of options.componentNames ?? []) {
       const provider = providers.find(p => p.provider_name === pair[0]);
