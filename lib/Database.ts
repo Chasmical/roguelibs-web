@@ -1,5 +1,6 @@
 export interface DatabaseTables {
   users: DbUser[];
+  user_notifications: DbUserNotification[];
 
   mods: DbMod[];
   mod_authors: DbModAuthor[];
@@ -38,6 +39,18 @@ export interface DbUser {
   slug: string | null; // citext null = null { unique, length [3;32], match /^[0-9a-zA-Z._-]+$/, not match /^[\da-fA-F]{8}-([\da-fA-F]{4}-){3}[\da-fA-F]{12}$/ }
   discord_id: string | null; // text null = null { match /^\d{1,20}$/ }
   is_admin: boolean; // bool = false
+}
+export interface DbUserNotification {
+  id: number; // int8 pk identity
+  user_id: string; // uuid fk(users / cascade)
+  created_at: string; // timestamptz = now()
+  is_read: boolean; // bool = false
+  message: string; // text { length [1;255] }
+  type: DbUserNotificationType; // int2 = 0 { >= 0 }
+}
+export enum DbUserNotificationType {
+  Unknown = 0,
+  Welcome = 1,
 }
 
 export interface DbMod {

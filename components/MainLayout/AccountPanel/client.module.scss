@@ -20,8 +20,9 @@
   border-radius: 9999px;
 }
 
-.popup {
+.user-popup {
   width: 200px !important;
+  height: 90px;
 
   .username {
     overflow: hidden;
@@ -44,10 +45,25 @@
   80% { transform: none; }
 }
 
-.account-info {
-  height: 90px;
-}
-
-.notifications {
+.notification-popup {
+  margin-top: 0.75rem;
   min-height: 90px;
+  max-width: 425px;
+}
+.notification-list {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 0.5rem;
+}
+.notification {
+  background-color: var(--color-background);
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  .time {
+    color: var(--color-secondary);
+    font-size: 0.8rem;
+    float: right;
+    margin-top: 0.25rem;
+    margin-left: 2rem;
+  }
 }

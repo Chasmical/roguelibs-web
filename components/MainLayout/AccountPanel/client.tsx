@@ -6,12 +6,14 @@ import Button from "@components/Common/Button";
 import Icon from "@components/Common/Icon";
 import IconButton from "@components/Common/IconButton";
 import { useSupabase } from "@lib/hooks";
-import { MouseEvent, useId, useState } from "react";
+import { MouseEvent, useEffect, useId, useState } from "react";
 import { useApi } from "@lib/API.Hooks";
 import Popup from "@components/Common/Popup";
 import Separator from "@components/Common/Separator";
 import clsx from "clsx";
 import Tooltip from "@components/Common/Tooltip";
+import { RestUserNotification } from "@lib/API";
+import { formatDateLocal } from "@lib/misc";
 
 export function SignInPanel() {
   const supabase = useSupabase();
@@ -58,7 +60,13 @@ export function AccountInfo() {
 
   const accountInfoOpen = useState(false);
   const notificationsOpen = useState(false);
-  const [unread, setUnread] = useState(true);
+  const [unread, setUnread] = useState(user?.notifications.some(n => !n.is_read));
+
+  useEffect(() => {
+    if (user && !unread) {
+      setUnread(user?.notifications.some(n => !n.is_read));
+    }
+  }, [user]);
 
   function toggleAccountInfo(e: MouseEvent<HTMLElement>) {
     e.stopPropagation();
@@ -94,14 +102,7 @@ export function AccountInfo() {
         />
         <Tooltip id={signOutId} place="left" content="Sign out" />
       </div>
-      <Popup
-        id={popupId}
-        open={accountInfoOpen}
-        place="left"
-        offset={16}
-        className={clsx(styles.popup, styles.accountInfo)}
-        noArrow
-      >
+      <Popup id={popupId} open={accountInfoOpen} place="left" offset={16} className={styles.userPopup} noArrow>
         {() => (
           <div>
             <div className={styles.username}>{user?.username}</div>
@@ -114,16 +115,31 @@ export function AccountInfo() {
         open={notificationsOpen}
         place="left"
         offset={16}
-        className={clsx(styles.popup, styles.notifications)}
+        className={styles.notificationPopup}
         noArrow
       >
         {() => (
-          <div>
+          <div className={styles.notificationList}>
             <div>{"New Notifications"}</div>
             <Separator />
+            {user?.notifications.map(notification => (
+              <Notification key={notification.id} value={notification} />
+            ))}
           </div>
         )}
       </Popup>
+    </div>
+  );
+}
+
+export interface NotificationProps {
+  value: RestUserNotification;
+}
+export function Notification({ value }: NotificationProps) {
+  return (
+    <div className={styles.notification}>
+      {value.message}
+      <span className={styles.time}>{formatDateLocal(value.created_at)}</span>
     </div>
   );
 }

@@ -4,6 +4,7 @@ $$
 declare
   _username text;
   _avatar_url text;
+  _slug text;
 begin
 
   _username := left(new.raw_user_meta_data#>>'{custom_claims,global_name}', 64);
@@ -19,8 +20,19 @@ begin
     _avatar_url := null;
   end if;
 
-  insert into public.users (id, uid, username, avatar_url)
-  values (new.id, new.id, _username, _avatar_url);
+  -- construct a url slug from any valid characters
+  select array_to_string(array(
+    select * from regexp_matches(_username, '[0-9a-zA-Z._-]+', 'g')
+  ), '') into _slug;
+  if length(_slug) > 32 then
+    _slug := left(_slug, 32);
+  end if;
+  if length(_slug) < 3 or exists(select 1 from public.users where slug = _slug) then
+    _slug := null;
+  end if;
+
+  insert into public.users (id, uid, username, avatar_url, slug)
+  values (new.id, new.id, _username, _avatar_url, _slug);
 
   return new;
 

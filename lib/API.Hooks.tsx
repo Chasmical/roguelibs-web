@@ -1,7 +1,7 @@
 "use client";
 import { SessionContextProvider as SupabaseProvider, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { RestUser, RogueLibsApi } from "./API";
+import { RestUserPersonal, RogueLibsApi } from "./API";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useSupabaseSession } from "@lib/hooks";
 
@@ -23,7 +23,7 @@ export function ApiProvider({ children }: React.PropsWithChildren<ApiProviderPro
 function SubProvider({ children }: React.PropsWithChildren) {
   const supabaseClient = useSupabaseClient();
   const session = useSupabaseSession();
-  const [user, setUser] = useState<RestUser | null>(null);
+  const [user, setUser] = useState<RestUserPersonal | null>(null);
 
   const value = useMemo(() => {
     return { api: new RogueLibsApi(supabaseClient, user) };
@@ -33,7 +33,7 @@ function SubProvider({ children }: React.PropsWithChildren) {
   useEffect(() => {
     if (user_id) {
       (async () => {
-        const result = await value.api.fetchUserById(user_id);
+        const result = await value.api.fetchUserById(user_id, true);
         setUser(result);
       })();
     }
@@ -44,28 +44,4 @@ function SubProvider({ children }: React.PropsWithChildren) {
 
 export function useApi() {
   return useContext(ApiContext)!.api;
-}
-
-export function useUser(user_id: string | null | undefined) {
-  const [user, setUser] = useState<RestUser | null>(null);
-  const api = useApi();
-  const session = useSupabaseSession();
-
-  useEffect(() => {
-    if (user_id) {
-      const current = (session?.user as any)["rlUser"];
-      if (current?.id === user_id) {
-        setUser(current);
-        return;
-      }
-
-      (async () => {
-        const result = await api.fetchUserById(user_id);
-        if (session) Object.assign(session.user, { rlUser: result });
-        setUser(result);
-      })();
-    }
-  }, [user_id]);
-
-  return user;
 }

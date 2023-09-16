@@ -11,6 +11,7 @@ begin
 end;
 $$ language plpgsql stable;
 
+-- function to be used with PostgREST
 create or replace function public.get_user_nuggets(_user public.users)
 returns int8[] as
 $$

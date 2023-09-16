@@ -1,13 +1,16 @@
 import { createRouteHandlerClient, createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { SupabaseClient, createClient as createSupabaseClient } from "@supabase/supabase-js";
-import { DbMod, DbModAuthor, DbRelease, DbReleaseFile, DbUser } from "./Database";
+import { DbMod, DbModAuthor, DbRelease, DbReleaseFile, DbUser, DbUserNotification } from "./Database";
 import { WrappedSupabaseClient, from } from "./API.Statement";
 
 export { useApi, ApiProvider, type ApiProviderProps } from "./API.Hooks";
 
-export interface RestUser extends DbUser {
+export interface RestUser extends DbUser {}
+export interface RestUserPersonal extends RestUser {
   nuggets: number[];
+  notifications: RestUserNotification[];
 }
+export interface RestUserNotification extends DbUserNotification {}
 
 export interface RestMod extends DbMod {
   authors: RestModAuthor[];
@@ -31,8 +34,14 @@ export interface RestReleaseFile extends DbReleaseFile {}
 
 //
 
+const selectUserNotification = from("user_notifications").select<RestUserNotification>("*");
+
 const selectUser = from("users").select<RestUser>("*", {
   nuggets: "get_user_nuggets",
+});
+const selectUserPersonal = from("users").select<RestUserPersonal>("*", {
+  nuggets: "get_user_nuggets",
+  notifications: selectUserNotification.multiple,
 });
 
 const selectModAuthor = from("mod_authors").select<RestModAuthor>({
@@ -61,12 +70,12 @@ const selectModWithReleases = from("mods").select<RestModWithReleases>({
 //
 
 export class RogueLibsApi extends WrappedSupabaseClient {
-  public constructor(Supabase: SupabaseClient, currentUser: RestUser | null) {
+  public constructor(Supabase: SupabaseClient, currentUser: RestUserPersonal | null) {
     super(Supabase);
     this.currentUser = currentUser;
   }
 
-  currentUser: RestUser | null = null;
+  currentUser: RestUserPersonal | null = null;
 
   public fetchModById(id: number) {
     return this.selectOne(selectMod, m => m.eq("id", id));
@@ -98,8 +107,14 @@ export class RogueLibsApi extends WrappedSupabaseClient {
     return this.selectMany(selectRelease, r => r.eq("mod_id", mod_id));
   }
 
-  public fetchUserById(user_id: string) {
-    return this.selectOne(selectUser, u => u.eq("id", user_id));
+  public fetchUserById<IsPersonal extends boolean | undefined = false>(
+    user_id: string,
+    is_personal?: IsPersonal,
+  ): Promise<IsPersonal extends true ? RestUserPersonal : RestUser> {
+    if (!is_personal) return this.selectOne(selectUser, u => u.eq("id", user_id)) as never;
+    return this.selectOne(selectUserPersonal, u => u.eq("id", user_id)).then(
+      user => (user?.notifications.reverse(), user),
+    ) as never;
   }
 
   public setModNugget(mod_id: number, nugget: boolean) {
