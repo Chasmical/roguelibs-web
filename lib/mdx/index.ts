@@ -8,6 +8,7 @@ export const MdxOptions: MDXRemoteProps["options"] = {
   mdxOptions: {
     remarkPlugins: RemarkPlugins,
     rehypePlugins: RehypePlugins,
+    // format: "md",
   },
 };
 

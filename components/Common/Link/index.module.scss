@@ -4,14 +4,14 @@
 
   color: var(--color-primary-lighter);
   transition: all 0.2s ease;
-  padding-left: 1px;
+  margin-left: -0.1em;
 
   &:hover {
     color: var(--color-primary-dark);
   }
 
   & > span {
-    padding-left: 0.05em;
+    padding-left: 0.1em;
   }
 
   &.underline {

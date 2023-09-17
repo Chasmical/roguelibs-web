@@ -3,30 +3,14 @@ import { compileMDX } from "@lib/mdx";
 import "katex/dist/katex.min.css";
 import { Metadata } from "next";
 import yaml from "js-yaml";
+import { notFound } from "next/navigation";
+import fs from "fs";
+import Path from "path";
+import { readFile } from "fs/promises";
+import Link from "@components/Common/Link";
 
 interface PageProps {
   params: { slug: string[] };
-}
-
-export default async function DocsPageIndex({ params }: PageProps) {
-  const url = `https://raw.githubusercontent.com/SugarBarrel/RogueLibs/main/website/docs/${params.slug.join("/")}.mdx`;
-
-  const { content } = await compileMDX<Frontmatter>(source);
-
-  return (
-    <div
-      style={{
-        width: "950px",
-        display: "flex",
-        flexFlow: "column",
-        gap: "1rem",
-        fontFamily: "var(--standard-font) !important",
-      }}
-    >
-      {content}
-      <SetCanonicalUrl url={`/docs/${params.slug}`} />
-    </div>
-  );
 }
 
 interface Frontmatter {
@@ -35,9 +19,88 @@ interface Frontmatter {
   image?: string;
 }
 
+export default async function DocsPageIndex({ params }: PageProps) {
+  const sections = await fetchDocSections("SugarBarrel/RogueLibs", "v4-beta", "dev-docs");
+  const source = await fetchDoc("SugarBarrel/RogueLibs", "v4-beta", params.slug);
+
+  const { content } = await compileMDX<Frontmatter>(source);
+
+  return (
+    <div style={{ display: "flex", fontFamily: "var(--standard-font) !important", gap: "1rem" }}>
+      <div
+        style={{
+          whiteSpace: "nowrap",
+          padding: "0.5rem 1rem",
+          backgroundColor: "var(--color-background)",
+          borderRadius: "1rem",
+        }}
+      >
+        {sections.map(section => (
+          <div key={section.name}>
+            <div>{section.name}</div>
+            <ul>
+              {section.pages.map(p => (
+                <li key={p.name}>{p.children ? <SidebarCategory category={p} /> : <SidebarItem page={p} />}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <div
+        style={{
+          flexGrow: 1,
+          padding: "0.5rem 1rem",
+          backgroundColor: "var(--color-background)",
+          borderRadius: "1rem",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: "700px",
+            margin: "0 auto",
+            display: "flex",
+            flexFlow: "column",
+            gap: "1rem",
+            marginTop: "2rem",
+          }}
+        >
+          {content}
+          <SetCanonicalUrl url={`/docs/${params.slug.join("/")}`} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SidebarCategory({ category, url }: { category: DocCategory; url?: string }) {
+  url = (url ?? "/docs") + "/" + category.name;
+  return (
+    <div>
+      <div>{category.name}</div>
+      <ul>
+        {category.children.map((p, i) => (
+          <li key={i}>
+            {p.children ? <SidebarCategory category={p} url={url} /> : <SidebarItem page={p} url={url} />}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+function SidebarItem({ page, url }: { page: DocPage; url?: string }) {
+  return (
+    <Link href={(url ?? "/docs") + "/" + page.name} prefetch={false}>
+      {page.name}
+    </Link>
+  );
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const frontmatterEnd = source.indexOf("\n---", 1);
+  const source = await fetchDoc("SugarBarrel/RogueLibs", "v4-beta", params.slug);
+
+  const frontmatterEnd = Math.max(source.indexOf("\n---", 1), 0);
   const frontmatter = yaml.load(source.slice(0, frontmatterEnd)) as Frontmatter;
+  if (!frontmatter) notFound();
 
   return {
     title: frontmatter.title,
@@ -65,77 +128,70 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-const source = `---
-title: Getting Started 🎉
-description: "Welcome to the SoR mod-making guide featuring RogueLibs! Library and tools provided by RogueLibs really simplify the modding process, but you'll still need some basic C# knowledge to get started. If you have any questions, feel free to ask them in the official Discord's #🔧|modding channel (https://discord.gg/m3zuHSwQw2)."
----
-# Getting Started
+async function fetchDocSections(repo: string, branch: string, path: string) {
+  const res = await fetch(`https://raw.githubusercontent.com/${repo}/${branch}/docs/${path}.yml`);
+  const sections = yaml.loadAll(await res.text()) as ConfigSection[];
+  return sections.map(parseDocSection);
+}
+async function fetchDoc(repo: string, branch: string, path: string | string[]) {
+  if (Array.isArray(path)) path = path.join("/");
+  if (process.env.NODE_ENV === "development" && ROGUELIBS_DOCS_DIR) {
+    const content = await readFile(`${ROGUELIBS_DOCS_DIR}\\${path}.mdx`);
+    return content.toString();
+  }
+  const res = await fetch(`https://raw.githubusercontent.com/${repo}/${branch}/docs/${path}.mdx`);
+  return await res.text();
+}
 
-Welcome to the SoR mod-making guide featuring RogueLibs! Library and tools provided by RogueLibs really simplify the modding process, but you'll still need some basic C# knowledge to get started. If you have any questions, feel free to ask them in the official Discord's [#\\🔧|modding](https://discord.gg/m3zuHSwQw2) channel.
+const ROGUELIBS_DOCS_DIR = (() => {
+  const parts = Path.normalize(__dirname).split(Path.sep);
+  while (parts.length) {
+    const path = parts.join(Path.sep) + Path.sep + "RogueLibs" + Path.sep + "docs";
+    if (fs.existsSync(path)) return path;
+    parts.pop();
+  }
+  return null;
+})();
 
-## Required Tools {#workspace-tools}
+interface ConfigSection {
+  section: string | null;
+  pages: (ConfigCategories | string)[] | null;
+}
+interface ConfigCategories {
+  [categoryName: string]: (ConfigCategories | string)[] | null;
+}
 
-First of all, you'll need to install these tools:
-- **[dnSpy](https://github.com/dnSpy/dnSpy/releases/latest)** - a .NET assembly editor (and a debugger, but it's way too tedious to make it work for BepInEx and plugins). You're not gonna edit assemblies, just view them to see how the game and/or other plugins work.
-- **[Visual Studio 2022 Community](https://visualstudio.microsoft.com/downloads/)** - the Integrated Development Environment (IDE for short) that you'll be working in.
+interface DocSection {
+  name: string;
+  pages: (DocCategory | DocPage)[];
+}
+interface DocCategory {
+  name: string;
+  children: (DocCategory | DocPage)[];
+}
+interface DocPage {
+  name: string;
+  children?: never;
+}
 
-## Workspace Features {#workspace-features}
+function parseDocSection(section: ConfigSection): DocSection {
+  return {
+    name: "" + section.section,
+    pages: parseDocItems(section.pages),
+  };
+}
+function parseDocItems(items: (ConfigCategories | string)[] | null): (DocCategory | DocPage)[] {
+  if (items == null) return [];
+  const pages: (DocCategory | DocPage)[] = [];
 
-Instead of creating a project manually, we'll be using a **special template** with a ton of advantages!
+  for (const item of items) {
+    if (item == null) continue;
+    if (typeof item === "object") {
+      pages.push(...Object.entries(item).map(([key, value]) => ({ name: "" + key, children: parseDocItems(value) })));
+    } else {
+      pages.push({ name: "" + item });
+    }
+  }
 
-- The template is SDK-style, which means that:
-  - You'll be able to use most of the features of the latest C# versions!
-  - Less messing around with the settings and configurations!
-- No DLL Hell. All of the references are in a single designated folder!
-- PluginBuildEvents utility will move your mods to BepInEx/plugins automatically!
-- The template contains the base code to quickly start developing your mod!
-- Most of the stuff you could possibly need is already in the template!
-
-You can just copy-paste the template, and start working on your mod in less than a minute!
-
-## Workspace Structure {#workspace-structure}
-
-First of all, **[download the workspace template](https://drive.google.com/file/d/1d1FH0Gh7egp7Z4QugsCF4aCE4-NgWD1X/view?usp=sharing)** and extract the \`sor-repos\` folder.
-
-:::tip{title="Pro-tip: Managing repository directories"}
-You should put your repositories close to the root of the drive, so that they have much shorter and more manageable paths, like \`D:\\sor-repos\`, \`F:\\rim-repos\` (for Rimworld mods), \`E:\\uni-repos\` (for university stuff) and etc. This way you'll always know the exact path to your projects, and all errors and warnings regarding the files will be much shorter and will contain less unnecessary information.
-:::
-
-Now let's see what this workspace has to offer!
-
-### \`.ref\` - References {#references}
-
-\`.ref\` directory will contain all of the references for your mods. There are two kinds of them:
-
-***Static references*** (that is, the ones that aren't updated frequently and mostly remain the same) are stored in the \`static\` subdirectory. Most of the stuff that you can find in the \`/StreetsOfRogue_Data/Managed\` directory goes here.
-
-<img src="/img/setup/ref-static.png" width='600'/>
-
-***Dynamic references*** (the ones that change often) are \`Assembly-CSharp.dll\` (that contains the game code) and \`RogueLibsCore.dll\` (RogueLibs library). They are stored in the \`.ref\` directory itself, so you can update them more easily.
-
-<img src="/img/setup/ref.png" width='600'/>
-
-:::tip{title="Pro-tip: Documentation files"}
-Some references have documentation as a separate file, like \`RogueLibsCore.xml\`. Make sure that you place it next to the .dll in the same folder. If you do, you'll be able to look up documentation on types and members right in Visual Studio!
-:::
-
-### \`.events\` - PluginBuildEvents {#pluginbuildevents}
-
-PluginBuildEvents is a simple utility for copying your mods over to the BepInEx/plugins directory. The default project template includes it as a post-build event, so you just need to build your mod, and its file will be automatically moved!
-
-:::note{title="Non-Steam versions of the game"}
-If you haven't purchased the Steam version of the game (or if you somehow messed up the Steam's installation path in the registry), then specify the full path to the game's root directory in the properties of your project (right-click on it in the Solution Explorer and select Properties > Build > Events):
-\`\`\`sh
-"$(SolutionDir)\\..\\.events\\PluginBuildEvents.exe" "$(TargetPath)" "D:\\Games\\Streets of Rogue"
-\`\`\`
-:::
-
-### Solution Folders {#solution-folders}
-
-All other folders should contain solutions with your projects:
-
-<img src="/img/setup/solutions.png" width='600'/>
-
-To create a new one, just copy-paste the template one. You can also modify the template to fit your specific needs.
-
-`;
+  return pages;
+}
