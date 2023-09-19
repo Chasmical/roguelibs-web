@@ -21,16 +21,16 @@ export default function DefaultEmbed({ url, data, ...props }: DefaultEmbedProps)
   switch (embed.type) {
     case "video":
     case "rich":
-      return <div {...props} dangerouslySetInnerHTML={{ __html: embed.html }} />;
+      return <div role="panel" {...props} dangerouslySetInnerHTML={{ __html: embed.html }} />;
     case "link":
       return (
-        <div {...props}>
+        <div role="panel" {...props}>
           <Link href={url}>{embed.title}</Link>
         </div>
       );
     case "photo":
       return (
-        <div {...props}>
+        <div role="panel" {...props}>
           <img src={embed.url} alt={embed.title} title={embed.title} />
         </div>
       );

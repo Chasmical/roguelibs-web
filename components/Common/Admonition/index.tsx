@@ -19,7 +19,7 @@ export default function Admonition({ type, title, className, children, ...props 
   type = aliasMap[type] ?? (type as AdmonitionType);
 
   return (
-    <div {...props} className={clsx(styles.admonition, styles[type], className)}>
+    <div role="panel" {...props} className={clsx(styles.admonition, styles[type], className)}>
       {title && (
         <div className={styles.title}>
           <Icon type="edit" size={24} />

@@ -1,0 +1,30 @@
+.wrapper {
+  border: 2px solid var(--color-overlay-2);
+  border-radius: calc(0.5rem + 2px);
+}
+
+.tabs {
+  display: flex;
+  padding-left: 0 !important;
+  margin-bottom: -2px !important;
+}
+.tab {
+  display: inline-flex;
+  padding: 1rem;
+  cursor: pointer;
+  color: var(--color-white);
+  margin-top: 0 !important;
+
+  border-bottom: 2px solid transparent;
+  border-radius: 0.5rem 0.5rem 0 0;
+
+  transition: background-color 0.2s var(--smooth-transition);
+
+  &:hover {
+    background-color: var(--color-overlay-2);
+  }
+  &.selected {
+    border-bottom: 2px solid var(--color-primary);
+    color: var(--color-primary);
+  }
+}

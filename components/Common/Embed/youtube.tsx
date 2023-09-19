@@ -21,6 +21,7 @@ export default function YouTubeEmbed({ url, data, className, style, ...props }: 
     // return the provided "html" data
     return (
       <div
+        role="panel"
         className={clsx(styles.embed, className)}
         style={{ ...style, width: embed.width, height: embed.height }}
         {...props}
@@ -31,6 +32,7 @@ export default function YouTubeEmbed({ url, data, className, style, ...props }: 
     // return a thumbnail-placeholder
     return (
       <div
+        role="panel"
         className={clsx(styles.embed, className)}
         style={{ ...style, width: embed.width, height: embed.height }}
         {...props}

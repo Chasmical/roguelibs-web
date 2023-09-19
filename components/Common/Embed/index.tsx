@@ -7,8 +7,6 @@ export interface EmbedProps extends HTMLAttributes<HTMLElement> {
   data: oEmbedResponse | string;
   // ...props
   url: string;
-  className?: string;
-  style?: React.CSSProperties;
 }
 
 export default function Embed({ data, ...props }: EmbedProps) {

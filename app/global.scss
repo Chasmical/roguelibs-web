@@ -86,6 +86,8 @@
   --color-overlay-7: #ffffff38;
   --color-overlay-8: #ffffff40;
 
+  --smooth-transition: cubic-bezier(0.08, 0.52, 0.52, 1);
+
   --text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
   --text-shadow-2: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000,
                    -2px 0px 0 #000, 2px 0px 0 #000, 0px -2px 0 #000, 0px 2px 0 #000;
@@ -100,17 +102,15 @@
   // font-family: var(--standard-font) !important;
 
   button { border: none; }
-  p { line-height: 1.5em; }
-  p + p { margin-top: 1rem; }
-
-  h1, h2, h3, h4, h5, h6 { font-weight: bold; }
-  h1 { font-size: 3rem; margin: 0; }
-  h2 { font-size: 2rem; }
-  h3 { font-size: 1.5rem; }
-
   ul, ol { padding-left: 2rem; }
   li { line-height: 1.65em; }
-  li + li { margin-top: 0.25rem; }
+
+  table { border-collapse: collapse; }
+  th, td {
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--color-secondary);
+    line-height: 1.5em;
+  }
 
 }
 body {
@@ -128,6 +128,25 @@ body {
 img.emoji {
   height: 1em;
   width: 1em;
-  margin: 0 .05em 0 .1em;
+  margin: 0 .05em 0 .1em !important;
   vertical-align: -0.1em;
+}
+
+.markdown {
+  p { line-height: 1.5em; }
+
+  p, ul, ol, h4, h5, h6, img, table, div[role=panel] {
+    margin-bottom: 1.25rem;
+  }
+
+  h1, h2, h3, h4, h5, h6 { font-weight: bold; }
+  h1 { font-size: 3rem; margin-bottom: 1.5rem; }
+  h2 { font-size: 2rem; margin-top: 2.5rem; margin-bottom: 1.25rem; }
+  h3 { font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1.25rem; }
+
+  li + li { margin-top: 0.25rem; }
+
+  div :last-child {
+    margin-bottom: 0;
+  }
 }

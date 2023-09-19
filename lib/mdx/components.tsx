@@ -4,7 +4,9 @@ import CodeBlock from "@components/Common/CodeBlock";
 import Embed from "@components/Common/Embed";
 import YouTubeEmbed from "@components/Common/Embed/youtube";
 import Link from "@components/Common/Link";
-import type { MDXComponents } from "mdx/types";
+import Tabs from "@components/Common/Tabs";
+import TabItem from "@components/Common/TabItem";
+import { MDXComponents } from "@lib/mdx";
 
 const MdxComponents: MDXComponents = {
   code: Code,
@@ -13,5 +15,7 @@ const MdxComponents: MDXComponents = {
   Admonition: Admonition,
   Embed: Embed,
   YouTubeEmbed: YouTubeEmbed,
+  Tabs: Tabs,
+  TabItem: TabItem,
 };
 export default MdxComponents;

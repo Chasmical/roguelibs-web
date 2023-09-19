@@ -3580,6 +3580,18 @@ rehype-katex@^6.0.3:
     katex "^0.16.0"
     unist-util-visit "^4.0.0"
 
+rehype-mdx-code-props@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/rehype-mdx-code-props/-/rehype-mdx-code-props-1.0.0.tgz#c929d4a0910f11a9e3c641489481f0e2779726ed"
+  integrity sha512-NvHm7pTqIIfhpKmjNNizIIJzOcaRDvsAI2katLLylxX5DdhTw/sYKTKnvVZTungykXQglcYnlyVglsEuZ/jZxA==
+  dependencies:
+    "@types/hast" "^2.0.0"
+    acorn "^8.0.0"
+    acorn-jsx "^5.0.0"
+    hast-util-to-estree "^2.0.0"
+    unified "^10.0.0"
+    unist-util-visit-parents "^5.0.0"
+
 remark-breaks@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/remark-breaks/-/remark-breaks-3.0.3.tgz#660e6c995e954e5abdd95bf77df6f1402cb911ef"

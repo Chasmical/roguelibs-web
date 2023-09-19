@@ -10,6 +10,7 @@ import rehypeKatex from "rehype-katex";
 import remarkEmoji from "@lib/mdx/remark-emoji";
 import remarkAdmonition from "@lib/mdx/remark-admonition";
 import remarkEmbed from "@lib/mdx/remark-embed";
+import rehypeMdxCodeProps from "rehype-mdx-code-props";
 
 export const RemarkPlugins: PluggableList = [
   remarkGfm,
@@ -24,4 +25,4 @@ export const RemarkPlugins: PluggableList = [
   [remarkEmbed, { size: [400, 225], componentNames: [["YouTube", "YouTubeEmbed"]] }],
 ];
 
-export const RehypePlugins: PluggableList = [rehypeKatex];
+export const RehypePlugins: PluggableList = [rehypeMdxCodeProps, rehypeKatex];

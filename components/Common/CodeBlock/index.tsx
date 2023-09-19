@@ -11,7 +11,7 @@ export interface CodeBlockProps extends HTMLAttributes<HTMLElement> {
 
 export default function CodeBlock({ className, children, ...props }: CodeBlockProps) {
   return (
-    <div {...props}>
+    <div role="panel" {...props}>
       <div>My code block</div>
       <pre className={clsx(styles.pre, className)}>{children}</pre>
     </div>

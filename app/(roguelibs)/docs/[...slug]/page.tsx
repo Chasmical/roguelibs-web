@@ -55,13 +55,12 @@ export default async function DocsPageIndex({ params }: PageProps) {
         }}
       >
         <div
+          className="markdown"
           style={{
             maxWidth: "700px",
             margin: "0 auto",
-            display: "flex",
-            flexFlow: "column",
-            gap: "1rem",
             marginTop: "2rem",
+            marginBottom: "5rem",
           }}
         >
           {content}
@@ -135,13 +134,15 @@ async function fetchDocSections(repo: string, branch: string, path: string) {
 }
 async function fetchDoc(repo: string, branch: string, path: string | string[]) {
   if (Array.isArray(path)) path = path.join("/");
-  if (process.env.NODE_ENV === "development" && ROGUELIBS_DOCS_DIR) {
+  if (process.env.NODE_ENV === "development" && SERVE_LOCAL_DOCS && ROGUELIBS_DOCS_DIR) {
     const content = await readFile(`${ROGUELIBS_DOCS_DIR}\\${path}.mdx`);
     return content.toString();
   }
   const res = await fetch(`https://raw.githubusercontent.com/${repo}/${branch}/docs/${path}.mdx`);
   return await res.text();
 }
+
+const SERVE_LOCAL_DOCS = true;
 
 const ROGUELIBS_DOCS_DIR = (() => {
   const parts = Path.normalize(__dirname).split(Path.sep);
