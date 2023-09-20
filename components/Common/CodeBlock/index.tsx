@@ -1,6 +1,6 @@
 "use client";
 import { Highlight, Prism } from "prism-react-renderer";
-import { Children, useId, useMemo } from "react";
+import { Children, useEffect, useId, useMemo, useState } from "react";
 import styles from "./index.module.scss";
 import clsx from "clsx";
 import IconButton from "@components/Common/IconButton";
@@ -33,9 +33,14 @@ export default function CodeBlock({
   ...props
 }: CodeBlockProps) {
   const code = useMemo(() => stringifyChildren(children).join("\n"), [children]);
+  const [highlight, setHighlight] = useState(false);
+
+  useEffect(() => setHighlight(true), []);
 
   try {
-    lang = usefulAliases[lang!] ?? lang;
+    const aliased = usefulAliases[lang!];
+    aliased && console.log(`Detected language alias "${lang}" for "${aliased}". Maybe use "${aliased}" directly?`);
+    lang = aliased ?? lang;
     if (lang) require("prismjs/components/prism-" + lang);
   } catch (err) {
     console.error(`"${lang}" is not a valid PrismJS language.`);
@@ -45,27 +50,43 @@ export default function CodeBlock({
   return (
     <div role="panel" className={clsx(styles.block, className)} {...props}>
       {title && <div className={styles.title}>{title}</div>}
-      <Highlight code={code} language={lang ?? "text"}>
-        {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <div className={styles.contents}>
-            <pre className={clsx(styles.pre, className)} style={style}>
-              <code className={clsx(wrap && styles.wrap, nonums || styles.withLineNumbers)}>
-                {tokens.map((line, index) => (
-                  <span key={index} className={styles.line}>
-                    {nonums || <span className={styles.lineNumber} />}
-                    <span {...getLineProps({ line })}>
-                      {line.map((token, index) => {
-                        return <span key={index} {...getTokenProps({ token })} />;
-                      })}
+      {highlight ? (
+        <Highlight code={code} language={lang ?? "text"}>
+          {({ className, style, tokens, getLineProps, getTokenProps }) => (
+            <div className={styles.contents}>
+              <pre className={clsx(styles.pre, className)} style={style}>
+                <code className={clsx(wrap && styles.wrap, nonums || styles.withLineNumbers)}>
+                  {tokens.map((line, index) => (
+                    <span key={index} className={styles.line}>
+                      {nonums || <span className={styles.lineNumber} />}
+                      <span {...getLineProps({ line })}>
+                        {line.map((token, index) => {
+                          return <span key={index} {...getTokenProps({ token })} />;
+                        })}
+                      </span>
                     </span>
-                  </span>
-                ))}
-              </code>
-            </pre>
-            {nocopy || <CopyButton code={code} />}
-          </div>
-        )}
-      </Highlight>
+                  ))}
+                </code>
+              </pre>
+              {nocopy || <CopyButton code={code} />}
+            </div>
+          )}
+        </Highlight>
+      ) : (
+        <div className={styles.contents}>
+          <pre className={styles.pre}>
+            <code className={clsx(wrap && styles.wrap, nonums || styles.withLineNumbers)}>
+              {code.split("\n").map((line, index) => (
+                <span key={index} className={styles.line}>
+                  {nonums || <span className={styles.lineNumber} />}
+                  <span>{line}</span>
+                </span>
+              ))}
+            </code>
+          </pre>
+          {nocopy || <CopyButton code={code} />}
+        </div>
+      )}
     </div>
   );
 }

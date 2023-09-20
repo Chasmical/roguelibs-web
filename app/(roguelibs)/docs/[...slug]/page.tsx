@@ -8,6 +8,8 @@ import fs from "fs";
 import Path from "path";
 import { readFile } from "fs/promises";
 import Link from "@components/Common/Link";
+import styles from "./index.module.scss";
+import clsx from "clsx";
 
 interface PageProps {
   params: { slug: string[] };
@@ -26,15 +28,8 @@ export default async function DocsPageIndex({ params }: PageProps) {
   const { content } = await compileMDX<Frontmatter>(source);
 
   return (
-    <div style={{ display: "flex", fontFamily: "var(--standard-font) !important", gap: "1rem" }}>
-      <div
-        style={{
-          whiteSpace: "nowrap",
-          padding: "0.5rem 1rem",
-          backgroundColor: "var(--color-background)",
-          borderRadius: "1rem",
-        }}
-      >
+    <div className={styles.wrapper}>
+      <div className={styles.sidebar}>
         {sections.map(section => (
           <div key={section.name}>
             <div>{section.name}</div>
@@ -46,23 +41,8 @@ export default async function DocsPageIndex({ params }: PageProps) {
           </div>
         ))}
       </div>
-      <div
-        style={{
-          flexGrow: 1,
-          padding: "0.5rem 1rem",
-          backgroundColor: "var(--color-background)",
-          borderRadius: "1rem",
-        }}
-      >
-        <div
-          className="markdown"
-          style={{
-            maxWidth: "700px",
-            margin: "0 auto",
-            marginTop: "2rem",
-            marginBottom: "5rem",
-          }}
-        >
+      <div className={styles.main}>
+        <div className={clsx(styles.central, "markdown")}>
           {content}
           <SetCanonicalUrl url={`/docs/${params.slug.join("/")}`} />
         </div>
