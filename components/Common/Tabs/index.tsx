@@ -80,12 +80,11 @@ function TabsContainer({ lazy, children, selectedValue }: Pick<TabsProps, "lazy"
 
   return (
     <>
-      {tabs.map((tab, i) =>
-        cloneElement(tab, {
-          key: i,
-          hidden: !isTabSelected(selectedValue, tab.props.value),
-        }),
-      )}
+      {tabs.map((tab, key) => {
+        const hidden = !isTabSelected(selectedValue, tab.props.value);
+        if (lazy && hidden) return null;
+        return cloneElement(tab, { key, hidden });
+      })}
     </>
   );
 }
@@ -127,7 +126,7 @@ function convertTabValues(values: TabsHookInput["values"]): Tab[] {
       .split(TabValueSeparator)
       .map(v => v.trim())
       .filter(Boolean)
-      .map(v => ({ value: v, label: v }));
+      .map(v => ({ value: v, label: v.charAt(0).toUpperCase() + v.slice(1) }));
   }
   if (!Array.isArray(values)) {
     return Object.entries(values).map(([value, label]) => ({ value, label }));

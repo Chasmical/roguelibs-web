@@ -1,9 +1,10 @@
 .code {
   background-color: var(--color-background-darker);
   background-clip: padding-box;
-  border: 2px solid;
-  border-image: url("/frame-3.png") 8 / 4px;
-  padding: 2px 4px;
+  border: 0.15em solid;
+  border-image: url("/frame-3.png") 8 / 0.3em;
+  padding: 0.15em 0.3em;
   font-size: 0.8em;
-  white-space: nowrap;
+  white-space: pre;
+  cursor: text;
 }

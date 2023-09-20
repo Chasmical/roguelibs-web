@@ -1,19 +1,120 @@
+"use client";
+import { Highlight, Prism } from "prism-react-renderer";
+import { Children, useId, useMemo } from "react";
 import styles from "./index.module.scss";
-import { HTMLAttributes } from "react";
 import clsx from "clsx";
+import IconButton from "@components/Common/IconButton";
+import Icon from "@components/Common/Icon";
+import Tooltip from "@components/Common/Tooltip";
 
-export interface CodeBlockProps extends HTMLAttributes<HTMLElement> {
+(typeof global !== "undefined" ? global : window).Prism = Prism;
+// require("prismjs/components/prism-csharp");
+
+export interface CodeBlockProps extends React.HTMLAttributes<HTMLElement> {
+  title?: string;
+  lang?: string;
+  wrap?: boolean;
+  nocopy?: boolean;
+  nonums?: boolean;
   className?: string;
+  children?: React.ReactNode;
   // ...props
   style?: React.CSSProperties;
-  children?: React.ReactNode;
 }
 
-export default function CodeBlock({ className, children, ...props }: CodeBlockProps) {
+export default function CodeBlock({
+  title,
+  lang,
+  wrap,
+  nocopy,
+  nonums,
+  className,
+  children,
+  ...props
+}: CodeBlockProps) {
+  const code = useMemo(() => stringifyChildren(children).join("\n"), [children]);
+
+  try {
+    lang = usefulAliases[lang!] ?? lang;
+    if (lang) require("prismjs/components/prism-" + lang);
+  } catch (err) {
+    console.error(`"${lang}" is not a valid PrismJS language.`);
+    lang = undefined;
+  }
+
   return (
-    <div role="panel" {...props}>
-      <div>My code block</div>
-      <pre className={clsx(styles.pre, className)}>{children}</pre>
+    <div role="panel" className={clsx(styles.block, className)} {...props}>
+      {title && <div className={styles.title}>{title}</div>}
+      <Highlight code={code} language={lang ?? "text"}>
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <div className={styles.contents}>
+            <pre className={clsx(styles.pre, className)} style={style}>
+              <code className={clsx(wrap && styles.wrap, nonums || styles.withLineNumbers)}>
+                {tokens.map((line, index) => (
+                  <span key={index} className={styles.line}>
+                    {nonums || <span className={styles.lineNumber} />}
+                    <span {...getLineProps({ line })}>
+                      {line.map((token, index) => {
+                        return <span key={index} {...getTokenProps({ token })} />;
+                      })}
+                    </span>
+                  </span>
+                ))}
+              </code>
+            </pre>
+            {nocopy || <CopyButton code={code} />}
+          </div>
+        )}
+      </Highlight>
     </div>
   );
 }
+
+function CopyButton({ code }: { code: string }) {
+  const id = useId();
+  return (
+    <>
+      <IconButton
+        data-tooltip-id={id}
+        className={styles.copyButton}
+        onClick={() => navigator.clipboard.writeText(code)}
+      >
+        <Icon type="copy" size={24} alpha={0.5} />
+        <Tooltip id={id} openOnClick content="Copied!" place="left" delayHide={3000} />
+      </IconButton>
+    </>
+  );
+}
+
+function stringifyChildren(children: any, results: string[] = []) {
+  for (const child of Children.toArray(children)) {
+    if (typeof child !== "boolean" && typeof child !== "undefined" && child !== null) {
+      if ((child as any).type === "code") {
+        stringifyChildren((child as any).props.children, results);
+      } else {
+        const lines = ("" + child).split("\n");
+        if (!lines.at(-1)) lines.pop();
+        results.push(...lines);
+      }
+    }
+  }
+  return results;
+}
+
+const usefulAliases: Record<string, string | undefined> = {
+  js: "javascript",
+  ts: "typescript",
+  cs: "csharp",
+  sln: "markup",
+  csproj: "markup",
+  url: "uri",
+  xml: "markup",
+  html: "markup",
+  svg: "markup",
+  yml: "yaml",
+  md: "markdown",
+  sh: "bash",
+  shell: "bash",
+  ps: "powershell",
+  py: "python",
+};

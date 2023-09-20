@@ -432,6 +432,11 @@
   dependencies:
     postcss "^8.0.0"
 
+"@types/prismjs@^1.26.0":
+  version "1.26.0"
+  resolved "https://registry.yarnpkg.com/@types/prismjs/-/prismjs-1.26.0.tgz#a1c3809b0ad61c62cac6d4e0c56d610c910b7654"
+  integrity sha512-ZTaqn/qSqUuAq1YwvOFQfVW1AR/oQJlLSZVustdjwI+GZ8kr0MSHBj0tsXPW1EqHubx50gtBEjbPGsdZwQwCjQ==
+
 "@types/prop-types@*":
   version "15.7.5"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.5.tgz#5f19d2b85a98e9558036f6a3cacc8819420f05cf"
@@ -3456,6 +3461,19 @@ prettier@^2.8.8:
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.8.tgz#e8c5d7e98a4305ffe3de2e1fc4aca1a71c28b1da"
   integrity sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==
 
+prism-react-renderer@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/prism-react-renderer/-/prism-react-renderer-2.0.6.tgz#24f0c1afbc07d4a268677fb05e77079ea80b6a2f"
+  integrity sha512-ERzmAI5UvrcTw5ivfEG20/dYClAsC84eSED5p9X3oKpm0xPV4A5clFK1mp7lPIdKmbLnQYsPTGiOI7WS6gWigw==
+  dependencies:
+    "@types/prismjs" "^1.26.0"
+    clsx "^1.2.1"
+
+prismjs@^1.29.0:
+  version "1.29.0"
+  resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.29.0.tgz#f113555a8fa9b57c35e637bba27509dcf802dd12"
+  integrity sha512-Kx/1w86q/epKcmte75LNrEoT+lX8pBpavuAbvJWRXar7Hz8jrtF+e3vY751p0R8H9HdArwaCTNDDzHg/ScJK1Q==
+
 prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
@@ -3579,18 +3597,6 @@ rehype-katex@^6.0.3:
     hast-util-to-text "^3.1.0"
     katex "^0.16.0"
     unist-util-visit "^4.0.0"
-
-rehype-mdx-code-props@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/rehype-mdx-code-props/-/rehype-mdx-code-props-1.0.0.tgz#c929d4a0910f11a9e3c641489481f0e2779726ed"
-  integrity sha512-NvHm7pTqIIfhpKmjNNizIIJzOcaRDvsAI2katLLylxX5DdhTw/sYKTKnvVZTungykXQglcYnlyVglsEuZ/jZxA==
-  dependencies:
-    "@types/hast" "^2.0.0"
-    acorn "^8.0.0"
-    acorn-jsx "^5.0.0"
-    hast-util-to-estree "^2.0.0"
-    unified "^10.0.0"
-    unist-util-visit-parents "^5.0.0"
 
 remark-breaks@^3.0.3:
   version "3.0.3"

@@ -101,22 +101,25 @@
 
   // font-family: var(--standard-font) !important;
 
-  button { border: none; }
-  ul, ol { padding-left: 2rem; }
-  li { line-height: 1.65em; }
-
-  table { border-collapse: collapse; }
-  th, td {
-    padding: 0.25rem 0.5rem;
-    border: 1px solid var(--color-secondary);
-    line-height: 1.5em;
-  }
-
 }
+
 body {
   color: var(--color-main);
   background-color: var(--color-background-darker);
   font-size: 1rem;
+}
+button { border: none; }
+ul, ol { padding-left: 2rem; }
+li { line-height: 1.65em; }
+
+table { border-collapse: collapse; }
+th, td {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--color-secondary);
+  line-height: 1.5em;
+}
+img {
+  max-width: 100%;
 }
 
 * {
@@ -135,8 +138,11 @@ img.emoji {
 .markdown {
   p { line-height: 1.5em; }
 
-  p, ul, ol, h4, h5, h6, img, table, div[role=panel] {
-    margin-bottom: 1.25rem;
+  &, :is(div[role=tabpanel], div[role=panel]) {
+    > :is(p, ul, ol, h4, h5, h6, img, table, hr, div[role=panel]) {
+      margin-bottom: 1.25rem;
+      &:last-child { margin-bottom: 0; }
+    }
   }
 
   h1, h2, h3, h4, h5, h6 { font-weight: bold; }
@@ -146,7 +152,4 @@ img.emoji {
 
   li + li { margin-top: 0.25rem; }
 
-  div :last-child {
-    margin-bottom: 0;
-  }
 }
