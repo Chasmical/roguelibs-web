@@ -11,6 +11,7 @@ import remarkEmoji from "@lib/mdx/remark-emoji";
 import remarkAdmonition from "@lib/mdx/remark-admonition";
 import remarkEmbed from "@lib/mdx/remark-embed";
 import rehypeCodeMeta from "@lib/mdx/rehype-code-meta";
+import rehypeOverrideJsx from "@lib/mdx/rehype-override-jsx";
 
 export const RemarkPlugins: PluggableList = [
   remarkGfm,
@@ -25,4 +26,4 @@ export const RemarkPlugins: PluggableList = [
   [remarkEmbed, { size: [400, 225], componentNames: [["YouTube", "YouTubeEmbed"]] }],
 ];
 
-export const RehypePlugins: PluggableList = [rehypeCodeMeta, rehypeKatex];
+export const RehypePlugins: PluggableList = [rehypeOverrideJsx, rehypeCodeMeta, rehypeKatex];

@@ -12,6 +12,7 @@ const MdxComponents: MDXComponents = {
   code: Code,
   pre: CodeBlock,
   a: Link as never,
+  img: props => <img loading="lazy" alt="" {...props} />,
   Admonition: Admonition,
   Embed: Embed,
   YouTubeEmbed: YouTubeEmbed,
