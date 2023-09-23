@@ -1,20 +1,23 @@
 "use client";
-import { Children, HTMLAttributes, ReactElement, cloneElement, useMemo, useState } from "react";
+import { Children, cloneElement, useMemo, useState } from "react";
+import useLocalStorage from "@lib/hooks/useLocalStorage";
+import useScrollPositionBlocker from "@lib/hooks/useScrollPositionBlocker";
 import { TabItemProps } from "@components/Common/TabItem";
 import styles from "./index.module.scss";
 import clsx from "clsx";
+import useQueryString from "@lib/hooks/useQueryString";
 
-export interface TabsProps extends TabsHookInput, Omit<HTMLAttributes<HTMLDivElement>, "defaultValue"> {
+export interface TabsProps extends TabsHookInput, Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue"> {
   lazy?: boolean;
   className?: string;
   children?: React.ReactNode;
   // ...TabsHookInput props
 }
 
-export default function Tabs({ lazy, className, children, ...props }: TabsProps) {
-  const tabs = useTabs(props);
+export default function Tabs({ lazy, id, query, className, children, ...props }: TabsProps) {
+  const tabs = useTabs(children, { id, query });
   return (
-    <div role="panel" className={clsx(styles.wrapper, className)} {...props}>
+    <div role="panel" className={clsx(styles.wrapper, className)} {...props} defaultValue={undefined}>
       <TabsHeader {...tabs} />
       <TabsContainer lazy={lazy} {...tabs}>
         {children}
@@ -25,7 +28,7 @@ export default function Tabs({ lazy, className, children, ...props }: TabsProps)
 
 function TabsHeader({ tabs, selectedValue, selectValue }: TabsHookOutput) {
   const tabRefs: (HTMLLIElement | null)[] = [];
-  // const { blockElementScrollPositionUntilNextRender } = useScrollPositionBlocker();
+  const blockElementScrollPositionUntilNextRender = useScrollPositionBlocker();
 
   const handleTabChange = (
     event: React.FocusEvent<HTMLLIElement> | React.MouseEvent<HTMLLIElement> | React.KeyboardEvent<HTMLLIElement>,
@@ -33,7 +36,7 @@ function TabsHeader({ tabs, selectedValue, selectValue }: TabsHookOutput) {
     const newTabValue = tabs[tabRefs.indexOf(event.currentTarget)].value;
 
     if (newTabValue !== selectedValue) {
-      // blockElementScrollPositionUntilNextRender(newTab);
+      blockElementScrollPositionUntilNextRender(event.currentTarget);
       selectValue(newTabValue);
     }
   };
@@ -44,16 +47,17 @@ function TabsHeader({ tabs, selectedValue, selectValue }: TabsHookOutput) {
       case "Enter":
         return handleTabChange(event);
       case "ArrowRight":
-        return (tabRefs[index + 1] ?? tabRefs[0]!).focus();
+        return tabRefs[(index + 1) % tabRefs.length]!.focus();
       case "ArrowLeft":
-        return (tabRefs[index - 1] ?? tabRefs[tabRefs.length - 1]!).focus();
+        return tabRefs.at(index - 1)!.focus();
     }
   };
 
   return (
     <ul role="tablist" aria-orientation="horizontal" className={styles.tabs}>
-      {tabs.map(({ value, label, ...attr }) => {
-        const isSelected = isTabSelected(selectedValue, value);
+      {/* eslint-disable-next-line unused-imports/no-unused-vars */}
+      {tabs.map(({ value, label, key, ...attr }) => {
+        const isSelected = selectedValue === value;
         return (
           <li
             key={value}
@@ -74,16 +78,16 @@ function TabsHeader({ tabs, selectedValue, selectValue }: TabsHookOutput) {
   );
 }
 
-function TabsContainer({ lazy, children, selectedValue }: Pick<TabsProps, "lazy" | "children"> & TabsHookOutput) {
-  let tabs = Children.toArray(children).filter(Boolean) as ReactElement<TabItemProps>[];
-  lazy && (tabs = tabs.filter(tab => isTabSelected(selectedValue, tab.props.value)));
+function TabsContainer({ lazy, children, tabs, selectedValue }: Pick<TabsProps, "lazy" | "children"> & TabsHookOutput) {
+  const items = Children.toArray(children).filter(Boolean) as React.ReactElement<TabItemProps>[];
 
   return (
     <>
-      {tabs.map((tab, key) => {
-        const hidden = !isTabSelected(selectedValue, tab.props.value);
+      {items.map(key => {
+        const sub = tabs.filter(t => t.key === key.key);
+        const hidden = sub.every(t => t.value !== selectedValue);
         if (lazy && hidden) return null;
-        return cloneElement(tab, { key, hidden });
+        return cloneElement(key, { hidden });
       })}
     </>
   );
@@ -91,14 +95,13 @@ function TabsContainer({ lazy, children, selectedValue }: Pick<TabsProps, "lazy"
 
 interface Tab {
   value: string;
-  label: string;
+  label: React.ReactNode;
   default?: boolean;
+  key: React.Key | null;
 }
 interface TabsHookInput {
-  values: Tab[] | string[] | Record<string, string> | string;
   id?: string;
   query?: boolean;
-  storage?: boolean;
 }
 interface TabsHookOutput {
   tabs: Tab[];
@@ -106,13 +109,25 @@ interface TabsHookOutput {
   selectValue: (newValue: string) => void;
 }
 
-export function useTabs({ values, id, query, storage }: TabsHookInput): TabsHookOutput {
-  const tabs = useMemo(() => convertTabValues(values), [values]);
-  const [selectedValue, setSelectedValue] = useState(() => (tabs.find(t => t.default) ?? tabs[0]).value);
+export function useTabs(children: React.ReactNode, { id, query }: TabsHookInput): TabsHookOutput {
+  const tabs = useMemo(() => {
+    return convertTabsChildren(children);
+  }, [children]);
+
+  const [storedValue, setStoredValue] = useLocalStorage(id);
+  const [queryValue, setQueryValue] = useQueryString(query ? id : undefined);
+  const [simpleState, setSimpleState] = useState(getDefaultValue);
+
+  function getDefaultValue() {
+    return (tabs.find(t => t.default) ?? tabs[0]).value;
+  }
+
+  const selectedValue = queryValue ?? storedValue ?? simpleState;
 
   const selectValue = (newValue: string) => {
-    setSelectedValue(newValue);
-    // TODO: store the new value
+    setSimpleState(newValue);
+    setStoredValue(newValue);
+    setQueryValue(newValue === getDefaultValue() ? null : newValue);
   };
 
   return { tabs, selectedValue, selectValue };
@@ -120,33 +135,40 @@ export function useTabs({ values, id, query, storage }: TabsHookInput): TabsHook
 
 const TabValueSeparator = /[,;|]/;
 
-function convertTabValues(values: TabsHookInput["values"]): Tab[] {
-  if (typeof values === "string") {
-    return values
-      .split(TabValueSeparator)
-      .map(v => v.trim())
-      .filter(Boolean)
-      .map(v => ({ value: v, label: v.charAt(0).toUpperCase() + v.slice(1) }));
+function convertTabsChildren(children: React.ReactNode): Tab[] {
+  const tabs: Tab[] = [];
+  for (const child of Children.toArray(children).filter(Boolean) as React.ReactElement<TabItemProps>[]) {
+    const values = splitValues(child.props.values) ?? [child.props.value];
+    const labels = splitValues(child.props.labels) ?? [child.props.label];
+    const defaultIndex = convertDefaultIndex(child.props.default, values);
+    let count = Math.max(values.length, labels.length);
+    for (let i = 0; i < count; i++) {
+      let value = "" + (values[i] ?? labels[i] ?? `${child.key}${count > 1 ? "." + i : ""}`);
+      let label = labels[i] ?? toTitleCase(value);
+
+      tabs.push({
+        key: child.key,
+        value: value.toLowerCase(),
+        label: label,
+        default: i === defaultIndex,
+      });
+    }
   }
-  if (!Array.isArray(values)) {
-    return Object.entries(values).map(([value, label]) => ({ value, label }));
-  }
-  if (typeof values[0] !== "object") {
-    return (values as string[])
-      .map(String)
-      .filter(Boolean)
-      .map(v => ({ value: v, label: v }));
-  }
-  return values as Tab[];
+  return tabs;
 }
 
-function isTabSelected(selectedValue: string, value: string | string[]) {
-  if (Array.isArray(value)) return value.includes(selectedValue);
-  if (TabValueSeparator.test(value)) {
-    return value
-      .split(TabValueSeparator)
-      .map(v => v.trim())
-      .includes(selectedValue);
-  }
-  return selectedValue === value;
+function splitValues(str: string | string[] | null | undefined) {
+  return !str ? null : Array.isArray(str) ? str : str.split(TabValueSeparator);
+}
+function convertDefaultIndex(value: string | number | boolean | null | undefined, values: (string | undefined)[]) {
+  if (value == null || value === false) return -1;
+  if (value === true) return 0;
+  if (typeof value === "number") return value;
+  return values.indexOf(value);
+}
+function toTitleCase(str: string): string;
+function toTitleCase(str: string | null | undefined): string | undefined;
+function toTitleCase(str: string | null | undefined): string | undefined {
+  if (!str) return undefined;
+  return str.charAt(0).toUpperCase() + str.substring(1);
 }

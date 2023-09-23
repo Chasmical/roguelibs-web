@@ -3,10 +3,14 @@ import styles from "./index.module.scss";
 import clsx from "clsx";
 
 export interface TabItemProps extends HTMLAttributes<HTMLDivElement> {
+  value?: string;
+  values?: string | string[];
+  label?: React.ReactNode;
+  labels?: string | string[];
+  default?: boolean | number | string;
   className?: string;
   children?: React.ReactNode;
   // ...props
-  value: string | string[];
 }
 
 export default function TabItem({ className, children, ...props }: TabItemProps) {

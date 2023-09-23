@@ -1,3 +1,5 @@
+import { ScrollControllerProvider } from "@lib/hooks/useScrollPositionBlocker";
+import { QueryStringOverridesProvider } from "@lib/hooks/useSearchParams";
 import MainLayout from "@components/MainLayout";
 import type { Metadata } from "next";
 import { ApiProvider } from "@lib/API.Hooks";
@@ -49,7 +51,11 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
     <html lang="en" className={munroFont.className} suppressHydrationWarning>
       <body>
         <ApiProvider>
-          <MainLayout>{children}</MainLayout>
+          <ScrollControllerProvider>
+            <QueryStringOverridesProvider>
+              <MainLayout>{children}</MainLayout>
+            </QueryStringOverridesProvider>
+          </ScrollControllerProvider>
         </ApiProvider>
       </body>
     </html>
