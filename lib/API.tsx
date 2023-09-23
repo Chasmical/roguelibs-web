@@ -77,6 +77,10 @@ export class RogueLibsApi extends WrappedSupabaseClient {
 
   currentUser: RestUserPersonal | null = null;
 
+  public async getSession() {
+    return (await this.Supabase.auth.getSession()).data.session;
+  }
+
   public fetchModById(id: number) {
     return this.selectOne(selectMod, m => m.eq("id", id));
   }

@@ -1,15 +1,14 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SetCanonicalUrl from "@components/Specialized/SetCanonicalUrl";
-import DocPage, { DocPageProps, Frontmatter, fetchFile } from "@components/DocPage";
+import DocPage, { DocPageProps, extractFrontmatter, fetchFile } from "@components/DocPage";
 import { findDirectoryWithTarget } from "@lib/utils/file";
-import yaml from "js-yaml";
 
 interface PageProps {
   params: { slug: string[] };
 }
 
-export default async function DocPageIndex({ params }: PageProps) {
+export default function DocPageIndex({ params }: PageProps) {
   const [path, url] = resolveSlug(params.slug);
   return (
     <>
@@ -34,9 +33,7 @@ function resolveSlug(slug: string[]): [path: string, url: string] {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const [path, url] = resolveSlug(params.slug);
   const source = await fetchFile({ ...props, path });
-
-  const frontmatterEnd = Math.max(source.indexOf("\n---", 1), 0);
-  const frontmatter = yaml.load(source.slice(0, frontmatterEnd)) as Frontmatter;
+  const frontmatter = extractFrontmatter(source);
   if (!frontmatter) notFound();
 
   return {
