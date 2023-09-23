@@ -3,7 +3,7 @@ import { RestModAuthor, useApi } from "@lib/API";
 import styles from "./index.module.scss";
 import clsx from "clsx";
 import { DragDropContext, Draggable, Droppable, OnDragEndResponder } from "@hello-pangea/dnd";
-import { ImmerStateRecipe, ImmerStateSetter } from "@lib/hooks";
+import { ImmerStateRecipe, ImmerStateSetter } from "@lib/hooks/useImmerState";
 import { createContext, useCallback, useContext, useId, useMemo, useState } from "react";
 import { reorder } from "@lib/misc";
 import Avatar from "@components/Common/Avatar";

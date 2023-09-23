@@ -1,7 +1,7 @@
 "use client";
 import { RestMod, RestRelease } from "@lib/API";
 import { Dispatch, SetStateAction, createContext, useContext, useMemo, useState } from "react";
-import { ImmerStateSetter, useImmerState } from "@lib/hooks";
+import useImmerState, { ImmerStateSetter } from "@lib/hooks/useImmerState";
 import ModPageHeader from "./Header";
 import ModPageBody from "@components/ModPage/Body";
 import ModPageSidebar from "@components/ModPage/Sidebar";

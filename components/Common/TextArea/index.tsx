@@ -1,8 +1,8 @@
 "use client";
 import { ChangeEventHandler, ForwardedRef, MouseEventHandler, forwardRef, useCallback, useRef } from "react";
+import useMergedRefs from "@lib/hooks/useMergedRefs";
 import styles from "./index.module.scss";
 import clsx from "clsx";
-import { useMergedRefs } from "@lib/hooks";
 
 export interface TextAreaProps {
   className?: string;

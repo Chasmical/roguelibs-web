@@ -3,7 +3,7 @@ import styles from "./index.module.scss";
 import { useModPage } from "@components/ModPage";
 import { RestRelease } from "@lib/API";
 import AuthorsList from "@components/Specialized/AuthorsList";
-import { useImmerSlice } from "@lib/hooks";
+import { useImmerSlice } from "@lib/hooks/useImmerState";
 import clsx from "clsx";
 
 export default function ModPageSidebar() {

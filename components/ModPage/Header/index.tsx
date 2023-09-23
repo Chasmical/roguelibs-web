@@ -1,7 +1,7 @@
 import styles from "./index.module.scss";
 import { useModPage } from "@components/ModPage";
 import IconButton from "@components/Common/IconButton";
-import { useLocation } from "@lib/hooks";
+import useLocation from "@lib/hooks/useLocation";
 import Tooltip from "@components/Common/Tooltip";
 import ModPageBreadcrumbs from "./Breadcrumbs";
 import { useId } from "react";
