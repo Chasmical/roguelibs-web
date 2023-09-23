@@ -37,7 +37,6 @@
     "remark-extended-table": "^1.1.0",
     "remark-gfm": "^3.0.1",
     "remark-math": "^5.1.1",
-    "remark-mentions": "^1.1.0",
     "twemoji": "^14.0.2"
   },
   "devDependencies": {
