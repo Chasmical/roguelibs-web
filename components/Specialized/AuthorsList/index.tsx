@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { DragDropContext, Draggable, Droppable, OnDragEndResponder } from "@hello-pangea/dnd";
 import { ImmerStateRecipe, ImmerStateSetter } from "@lib/hooks/useImmerState";
 import { createContext, useCallback, useContext, useId, useMemo, useState } from "react";
-import { reorder } from "@lib/misc";
+import { reorder } from "@lib/utils/misc";
 import Avatar from "@components/Common/Avatar";
 import IconButton from "@components/Common/IconButton";
 import Popup from "@components/Common/Popup";

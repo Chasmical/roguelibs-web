@@ -7,7 +7,7 @@ import { useEffect, useId, useState } from "react";
 import Popup from "@components/Common/Popup";
 import { useApi } from "@lib/API.Hooks";
 import Tooltip from "@components/Common/Tooltip";
-import { arrayToggle } from "@lib/misc";
+import { arrayToggle } from "@lib/utils/misc";
 
 export default function ModPageRightButtons() {
   return (

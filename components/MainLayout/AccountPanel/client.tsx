@@ -13,7 +13,7 @@ import Separator from "@components/Common/Separator";
 import clsx from "clsx";
 import Tooltip from "@components/Common/Tooltip";
 import { RestUserNotification } from "@lib/API";
-import { formatDateLocal } from "@lib/misc";
+import { formatDateLocal } from "@lib/utils/date";
 
 export function SignInPanel() {
   const supabase = useSupabase();

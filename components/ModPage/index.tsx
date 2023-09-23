@@ -6,7 +6,7 @@ import ModPageHeader from "./Header";
 import ModPageBody from "@components/ModPage/Body";
 import ModPageSidebar from "@components/ModPage/Sidebar";
 import styles from "./index.module.scss";
-import { diff } from "@lib/misc";
+import diff from "@lib/utils/diff";
 
 export interface ModPageProps {
   mod: RestMod;
