@@ -51,9 +51,5 @@ export interface DocSidebarItemProps {
   item: DocSidebarItem;
 }
 export function DocSidebarItem({ item }: DocSidebarItemProps) {
-  return (
-    <Link href={"/" + item.path} prefetch={false}>
-      {item.name}
-    </Link>
-  );
+  return <Link href={"/" + item.path}>{item.name}</Link>;
 }
