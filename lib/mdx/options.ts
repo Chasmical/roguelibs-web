@@ -12,6 +12,7 @@ import remarkEmbed from "@lib/mdx/remark-embed";
 import rehypeCodeMeta from "@lib/mdx/rehype-code-meta";
 import rehypeOverrideJsx from "@lib/mdx/rehype-override-jsx";
 import remarkMentions from "@lib/mdx/remark-mentions";
+import remarkInlineHexColor from "@lib/mdx/remark-inline-hex-color";
 
 export const RemarkPlugins: PluggableList = [
   remarkGfm,
@@ -22,6 +23,7 @@ export const RemarkPlugins: PluggableList = [
   remarkMath,
   [remarkExtendedTable, { colspanWithEmpty: true }],
   remarkMentions,
+  remarkInlineHexColor,
   remarkEmoji,
   [remarkEmbed, { size: [400, 225], componentNames: [["YouTube", "YouTubeEmbed"]] }],
 ];

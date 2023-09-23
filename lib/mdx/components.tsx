@@ -6,6 +6,7 @@ import YouTubeEmbed from "@components/Common/Embed/youtube";
 import Link from "@components/Common/Link";
 import Tabs from "@components/Common/Tabs";
 import TabItem from "@components/Common/TabItem";
+import InlineHexColor from "@components/Common/InlineHexColor";
 import { MDXComponents } from "@lib/mdx";
 
 const MdxComponents: MDXComponents = {
@@ -18,5 +19,6 @@ const MdxComponents: MDXComponents = {
   YouTubeEmbed: YouTubeEmbed,
   Tabs: Tabs,
   TabItem: TabItem,
+  InlineHexColor: InlineHexColor,
 };
 export default MdxComponents;
