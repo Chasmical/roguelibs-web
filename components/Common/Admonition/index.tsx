@@ -1,7 +1,7 @@
 import styles from "./index.module.scss";
 import { HTMLAttributes } from "react";
 import clsx from "clsx";
-import Icon from "@components/Common/Icon";
+import Icon, { IconType } from "@components/Common/Icon";
 
 export type AdmonitionType = "note" | "tip" | "info" | "caution" | "danger";
 export type AdmonitionTypeAlias = keyof typeof aliases;
@@ -20,12 +20,10 @@ export default function Admonition({ type, title, className, children, ...props 
 
   return (
     <div role="panel" {...props} className={clsx(styles.admonition, styles[type], className)}>
-      {title && (
-        <div className={styles.title}>
-          <Icon type="edit" size={24} />
-          {title}
-        </div>
-      )}
+      <div className={styles.title}>
+        <Icon type={icons[type]} size={24} />
+        {title ?? type}
+      </div>
       {children}
     </div>
   );
@@ -38,3 +36,11 @@ const aliases = {
 } as const;
 
 const aliasMap = aliases as typeof aliases & Record<AdmonitionType, undefined>;
+
+const icons: Record<AdmonitionType, IconType> = {
+  note: "note",
+  tip: "lightbulb",
+  info: "info",
+  caution: "caution",
+  danger: "danger",
+};

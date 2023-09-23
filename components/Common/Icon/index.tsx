@@ -5,31 +5,45 @@ export interface IconProps extends Omit<SpriteProps, "src"> {
 }
 
 export default function Icon({ type, ...props }: IconProps) {
-  return <Sprite src={IconPaths[type]} crisp {...props} />;
+  return <Sprite src={AllIconPaths[type]} crisp {...props} />;
 }
 
-export const IconPaths = {
-  loading: "/icons/loading.gif",
-  check: "/icons/check.png",
-  cross: "/icons/cross.png",
-  check_small: "/icons/check_small.png",
-  cross_small: "/icons/cross_small.png",
-  visibility: "/icons/visibility.png",
-  visibility_off: "/icons/visibility_off.png",
-  nugget: "/icons/nugget.png",
-  upload: "/icons/upload.png",
-  download: "/icons/download.png",
-  discord: "/icons/discord.png",
-  copy: "/icons/copy.png",
-  edit: "/icons/edit.png",
-  save: "/icons/save.png",
-  link: "/icons/link.png",
-  door: "/icons/door.png",
-  undo: "/icons/undo.png",
-  add: "/icons/add.png",
-  options: "/icons/options.png",
-  options_vert: "/icons/options_vert.png",
-  bell: "/icons/bell.png",
-} as const;
+export const AllIconTypes = [
+  "loading",
+  "check",
+  "cross",
+  "check_small",
+  "cross_small",
+  "visibility",
+  "visibility_off",
+  "nugget",
+  "upload",
+  "download",
+  "discord",
+  "copy",
+  "edit",
+  "save",
+  "link",
+  "door",
+  "undo",
+  "add",
+  "options",
+  "options_vert",
+  "bell",
+  "note",
+  "lightbulb",
+  "info",
+  "caution",
+  "danger",
+] as const;
 
-export type IconType = keyof typeof IconPaths;
+export const AllIconPaths = (() => {
+  const paths = {} as Record<IconType, string>;
+  for (const icon of AllIconTypes) {
+    const ext = icon === "loading" ? "gif" : "png";
+    paths[icon] = `/icons/${icon}.${ext}`;
+  }
+  return paths;
+})();
+
+export type IconType = (typeof AllIconTypes)[number];
