@@ -135,3 +135,31 @@ export function formatDateLocal(date: Date | string | number) {
   if (typeof date !== "object") date = new Date(date);
   return date.toLocaleString();
 }
+
+export function arrayToggle<T>(array: T[], value: T, state?: boolean | null): void;
+export function arrayToggle<T, K extends string>(
+  obj: { [N in K]: T[] },
+  key: K,
+  value: T,
+  state?: boolean | null,
+): void;
+export function arrayToggle(...args: any[]) {
+  if (!Array.isArray(args[0])) {
+    const [obj, key] = args;
+    args[1] = obj[key] = obj[key].slice();
+    args.shift();
+  }
+  (arrayToggleMutable as Function)(...args);
+}
+function arrayToggleMutable<T>(array: T[], value: T, state?: boolean | null) {
+  if (state === true) {
+    array.includes(value) || array.push(value);
+  } else {
+    const index = array.indexOf(value);
+    if (index >= 0) {
+      array.splice(index, 1);
+    } else {
+      state == null && array.push(value);
+    }
+  }
+}

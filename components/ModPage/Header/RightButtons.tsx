@@ -6,6 +6,8 @@ import clsx from "clsx";
 import { useEffect, useId, useState } from "react";
 import Popup from "@components/Common/Popup";
 import { useApi } from "@lib/API.Hooks";
+import Tooltip from "@components/Common/Tooltip";
+import { arrayToggle } from "@lib/misc";
 
 export default function ModPageRightButtons() {
   return (
@@ -22,6 +24,7 @@ export default function ModPageRightButtons() {
 export function NuggetButton() {
   const { mod, mutateMod } = useModPage();
   const api = useApi();
+  const tooltipId = useId();
 
   const [loading, setLoading] = useState(false);
   const [myNugget, setMyNugget] = useState(api.currentUser?.nuggets.includes(mod.id));
@@ -31,12 +34,13 @@ export function NuggetButton() {
   }, [api.currentUser]);
 
   async function toggleNugget() {
-    if (loading) return;
+    if (loading || !api.currentUser) return;
     setLoading(true);
     try {
       const newNuggetCount = await api.setModNugget(mod.id, !myNugget);
       mutateMod(m => void (m.nugget_count = newNuggetCount));
       setMyNugget(!myNugget);
+      arrayToggle(api.currentUser!, "nuggets", mod.id, !myNugget);
     } catch (error) {
       console.error(error);
     } finally {
@@ -45,9 +49,23 @@ export function NuggetButton() {
   }
 
   return (
-    <Button className={clsx(styles.nuggetButton, myNugget && styles.setNugget)} onClick={toggleNugget}>
+    <Button
+      data-tooltip-id={tooltipId}
+      className={clsx(styles.nuggetButton, myNugget && styles.setNugget)}
+      onClick={toggleNugget}
+    >
       <Icon type={loading ? "loading" : "nugget"} alpha={loading || myNugget ? 1 : 0.5} />
       {mod.nugget_count}
+      {!api.currentUser && (
+        <Tooltip
+          id={tooltipId}
+          place="left"
+          openOnClick
+          variant="error"
+          content="You mush sign in to rate mods!"
+          delayHide={3000}
+        />
+      )}
     </Button>
   );
 }

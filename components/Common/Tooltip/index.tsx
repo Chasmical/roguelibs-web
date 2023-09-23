@@ -6,7 +6,7 @@ export type ReactTooltipProps = Parameters<typeof ReactTooltip>[0];
 type TooltipRenderProp = NonNullable<ReactTooltipProps["render"]>;
 
 // safer props type (to prevent ambigious usage of content-rendering props)
-export type TooltipProps = Omit<ReactTooltipProps, "content" | "children" | "render" | "html" | "variant"> &
+export type TooltipProps = Omit<ReactTooltipProps, "content" | "children" | "render" | "html"> &
   (
     | { content: string; children?: never; render?: never; html?: never }
     | { children: React.ReactNode | TooltipRenderProp; content?: never; render?: never; html?: never }
