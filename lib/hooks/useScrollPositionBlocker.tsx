@@ -2,15 +2,15 @@
 import { createContext, useCallback, useContext, useLayoutEffect, useRef } from "react";
 
 type ScrollBlockInfo = [elem: HTMLElement, top: number];
-const ScrollControllerContext = createContext<React.MutableRefObject<ScrollBlockInfo | null> | undefined>(undefined);
+const ScrollBlockContext = createContext<React.MutableRefObject<ScrollBlockInfo | null> | undefined>(undefined);
 
 export function ScrollControllerProvider({ children }: { children: React.ReactNode }) {
   const ref = useRef<ScrollBlockInfo>(null);
-  return <ScrollControllerContext.Provider value={ref}>{children}</ScrollControllerContext.Provider>;
+  return <ScrollBlockContext.Provider value={ref}>{children}</ScrollBlockContext.Provider>;
 }
 
 export default function useScrollPositionBlocker(): (element: HTMLElement) => void {
-  const scrollController = useContext(ScrollControllerContext)!;
+  const scrollController = useContext(ScrollBlockContext)!;
   const nextLayoutEffectCallbackRef = useRef<(() => void) | undefined>(undefined);
 
   const blockElementScrollPositionUntilNextRender = useCallback(

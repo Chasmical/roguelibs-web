@@ -1,5 +1,5 @@
 import { ScrollControllerProvider } from "@lib/hooks/useScrollPositionBlocker";
-import { QueryStringOverridesProvider } from "@lib/hooks/useSearchParams";
+import { CustomSearchParamsProvider } from "@lib/hooks/useSearchParams";
 import MainLayout from "@components/MainLayout";
 import type { Metadata } from "next";
 import { ApiProvider } from "@lib/API.Hooks";
@@ -52,9 +52,9 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
       <body>
         <ApiProvider>
           <ScrollControllerProvider>
-            <QueryStringOverridesProvider>
+            <CustomSearchParamsProvider>
               <MainLayout>{children}</MainLayout>
-            </QueryStringOverridesProvider>
+            </CustomSearchParamsProvider>
           </ScrollControllerProvider>
         </ApiProvider>
       </body>
