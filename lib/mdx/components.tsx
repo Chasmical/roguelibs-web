@@ -8,6 +8,7 @@ import Tabs from "@components/Common/Tabs";
 import TabItem from "@components/Common/TabItem";
 import InlineHexColor from "@components/Common/InlineHexColor";
 import { MDXComponents } from "@lib/mdx";
+import InventoryTooltipPreview from "@components/Specialized/InventoryTooltipPreview";
 
 const MdxComponents: MDXComponents = {
   code: Code,
@@ -20,5 +21,6 @@ const MdxComponents: MDXComponents = {
   Tabs: Tabs,
   TabItem: TabItem,
   InlineHexColor: InlineHexColor,
+  InventoryTooltipPreview: InventoryTooltipPreview,
 };
 export default MdxComponents;

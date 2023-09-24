@@ -1,0 +1,35 @@
+.container {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+  overflow: hidden;
+  image-rendering: pixelated;
+  background-size: 100%;
+  cursor: url("/invslot/normal.cur"), pointer;
+
+  background-image: url("/invslot/normal.png");
+  &.hoverable:hover {
+    background-image: url("/invslot/normalHover.png");
+  }
+}
+
+.sprite {
+  position: absolute;
+  margin: auto;
+  inset: 8px;
+  max-width: 64px;
+  max-height: 64px;
+  user-select: none;
+}
+
+.tooltip {
+  position: absolute;
+  left: 4px;
+  top: -6px;
+  font-family: 'Munro';
+  font-size: 30px;
+  text-shadow: 3px 3px black;
+  user-select: none;
+  line-height: 1.65;
+}
