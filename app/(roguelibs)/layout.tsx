@@ -46,6 +46,10 @@ export const metadata: Metadata = {
   generator: "Next.js",
 };
 
+if (process.env.NODE_ENV === "development") {
+  metadata.metadataBase = new URL("http://localhost:3000");
+}
+
 export default function RootLayout({ children }: React.PropsWithChildren) {
   return (
     <html lang="en" className={munroFont.className} suppressHydrationWarning>

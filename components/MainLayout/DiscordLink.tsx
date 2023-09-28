@@ -1,28 +1,23 @@
 "use client";
 import Link, { LinkProps } from "@components/Common/Link";
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 
 export interface DiscordLinkProps extends Omit<LinkProps, "href"> {}
 
-export default function DiscordLink({ children, ...props }: DiscordLinkProps) {
+export default function DiscordLink(props: DiscordLinkProps) {
   const discordLink = useDiscordLink();
-
-  return (
-    <Link {...props} href={discordLink}>
-      {children}
-    </Link>
-  );
+  return <Link {...props} href={discordLink} />;
 }
 
-function useDiscordLink() {
+export function useDiscordLink() {
   let [link, setLink] = useState("https://discord.com/invite/streetsofrogue");
 
-  useEffect(() => {
-    const index = navigator?.languages.findIndex(lang => lang.startsWith("ru"));
-    if (index != null && index >= 0 && index < 2) {
+  useLayoutEffect(() => {
+    const preferred = navigator.languages.slice(0, 2);
+    if (preferred.some(lang => lang.startsWith("ru"))) {
       setLink("https://discord.gg/neDvsmk");
     }
-  });
+  }, []);
 
   return link;
 }

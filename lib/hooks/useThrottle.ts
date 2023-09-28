@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import lodashThrottle from "lodash/throttle";
 
 export default function useThrottle<Func extends Function>(
@@ -6,11 +6,10 @@ export default function useThrottle<Func extends Function>(
   [delay, ...deps]: [number, ...React.DependencyList],
 ) {
   const cbRef = useRef(cb);
+  cbRef.current = cb;
 
-  const throttledCb = useCallback(
-    lodashThrottle((...args) => cbRef.current(...args), delay, { leading: true, trailing: true }),
-    [delay],
-  );
-  useEffect(() => void (cbRef.current = cb));
+  const throttledCb = useMemo(() => {
+    return lodashThrottle((...args) => cbRef.current(...args), delay, { leading: true, trailing: true });
+  }, [delay]);
   useEffect(throttledCb, [throttledCb, ...deps]);
 }
