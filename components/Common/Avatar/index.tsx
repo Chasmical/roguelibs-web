@@ -25,7 +25,13 @@ export default function Avatar({
 
   src ??= undefined;
   if (!src && uid != null) {
-    src = selectWithUid(uid, ["/logo-char1.png", "/logo-char2.png"]);
+    src = selectWithUid(uid, [
+      "/logo-char1.png",
+      "/logo-char2.png",
+      "/keyart-char1.png",
+      "/keyart-char2.png",
+      "/keyart-char3.png",
+    ]);
   }
 
   const avatar = (

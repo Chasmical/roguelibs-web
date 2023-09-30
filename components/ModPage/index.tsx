@@ -11,8 +11,9 @@ import diff from "@lib/utils/diff";
 export interface ModPageProps {
   mod: RestMod;
   releases: RestRelease[];
+  rscDescription: React.ReactNode;
 }
-export default function ModPage({ mod: original, releases }: ModPageProps) {
+export default function ModPage({ mod: original, releases, rscDescription }: ModPageProps) {
   const [mod, mutateMod] = useImmerState(original);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -27,10 +28,10 @@ export default function ModPage({ mod: original, releases }: ModPageProps) {
   return (
     <ModPageContext.Provider value={context}>
       <div className={styles.container}>
-        <ModPageHeader />
+        <ModPageHeader {...context} />
         <div className={styles.sides}>
-          <ModPageBody />
-          <ModPageSidebar />
+          <ModPageBody {...context} rscDescription={rscDescription} />
+          <ModPageSidebar {...context} />
         </div>
       </div>
     </ModPageContext.Provider>

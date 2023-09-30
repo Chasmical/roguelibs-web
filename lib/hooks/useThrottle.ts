@@ -11,5 +11,9 @@ export default function useThrottle<Func extends Function>(
   const throttledCb = useMemo(() => {
     return lodashThrottle((...args) => cbRef.current(...args), delay, { leading: true, trailing: true });
   }, [delay]);
-  useEffect(throttledCb, [throttledCb, ...deps]);
+
+  useEffect(() => {
+    throttledCb.cancel();
+    throttledCb();
+  }, [throttledCb, ...deps]);
 }

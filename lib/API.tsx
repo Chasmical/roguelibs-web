@@ -1,6 +1,15 @@
 import { createRouteHandlerClient, createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { SupabaseClient, createClient as createSupabaseClient } from "@supabase/supabase-js";
-import { DbMod, DbModAuthor, DbRelease, DbReleaseFile, DbUpload, DbUser, DbUserNotification } from "./Database";
+import {
+  DbMdxPreview,
+  DbMod,
+  DbModAuthor,
+  DbRelease,
+  DbReleaseFile,
+  DbUpload,
+  DbUser,
+  DbUserNotification,
+} from "./Database";
 import { WrappedSupabaseClient, from } from "./API.Statement";
 
 export { useApi, ApiProvider, type ApiProviderProps } from "./API.Hooks";
@@ -77,6 +86,12 @@ const selectModWithReleases = from("mods").select<RestModWithReleases>({
 
 //
 
+const selectMdxPreview = from("mdx_previews").select<DbMdxPreview>({});
+
+//
+
+//
+
 export class RogueLibsApi extends WrappedSupabaseClient {
   public constructor(Supabase: SupabaseClient, currentUser: RestUserPersonal | null) {
     super(Supabase);
@@ -141,15 +156,26 @@ export class RogueLibsApi extends WrappedSupabaseClient {
     const res = await this.Supabase.storage.from("uploads").createSignedUrl(upload.id + "/" + upload.filename, 60);
     return res.data?.signedUrl ?? null;
   }
+
+  public fetchMdxPreview(uid: string) {
+    return this.selectOne(selectMdxPreview, p => p.eq("uid", uid));
+  }
+  public upsertMdxPreview(source: string) {
+    return this.rpc("upsert_mdx_preview", { _source: source });
+  }
 }
 
 export function createServerApi(
   cxt: { headers: () => any; cookies: () => any } | { cookies: () => any },
-  nextOptions?: { revalidate?: number | false; tags?: string[] },
+  nextOptions?: { revalidate?: number | false; tags?: string[] } | false,
 ) {
   const customFetch = (req: any, options: any) => {
-    if (options) {
-      nextOptions ? (options.next = nextOptions) : (options.cache ??= "no-cache");
+    if (!options) options = {};
+    if (nextOptions) {
+      options.next = nextOptions;
+    }
+    if ((nextOptions == null && options.cache == null) || nextOptions === false) {
+      options.cache = "no-cache";
     }
     return fetch(req, options);
   };

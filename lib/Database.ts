@@ -11,6 +11,8 @@ export interface DatabaseTables {
 
   uploads: DbUpload[];
   upload_refs: DbUploadRef[];
+
+  mdx_previews: DbMdxPreview[];
 }
 
 export interface DatabaseViews {
@@ -20,6 +22,7 @@ export interface DatabaseViews {
 export interface DatabaseFunctions {
   set_mod_nugget: (e: { _mod_id: number; _nugget: boolean }) => number;
   get_user_nuggets: (e: DbUser) => number[];
+  upsert_mdx_preview: (e: { _source: string }) => string;
 }
 
 interface Database {
@@ -138,4 +141,11 @@ export interface DbUploadRef {
 }
 export enum DbResourceRefType {
   ReleaseFile = 1,
+}
+
+export interface DbMdxPreview {
+  uid: string; // uuid pk = uuid_generate_v4()
+  created_by: string; // uuid fk(users / cascade)
+  created_at: string; // timestamptz = now()
+  source: string; // text
 }

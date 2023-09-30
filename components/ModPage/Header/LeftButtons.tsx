@@ -1,4 +1,5 @@
-import { useModPage } from "@components/ModPage";
+"use client";
+import { ModPageContext } from "@components/ModPage";
 import styles from "./LeftButtons.module.scss";
 import Code from "@components/Common/Code";
 import clsx from "clsx";
@@ -7,8 +8,8 @@ import Tooltip from "@components/Common/Tooltip";
 import { useId } from "react";
 import { formatDate } from "@lib/utils/date";
 
-export default function ModPageLeftButtons() {
-  const { mod } = useModPage();
+export default function ModPageLeftButtons(props: ModPageContext) {
+  const { mod } = props;
 
   return (
     <div className={styles.container}>
@@ -22,17 +23,16 @@ export default function ModPageLeftButtons() {
           <span>{formatDate(mod.edited_at)}</span>
         </div>
       )}
-      {mod.guid && <CopyGuidButton />}
+      {mod.guid && <CopyGuidButton guid={mod.guid} />}
     </div>
   );
 }
 
-export function CopyGuidButton() {
-  const { mod } = useModPage();
+export function CopyGuidButton({ guid }: { guid: string }) {
   const tooltipId = useId();
 
   function copyGuid() {
-    navigator.clipboard.writeText(mod.guid!);
+    navigator.clipboard.writeText(guid);
   }
 
   return (
@@ -40,7 +40,7 @@ export function CopyGuidButton() {
       <div className={clsx(styles.panel, styles.copyGuid)}>
         <span>{"GUID:"}</span>
         <Code>
-          {mod.guid}
+          {guid}
           <IconButton data-tooltip-id={tooltipId} type="copy" size={16} onClick={copyGuid} />
         </Code>
       </div>

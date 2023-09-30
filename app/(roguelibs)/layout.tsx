@@ -7,7 +7,7 @@ import localFont from "next/font/local";
 import "../global.scss";
 import "normalize.css";
 
-const munroFont = localFont({
+export const munroFont = localFont({
   src: "../Munro.woff2",
   display: "swap",
   fallback: ["Munro"],

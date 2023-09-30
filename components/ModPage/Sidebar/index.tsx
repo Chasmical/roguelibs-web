@@ -1,15 +1,14 @@
+"use client";
 import DownloadsList from "@components/Specialized/DownloadsList";
 import styles from "./index.module.scss";
-import { useModPage } from "@components/ModPage";
-import { RestRelease } from "@lib/API";
+import { ModPageContext } from "@components/ModPage";
 import AuthorsList from "@components/Specialized/AuthorsList";
 import useImmerState, { useImmerSlice } from "@lib/hooks/useImmerState";
 import Separator from "@components/Common/Separator";
 import clsx from "clsx";
 
-export default function ModPageSidebar() {
-  const { mod, mutateMod, releases, isEditing, hasChanges } = useModPage();
-  // const release: RestRelease | undefined = releases[0];
+export default function ModPageSidebar(props: ModPageContext) {
+  const { mod, mutateMod, releases, isEditing, hasChanges } = props;
 
   const mutateAuthors = useImmerSlice(mutateMod, "authors");
 
@@ -25,7 +24,7 @@ export default function ModPageSidebar() {
             <label>{"Latest download" + (release.files.length > 1 ? "s" : "")}</label>
             <DownloadsList
               files={release.files}
-              mutateFiles={mutateFiles}
+              mutateFiles={isEditing ? mutateFiles : undefined}
               isEditing={isEditing}
               hasChanges={hasChanges}
             />
@@ -37,7 +36,7 @@ export default function ModPageSidebar() {
         <label>{"Author" + (mod.authors.length > 1 ? "s" : "")}</label>
         <AuthorsList
           authors={mod.authors}
-          mutateAuthors={mutateAuthors}
+          mutateAuthors={isEditing ? mutateAuthors : undefined}
           isEditing={isEditing}
           hasChanges={hasChanges}
         />

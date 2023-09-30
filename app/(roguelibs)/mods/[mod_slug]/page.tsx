@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import { createServerApi } from "@lib/API";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
+import { compileMDX } from "@lib/mdx";
 
 interface PageProps {
   params: { mod_slug: string };
@@ -17,9 +18,11 @@ export default async function ModPageIndex({ params }: PageProps) {
     return <div>{`Oops, looks like a mod with a URL slug "${params.mod_slug}" could not be found`}</div>;
   }
 
+  const { content } = await compileMDX(mod.description, o => (o.mdxOptions.format = "md"));
+
   return (
     <>
-      <ModPage key={mod.id} mod={mod} releases={mod.releases} />
+      <ModPage key={mod.id} mod={mod} releases={mod.releases} rscDescription={content} />
       <SetCanonicalUrl url={`/mods/${mod.slug ?? mod.id}`} />
     </>
   );

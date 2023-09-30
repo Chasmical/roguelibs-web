@@ -139,6 +139,9 @@ img.emoji {
   p { line-height: 1.5em; }
 
   &, :is(div[role=tabpanel], div[role=panel]) {
+    > :is(h1, h2, h3, h4, h5, h6) {
+      margin-top: 0;
+    }
     > :is(p, ul, ol, h4, h5, h6, img, table, hr, div[role=panel]) {
       margin-bottom: 1.25rem;
       &:last-child { margin-bottom: 0; }

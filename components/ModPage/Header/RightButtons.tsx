@@ -1,4 +1,5 @@
-import { useModPage } from "@components/ModPage";
+"use client";
+import { ModPageContext } from "@components/ModPage";
 import styles from "./RightButtons.module.scss";
 import Button from "@components/Common/Button";
 import Icon from "@components/Common/Icon";
@@ -9,25 +10,27 @@ import { useApi } from "@lib/API.Hooks";
 import Tooltip from "@components/Common/Tooltip";
 import { arrayToggle } from "@lib/utils/misc";
 
-export default function ModPageRightButtons() {
+export default function ModPageRightButtons(props: ModPageContext) {
   return (
     <div className={styles.container}>
       <div className={styles.row}>
-        <NuggetButton />
-        <SubscriptionButton />
-        <MiscButton />
+        <NuggetButton {...props} />
+        <SubscriptionButton {...props} />
+        <MiscButton {...props} />
       </div>
     </div>
   );
 }
 
-export function NuggetButton() {
-  const { mod, mutateMod } = useModPage();
+export function NuggetButton(props: ModPageContext) {
+  const { mod } = props;
   const api = useApi();
   const tooltipId = useId();
 
   const [loading, setLoading] = useState(false);
   const [myNugget, setMyNugget] = useState(api.currentUser?.nuggets.includes(mod.id));
+
+  const [newNuggetCount, setNewNuggetCount] = useState<number | null>(null);
 
   useEffect(() => {
     setMyNugget(api.currentUser?.nuggets.includes(mod.id));
@@ -38,7 +41,8 @@ export function NuggetButton() {
     setLoading(true);
     try {
       const newNuggetCount = await api.setModNugget(mod.id, !myNugget);
-      mutateMod(m => void (m.nugget_count = newNuggetCount));
+      setNewNuggetCount(newNuggetCount);
+      // mutateMod(m => void (m.nugget_count = newNuggetCount));
       setMyNugget(!myNugget);
       arrayToggle(api.currentUser!, "nuggets", mod.id, !myNugget);
     } catch (error) {
@@ -55,7 +59,7 @@ export function NuggetButton() {
       onClick={toggleNugget}
     >
       <Icon type={loading ? "loading" : "nugget"} alpha={loading || myNugget ? 1 : 0.5} />
-      {mod.nugget_count}
+      {newNuggetCount ?? mod.nugget_count}
       {!api.currentUser && (
         <Tooltip id={tooltipId} place="left" openOnClick variant="error" content="You mush sign in to rate mods!" />
       )}
@@ -63,9 +67,8 @@ export function NuggetButton() {
   );
 }
 
-export function SubscriptionButton() {
-  const { mod } = useModPage();
-
+export function SubscriptionButton(props: ModPageContext) {
+  const { mod } = props;
   const [loading, setLoading] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
 
@@ -93,8 +96,8 @@ export function SubscriptionButton() {
   );
 }
 
-export function MiscButton() {
-  const { mod } = useModPage();
+export function MiscButton(props: ModPageContext) {
+  const { mod } = props;
   const id = useId();
   const [isOpen, setIsOpen] = useState(false);
 
