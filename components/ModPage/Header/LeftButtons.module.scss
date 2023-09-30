@@ -20,4 +20,10 @@
 
 .copy-guid {
   line-height: 1.4rem;
+  > code {
+    gap: 0.25rem;
+    > button {
+      padding: 0;
+    }
+  }
 }

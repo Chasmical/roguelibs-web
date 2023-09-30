@@ -1,7 +1,4 @@
 "use client";
-import { RestModAuthor, useApi } from "@lib/API";
-import styles from "./index.module.scss";
-import clsx from "clsx";
 import { DragDropContext, Draggable, Droppable, OnDragEndResponder } from "@hello-pangea/dnd";
 import { ImmerStateRecipe, ImmerStateSetter } from "@lib/hooks/useImmerState";
 import { createContext, useCallback, useContext, useId, useMemo, useState } from "react";
@@ -11,6 +8,9 @@ import IconButton from "@components/Common/IconButton";
 import Popup from "@components/Common/Popup";
 import TextInput from "@components/Common/TextInput";
 import DragHandle from "@components/Common/DragHandle";
+import { RestModAuthor, useApi } from "@lib/API";
+import styles from "./index.module.scss";
+import clsx from "clsx";
 
 type RestAuthor = RestModAuthor;
 
@@ -107,7 +107,13 @@ export function Author({ author, index }: AuthorProps) {
           >
             {isEditing && <DragHandle {...provided.dragHandleProps} />}
             <div className={styles.author} {...provided.dragHandleProps}>
-              <Avatar src={user?.avatar_url} size={48} href={`/user/${user?.slug ?? user?.id}`} blank={hasChanges} />
+              <Avatar
+                src={user?.avatar_url}
+                uid={user?.id}
+                size={48}
+                href={`/user/${user?.slug ?? user?.id}`}
+                blank={isEditing || hasChanges}
+              />
 
               <div className={clsx(styles.userInfo, author.credit && styles.withCredits)}>
                 <span className={styles.username}>{user?.username ?? "..."}</span>
@@ -122,7 +128,7 @@ export function Author({ author, index }: AuthorProps) {
             </div>
             {isEditing && (
               <div className={styles.authorEditControls}>
-                <IconButton type="edit" size={16} onClick={() => setEditorOpen(true)} />
+                <IconButton type="edit" size={16} onClick={() => setEditorOpen(v => !v)} />
                 <IconButton type="cross" size={16} disabled={!canRemove} onClick={removeAuthor} />
               </div>
             )}
@@ -132,7 +138,7 @@ export function Author({ author, index }: AuthorProps) {
       {isEditing && (
         <Popup id={itemId} place="left" open={[editorOpen, setEditorOpen]}>
           {() => (
-            <div>
+            <div className={styles.authorEditor}>
               <label>{"Credit"}</label>
               <TextInput
                 value={author.credit}

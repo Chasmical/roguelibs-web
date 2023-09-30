@@ -14,16 +14,19 @@ export default function ModPageBreadcrumbs() {
 
   return (
     <div className={styles.breadcrumbs}>
+      <div className={styles.breadcrumb}>
+        <Link href="/">{"RL"}</Link>
+      </div>
       {">"}
-      <span className={styles.breadcrumb}>
+      <div className={styles.breadcrumb}>
         <Link href="/mods">{"Mods"}</Link>
-      </span>
+      </div>
       {">"}
-      <span className={styles.breadcrumb}>
+      <div className={styles.breadcrumb}>
         <Link href={modLink} blank={isEditing}>
           {mod.title}
         </Link>
-      </span>
+      </div>
       {canEdit && (
         <Button
           style={{ fontSize: "1rem", marginLeft: "auto", padding: "0.25rem 0.5rem" }}

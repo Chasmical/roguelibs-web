@@ -20,5 +20,6 @@ export default function Tooltip({ ...props }: TooltipProps) {
     (props as ReactTooltipProps).render = props.children;
     delete props.children;
   }
+  props.openOnClick && (props.delayHide ??= 3000);
   return ReactTooltip(props as ReactTooltipProps); // don't mount another component
 }

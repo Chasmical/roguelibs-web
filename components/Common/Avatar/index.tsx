@@ -1,6 +1,7 @@
 import Link from "@components/Common/Link";
 import styles from "./index.module.scss";
 import { HTMLProps } from "react";
+import { selectWithUid } from "@lib/utils/misc";
 
 export interface AvatarProps extends Omit<HTMLProps<HTMLDivElement>, "size" | "src"> {
   src: string | null | undefined;
@@ -17,18 +18,21 @@ export default function Avatar({
   href,
   blank,
   children,
+  style,
   ...props
 }: React.PropsWithChildren<AvatarProps>) {
   size ??= 64;
 
   src ??= undefined;
-  if (!src && uid) {
-    // TODO: get default pre-generated avatar
+  if (!src && uid != null) {
+    src = selectWithUid(uid, ["/logo-char1.png", "/logo-char2.png"]);
   }
 
   const avatar = (
-    <div className={styles.wrapper} style={{ width: size }} {...props}>
-      <img className={styles.avatar} src={src} width={size} alt="" />
+    <div className={styles.wrapper} style={{ width: size, height: size, ...style }} {...props}>
+      <svg className={styles.avatar} width={size} height={size}>
+        <image href={src} width="100%" height="100%" />
+      </svg>
       {children && <div className={styles.overlay}>{children}</div>}
       {(!!children || href || props.onClick) && <div className={styles.overlayBackdrop} />}
     </div>

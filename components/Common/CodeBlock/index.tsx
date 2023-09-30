@@ -101,7 +101,7 @@ function CopyButton({ code }: { code: string }) {
         onClick={() => navigator.clipboard.writeText(code)}
       >
         <Icon type="copy" size={24} alpha={0.5} />
-        <Tooltip id={id} openOnClick content="Copied!" place="left" delayHide={3000} />
+        <Tooltip id={id} openOnClick content="Copied!" place="left" />
       </IconButton>
     </>
   );

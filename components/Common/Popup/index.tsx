@@ -12,6 +12,7 @@ export default function Popup({ open: [isOpen, setIsOpen], ...props }: PopupProp
     openOnClick: true,
     isOpen: isOpen,
     setIsOpen: v => v || setIsOpen(false),
+    delayHide: 0,
     ...(props as TooltipProps),
   });
 }

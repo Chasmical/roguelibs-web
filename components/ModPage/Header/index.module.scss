@@ -57,6 +57,7 @@
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
+  z-index: 1;
 }
 .title {
   flex-grow: 1;

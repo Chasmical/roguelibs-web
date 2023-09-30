@@ -22,12 +22,12 @@ export default function ModPageHeader() {
           alt=""
           onDragStart={e => e.preventDefault()}
         />
-        <ModPageLeftButtons />
-        <ModPageRightButtons />
         <div className={styles.header}>
           <div className={styles.title}>{mod.title}</div>
           <CopyPermanentLink />
         </div>
+        <ModPageLeftButtons />
+        <ModPageRightButtons />
       </div>
     </>
   );
@@ -53,7 +53,7 @@ export function CopyPermanentLink() {
   return (
     <>
       <IconButton data-tooltip-id={id} type="link" onClick={copyLink} />
-      <Tooltip id={id} openOnClick content="Copied permanent link!" />
+      <Tooltip id={id} openOnClick content="Copied permanent link!" place="left" />
     </>
   );
 }

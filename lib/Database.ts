@@ -102,6 +102,16 @@ export interface DbReleaseFile {
   title: string | null; // text null = null { length [1;64] }
   tooltip: string | null; // text null = null { length [1;128] }
   order: number; // int2 = 0
+  type: DbReleaseFileType; // int2 = 0 { [0;6] }
+}
+export enum DbReleaseFileType {
+  Unknown = 0,
+  Plugin = 1,
+  PatcherPlugin = 2,
+  CorePlugin = 3,
+  SpritePack = 4,
+  Documentation = 5,
+  Extra = 6,
 }
 
 export interface DbUpload {

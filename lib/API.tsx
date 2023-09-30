@@ -1,6 +1,6 @@
 import { createRouteHandlerClient, createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { SupabaseClient, createClient as createSupabaseClient } from "@supabase/supabase-js";
-import { DbMod, DbModAuthor, DbRelease, DbReleaseFile, DbUser, DbUserNotification } from "./Database";
+import { DbMod, DbModAuthor, DbRelease, DbReleaseFile, DbUpload, DbUser, DbUserNotification } from "./Database";
 import { WrappedSupabaseClient, from } from "./API.Statement";
 
 export { useApi, ApiProvider, type ApiProviderProps } from "./API.Hooks";
@@ -22,13 +22,17 @@ export interface RestModAuthor extends DbModAuthor {
   user: RestUser;
 }
 
+export interface RestUpload extends DbUpload {}
+
 export interface RestRelease extends DbRelease {
   files: RestReleaseFile[];
 }
 export interface RestReleaseWithMod extends RestRelease {
   mod: RestMod;
 }
-export interface RestReleaseFile extends DbReleaseFile {}
+export interface RestReleaseFile extends DbReleaseFile {
+  upload: RestUpload;
+}
 
 //
 
@@ -51,7 +55,11 @@ const selectMod = from("mods").select<RestMod>({
   authors: selectModAuthor.multiple,
 });
 
-const selectReleaseFile = from("release_files").select<RestReleaseFile>({});
+const selectUpload = from("uploads").select<RestUpload>({});
+
+const selectReleaseFile = from("release_files").select<RestReleaseFile>({
+  upload: selectUpload,
+});
 const selectRelease = from("releases").select<RestRelease>({
   files: selectReleaseFile.multiple,
 });
@@ -123,6 +131,15 @@ export class RogueLibsApi extends WrappedSupabaseClient {
 
   public setModNugget(mod_id: number, nugget: boolean) {
     return this.rpc("set_mod_nugget", { _mod_id: mod_id, _nugget: nugget });
+  }
+
+  public async downloadFile(upload: DbUpload) {
+    const res = await this.Supabase.storage.from("uploads").download(upload.id + "/" + upload.filename);
+    return res.data;
+  }
+  public async signFileUrl(upload: DbUpload) {
+    const res = await this.Supabase.storage.from("uploads").createSignedUrl(upload.id + "/" + upload.filename, 60);
+    return res.data?.signedUrl ?? null;
   }
 }
 

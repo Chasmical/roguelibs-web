@@ -3,10 +3,10 @@
   flex-flow: column;
 }
 .author-wrapper {
-  position: relative;
   display: flex;
   flex-flow: row;
   align-items: center;
+  margin-bottom: 0.5rem;
 }
 .author {
   flex-grow: 1;
@@ -46,4 +46,13 @@
 
 .author-edit-controls {
   width: 1rem;
+  display: flex;
+  flex-flow: column nowrap;
+  align-self: flex-start;
+}
+
+.author-editor {
+  display: flex;
+  flex-flow: column;
+  gap: 0.25rem;
 }

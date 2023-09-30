@@ -57,14 +57,7 @@ export function NuggetButton() {
       <Icon type={loading ? "loading" : "nugget"} alpha={loading || myNugget ? 1 : 0.5} />
       {mod.nugget_count}
       {!api.currentUser && (
-        <Tooltip
-          id={tooltipId}
-          place="left"
-          openOnClick
-          variant="error"
-          content="You mush sign in to rate mods!"
-          delayHide={3000}
-        />
+        <Tooltip id={tooltipId} place="left" openOnClick variant="error" content="You mush sign in to rate mods!" />
       )}
     </Button>
   );
