@@ -1,0 +1,10 @@
+@import "react-loading-skeleton/dist/skeleton.css";
+
+.react-loading-skeleton {
+  --base-color: var(--color-overlay-4) !important;
+  --highlight-color: var(--color-primary) !important;
+  &::after {
+    background-image: linear-gradient(90deg, transparent, var(--highlight-color), transparent) !important;
+    opacity: 0.2;
+  }
+}

@@ -5,7 +5,7 @@
   border: 1px solid var(--color-background-light);
   border-radius: 1rem;
 
-  &:hover, &:focus-within {
+  &:hover, &:focus-within, &.expanded {
     .header { top: 0; }
   }
 }
