@@ -12,7 +12,6 @@ import Icon from "@components/Common/Icon";
 import { RestReleaseFile, useApi } from "@lib/API";
 import { DbReleaseFileType } from "@lib/Database";
 import styles from "./index.module.scss";
-import clsx from "clsx";
 
 interface FilesListContext {
   listId: string;

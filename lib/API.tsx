@@ -134,6 +134,10 @@ export class RogueLibsApi extends WrappedSupabaseClient {
     return this.selectMany(selectRelease, r => r.eq("mod_id", mod_id));
   }
 
+  public fetchTopMods(limit: number | [start: number, end: number]) {
+    return this.selectMany(selectMod, m => m.order("nugget_count", { ascending: false }), limit);
+  }
+
   public fetchUserById<IsPersonal extends boolean | undefined = false>(
     user_id: string,
     is_personal?: IsPersonal,

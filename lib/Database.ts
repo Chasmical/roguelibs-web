@@ -73,6 +73,9 @@ export interface DbMod {
   subscription_count: number; // int4 = 0
   guid: string | null; // text null = null { length [1;255] }
   slug: string | null; // citext null = null { unique, length [3;32], match /^[0-9a-zA-Z._-]+$/, not match /^\d+$/ }
+  card_description: string; // text null = null { length [1;100] }
+  card_banner_url: string | null; // text null = null { length [1;255] }
+  card_banner_layout: number; // int2 = 5 { [1;7] }
 }
 export interface DbModAuthor {
   id: number; // int8 pk identity

@@ -7,8 +7,6 @@ import Icon from "@components/Common/Icon";
 import { useApi } from "@lib/API.Hooks";
 
 export default function ModPageBreadcrumbs({ mod, original, isEditing, setIsEditing }: ModPageContext) {
-  const modLink = `/mods/${original.slug}`;
-
   const me = useApi().currentUser;
   const canEdit = original.authors.some(a => a.user_id === me?.id) || me?.is_admin;
 
@@ -25,7 +23,7 @@ export default function ModPageBreadcrumbs({ mod, original, isEditing, setIsEdit
       </div>
       {">"}
       <div className={styles.breadcrumb}>
-        <Link href={modLink} blank={isEditing}>
+        <Link href={`/mods/${original.slug}`} blank={isEditing}>
           {mod.title}
         </Link>
       </div>

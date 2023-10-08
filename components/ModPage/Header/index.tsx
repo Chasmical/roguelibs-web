@@ -10,13 +10,15 @@ import clsx from "clsx";
 export default function ModPageHeader(props: ModPageContext) {
   const { mod } = props;
 
+  const layout = bannerLayouts[mod.banner_layout - 1];
+
   return (
     <>
       <ModPageBreadcrumbs {...props} />
       <div className={styles.wrapper}>
         <img
           draggable="false"
-          className={clsx(styles.banner, styles[bannerLayouts[mod.banner_layout - 1]])}
+          className={clsx(styles.banner, styles[layout])}
           src={mod.banner_url ?? "/placeholder.png"}
           alt=""
         />
@@ -30,7 +32,7 @@ export default function ModPageHeader(props: ModPageContext) {
     </>
   );
 }
-const bannerLayouts = [
+export const bannerLayouts = [
   "widthTop",
   "widthMiddle",
   "widthBottom",

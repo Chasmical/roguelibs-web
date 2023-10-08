@@ -17,6 +17,31 @@
   > button {
     border-width: 1px;
     width: 100%;
+    &.download-main {
+      font-size: 1.2rem !important;
+      color: var(--color-black);
+      background-color: var(--color-primary);
+
+      &:hover, &:focus { background-color: var(--color-primary-darker); }
+      &:active { background-color: var(--color-primary-darkest); }
+    }
+    &.download-documentation {
+      font-size: 1.2rem !important;
+      color: var(--color-gray-200);
+      text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+      background-color: var(--color-info-dark);
+
+      &:hover, &:focus { background-color: var(--color-info-darker); }
+      &:active { background-color: var(--color-info-darkest); }
+    }
+    &.download-text {
+      font-size: 1.2rem !important;
+      color: var(--color-black);
+      background-color: var(--color-gray-500);
+
+      &:hover, &:focus { background-color: var(--color-gray-300); }
+      &:active { background-color: var(--color-gray-100); }
+    }
   }
 }
 
@@ -25,32 +50,6 @@
   display: flex;
   flex-flow: column nowrap;
   align-self: flex-start;
-}
-
-.download-main {
-  font-size: 1.2rem !important;
-  color: var(--color-black);
-  background-color: var(--color-primary);
-
-  &:hover, &:focus { background-color: var(--color-primary-darker); }
-  &:active { background-color: var(--color-primary-darkest); }
-}
-.download-documentation {
-  font-size: 1.2rem !important;
-  color: var(--color-gray-200);
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-  background-color: var(--color-info-dark);
-
-  &:hover, &:focus { background-color: var(--color-info-darker); }
-  &:active { background-color: var(--color-info-darkest); }
-}
-.download-text {
-  font-size: 1.2rem !important;
-  color: var(--color-black);
-  background-color: var(--color-gray-500);
-
-  &:hover, &:focus { background-color: var(--color-gray-300); }
-  &:active { background-color: var(--color-gray-100); }
 }
 
 .tooltip {

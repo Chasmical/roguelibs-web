@@ -15,7 +15,7 @@ export default function MainLayout({ className, children, ...props }: MainLayout
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <Link href="/" underline={false} className={styles.logo}>
+        <Link href="/mods" underline={false} className={styles.logo}>
           <img src="/logo-long.png" alt="RogueLibs' logo" />
         </Link>
         <AccountPanel />

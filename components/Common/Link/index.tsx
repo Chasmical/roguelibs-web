@@ -11,6 +11,7 @@ export interface LinkProps extends Omit<NextLinkProps, "href"> {
   children?: React.ReactNode;
   // ...props
   style?: React.CSSProperties;
+  tabIndex?: number;
 }
 
 const Link = forwardRef(function Link(
