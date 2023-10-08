@@ -4,7 +4,6 @@ import styles from "./index.module.scss";
 import { ModPageContext } from "@components/ModPage";
 import AuthorsList from "@components/Specialized/AuthorsList";
 import useImmerState, { useImmerSlice } from "@lib/hooks/useImmerState";
-import Separator from "@components/Common/Separator";
 import clsx from "clsx";
 
 export default function ModPageSidebar(props: ModPageContext) {
@@ -29,7 +28,6 @@ export default function ModPageSidebar(props: ModPageContext) {
               hasChanges={hasChanges}
             />
           </div>
-          <Separator outset="1rem" />
         </>
       )}
       <div className={styles.section}>

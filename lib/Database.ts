@@ -1,6 +1,9 @@
+import { BadgeName } from "@lib/badges";
+
 export interface DatabaseTables {
   users: DbUser[];
   user_notifications: DbUserNotification[];
+  user_badges: DbUserBadge[];
 
   mods: DbMod[];
   mod_authors: DbModAuthor[];
@@ -25,6 +28,7 @@ export interface DatabaseFunctions {
   set_mod_subscription: (e: { _mod_id: number; _subscription: boolean }) => number;
   get_user_nuggets: (e: DbUser) => number[];
   get_user_subscriptions: (e: DbUser) => number[];
+  get_user_badges: (e: DbUser) => string[];
   upsert_mdx_preview: (e: { _source: string }) => string;
 }
 
@@ -57,6 +61,11 @@ export interface DbUserNotification {
 export enum DbUserNotificationType {
   Unknown = 0,
   Welcome = 1,
+}
+export interface DbUserBadge {
+  user_id: string; // uuid pk fk(users / cascade)
+  badge_name: BadgeName; // text pk
+  automatic: boolean; // bool = true
 }
 
 export interface DbMod {

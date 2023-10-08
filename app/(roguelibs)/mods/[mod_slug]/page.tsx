@@ -1,4 +1,5 @@
 import ModPage from "@components/ModPage";
+import ModPageSkeleton from "@components/ModPage/skeleton";
 import SetCanonicalUrl from "@components/Specialized/SetCanonicalUrl";
 import { Metadata } from "next";
 import { createServerApi } from "@lib/API";
@@ -11,6 +12,8 @@ interface PageProps {
 }
 
 export default async function ModPageIndex({ params }: PageProps) {
+  if (params.mod_slug === "never") return <ModPageSkeleton />;
+
   const api = createServerApi({ headers, cookies });
 
   const mod = await api.fetchModWithReleasesBySlug(params.mod_slug);
@@ -35,12 +38,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     title: mod.title,
-    description: mod.description,
-    authors: mod.authors.map(a => ({ name: a.user.username, url: `/users/${a.user.slug ?? a.user.id}` })),
+    description: mod.card_description,
+    authors: mod.authors.map(a => ({ name: a.user.username, url: `/user/${a.user.slug ?? a.user.id}` })),
     openGraph: {
       type: "article",
       title: mod.title,
-      description: mod.description,
+      description: mod.card_description,
       url: `/mods/${mod.slug ?? mod.id}`,
       authors: mod.authors.map(a => a.user.username),
       publishedTime: mod.created_at,
@@ -53,8 +56,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     twitter: {
       card: "summary_large_image",
       title: mod.title,
-      description: mod.description,
-      images: [mod.banner_url ?? "/placeholder.png"],
+      description: mod.card_description,
+      images: [mod.card_banner_url ?? mod.banner_url ?? "/placeholder.png"],
     },
   };
 }

@@ -6,11 +6,11 @@ import ModListPage from "@components/ModListPage";
 export default async function ModsPageIndex() {
   const api = createServerApi({ headers, cookies }, { revalidate: 300 });
 
-  const releases = await api.fetchTopMods(50);
+  const mods = await api.fetchTopMods(50);
 
   return (
     <>
-      <ModListPage mods={releases} />
+      <ModListPage mods={mods} />
       <SetCanonicalUrl url={`/mods`} />
     </>
   );

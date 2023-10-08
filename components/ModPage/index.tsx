@@ -1,6 +1,6 @@
 "use client";
 import { RestMod, RestRelease } from "@lib/API";
-import { Dispatch, SetStateAction, createContext, useContext, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import useImmerState, { ImmerStateSetter } from "@lib/hooks/useImmerState";
 import ModPageHeader from "./Header";
 import ModPageBody from "@components/ModPage/Body";
@@ -26,15 +26,13 @@ export default function ModPage({ mod: original, releases, rscDescription }: Mod
   }, [mod, releases, isEditing]);
 
   return (
-    <ModPageContext.Provider value={context}>
-      <div className={styles.container}>
-        <ModPageHeader {...context} />
-        <div className={styles.sides}>
-          <ModPageBody {...context} rscDescription={rscDescription} />
-          <ModPageSidebar {...context} />
-        </div>
+    <div className={styles.container}>
+      <ModPageHeader {...context} />
+      <div className={styles.sides}>
+        <ModPageBody {...context} rscDescription={rscDescription} />
+        <ModPageSidebar {...context} />
       </div>
-    </ModPageContext.Provider>
+    </div>
   );
 }
 
@@ -46,10 +44,4 @@ export interface ModPageContext {
   isEditing: boolean;
   setIsEditing: Dispatch<SetStateAction<boolean>>;
   hasChanges: boolean;
-}
-
-const ModPageContext = createContext<ModPageContext | null>(null);
-
-export function useModPage() {
-  return useContext(ModPageContext)!;
 }

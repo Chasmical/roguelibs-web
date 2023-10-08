@@ -11,10 +11,13 @@ import {
   DbUserNotification,
 } from "./Database";
 import { WrappedSupabaseClient, from } from "./API.Statement";
+import { BadgeName } from "@lib/badges";
 
 export { useApi, ApiProvider, type ApiProviderProps } from "./API.Hooks";
 
-export interface RestUser extends DbUser {}
+export interface RestUser extends DbUser {
+  badges: BadgeName[];
+}
 export interface RestUserPersonal extends RestUser {
   mod_nuggets: number[];
   mod_subscriptions: number[];
@@ -50,8 +53,11 @@ export interface RestReleaseFile extends DbReleaseFile {
 
 const selectUserNotification = from("user_notifications").select<RestUserNotification>("*");
 
-const selectUser = from("users").select<RestUser>("*");
+const selectUser = from("users").select<RestUser>("*", {
+  badges: "get_user_badges",
+});
 const selectUserPersonal = from("users").select<RestUserPersonal>("*", {
+  badges: "get_user_badges",
   mod_nuggets: "get_user_nuggets",
   mod_subscriptions: "get_user_subscriptions",
   notifications: selectUserNotification.multiple,
@@ -143,9 +149,17 @@ export class RogueLibsApi extends WrappedSupabaseClient {
     is_personal?: IsPersonal,
   ): Promise<IsPersonal extends true ? RestUserPersonal : RestUser> {
     if (!is_personal) return this.selectOne(selectUser, u => u.eq("id", user_id)) as never;
-    return this.selectOne(selectUserPersonal, u => u.eq("id", user_id)).then(
-      user => (user?.notifications.reverse(), user),
-    ) as never;
+    return this.selectOne(selectUserPersonal, u => u.eq("id", user_id)) as never;
+  }
+  public fetchUserBySlug<IsPersonal extends boolean | undefined = false>(
+    user_slug: string,
+    is_personal?: IsPersonal,
+  ): Promise<IsPersonal extends true ? RestUserPersonal : RestUser> {
+    if (/^[\da-fA-F]{8}-([\da-fA-F]{4}-){3}[\da-fA-F]{12}$/.test(user_slug)) {
+      return this.fetchUserById(user_slug);
+    }
+    if (!is_personal) return this.selectOne(selectUser, u => u.eq("slug", user_slug)) as never;
+    return this.selectOne(selectUserPersonal, u => u.eq("slug", user_slug)) as never;
   }
 
   public setModNugget(mod_id: number, nugget: boolean) {
