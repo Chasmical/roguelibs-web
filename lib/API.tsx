@@ -186,6 +186,10 @@ export function createServerApi(
     }
     return fetch(req, options);
   };
+
+  const cookies = cxt.cookies();
+  cxt.cookies = () => cookies;
+
   let supabase: SupabaseClient;
   if ("headers" in cxt) {
     supabase = createServerComponentClient(cxt, { options: { global: { fetch: customFetch } } });
