@@ -5,6 +5,7 @@ export interface DatabaseTables {
   mods: DbMod[];
   mod_authors: DbModAuthor[];
   mod_nuggets: DbModNugget[];
+  mod_subscriptions: DbModSubscription[];
 
   releases: DbRelease[];
   release_files: DbReleaseFile[];
@@ -21,7 +22,9 @@ export interface DatabaseViews {
 
 export interface DatabaseFunctions {
   set_mod_nugget: (e: { _mod_id: number; _nugget: boolean }) => number;
+  set_mod_subscription: (e: { _mod_id: number; _subscription: boolean }) => number;
   get_user_nuggets: (e: DbUser) => number[];
+  get_user_subscriptions: (e: DbUser) => number[];
   upsert_mdx_preview: (e: { _source: string }) => string;
 }
 
@@ -67,6 +70,7 @@ export interface DbMod {
   is_public: boolean; // bool = false
   is_verified: boolean; // bool = false
   nugget_count: number; // int4 = 0
+  subscription_count: number; // int4 = 0
   guid: string | null; // text null = null { length [1;255] }
   slug: string | null; // citext null = null { unique, length [3;32], match /^[0-9a-zA-Z._-]+$/, not match /^\d+$/ }
 }
@@ -83,6 +87,10 @@ export interface DbModAuthor {
   order: number; // int2 = 0 { >= 0 }
 }
 export interface DbModNugget {
+  mod_id: number; // int8 pk fk(mods / cascade)
+  user_id: string; // uuid pk fk(users / cascade)
+}
+export interface DbModSubscription {
   mod_id: number; // int8 pk fk(mods / cascade)
   user_id: string; // uuid pk fk(users / cascade)
 }

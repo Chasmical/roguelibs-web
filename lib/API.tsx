@@ -16,7 +16,8 @@ export { useApi, ApiProvider, type ApiProviderProps } from "./API.Hooks";
 
 export interface RestUser extends DbUser {}
 export interface RestUserPersonal extends RestUser {
-  nuggets: number[];
+  mod_nuggets: number[];
+  mod_subscriptions: number[];
   notifications: RestUserNotification[];
 }
 export interface RestUserNotification extends DbUserNotification {}
@@ -49,11 +50,10 @@ export interface RestReleaseFile extends DbReleaseFile {
 
 const selectUserNotification = from("user_notifications").select<RestUserNotification>("*");
 
-const selectUser = from("users").select<RestUser>("*", {
-  nuggets: "get_user_nuggets",
-});
+const selectUser = from("users").select<RestUser>("*");
 const selectUserPersonal = from("users").select<RestUserPersonal>("*", {
-  nuggets: "get_user_nuggets",
+  mod_nuggets: "get_user_nuggets",
+  mod_subscriptions: "get_user_subscriptions",
   notifications: selectUserNotification.multiple,
 });
 
@@ -146,6 +146,9 @@ export class RogueLibsApi extends WrappedSupabaseClient {
 
   public setModNugget(mod_id: number, nugget: boolean) {
     return this.rpc("set_mod_nugget", { _mod_id: mod_id, _nugget: nugget });
+  }
+  public setModSubscription(mod_id: number, subscription: boolean) {
+    return this.rpc("set_mod_subscription", { _mod_id: mod_id, _subscription: subscription });
   }
 
   public async downloadFile(upload: DbUpload) {
