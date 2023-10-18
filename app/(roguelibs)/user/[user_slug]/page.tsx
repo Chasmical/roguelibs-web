@@ -6,6 +6,7 @@ import { createServerApi } from "@lib/API";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { selectUniqueAvatar } from "@components/Common/Avatar";
+import { compileMDX } from "@lib/mdx";
 
 interface PageProps {
   params: { user_slug: string };
@@ -21,9 +22,11 @@ export default async function UserPageIndex({ params }: PageProps) {
     return <div>{`Oops, looks like user with a URL slug "${params.user_slug}" could not be found`}</div>;
   }
 
+  const { content } = await compileMDX(user.description, o => (o.mdxOptions.format = "md"));
+
   return (
     <>
-      <UserPage key={user.id} user={user} />
+      <UserPage user={user} rscDescription={content} />
       <SetCanonicalUrl url={`/user/${user.slug ?? user.id}`} />
     </>
   );
@@ -48,7 +51,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       siteName: "RogueLibs Web",
     },
     twitter: {
-      card: "summary_large_image",
+      card: "summary",
       title: user.username,
       description: "", // user.description,
       images: [user.avatar_url ?? selectUniqueAvatar(user.id)],

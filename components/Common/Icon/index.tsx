@@ -20,6 +20,7 @@ export const AllIconTypes = [
   "upload",
   "download",
   "discord",
+  "gamebanana",
   "copy",
   "edit",
   "save",
@@ -35,6 +36,7 @@ export const AllIconTypes = [
   "info",
   "caution",
   "danger",
+  "website",
 ] as const;
 
 export const AllIconPaths = (() => {

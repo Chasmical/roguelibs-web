@@ -45,6 +45,7 @@ export interface DbUser {
   created_at: string; // timestamptz = now()
   edited_at: string | null; // timestamptz null = null
   username: string; // text { length [1;64] }
+  description: string; // text = '' { length <= 400 }
   avatar_url: string | null; // text null = null { length [1;255] }
   slug: string | null; // citext null = null { unique, length [3;32], match /^[0-9a-zA-Z._-]+$/, not match /^[\da-fA-F]{8}-([\da-fA-F]{4}-){3}[\da-fA-F]{12}$/ }
   discord_id: string | null; // text null = null { match /^\d{1,20}$/ }
@@ -73,7 +74,7 @@ export interface DbMod {
   created_at: string; // timestamptz = now()
   edited_at: string | null; // timestamptz null = null
   title: string; // text { length [1;64] }
-  description: string; // text { length [1;4000] }
+  description: string; // text = '' { length <= 4000 }
   banner_url: string | null; // text null = null { length [1;255] }
   banner_layout: number; // int2 = 5 { [1;7] }
   is_public: boolean; // bool = false
@@ -82,9 +83,12 @@ export interface DbMod {
   subscription_count: number; // int4 = 0
   guid: string | null; // text null = null { length [1;255] }
   slug: string | null; // citext null = null { unique, length [3;32], match /^[0-9a-zA-Z._-]+$/, not match /^\d+$/ }
-  card_description: string; // text null = null { length [1;100] }
+  card_description: string; // text = '' { length <= 100 }
   card_banner_url: string | null; // text null = null { length [1;255] }
   card_banner_layout: number; // int2 = 5 { [1;7] }
+  github_repo: string | null; // text null = null { length <= 64, match /^[\w.-]+\/[\w.-]+$/ }
+  gamebanana_id: number | null; // int4 null = null { > 0 }
+  website_link: string | null; // text null = null { length <= 128, match /^https:\/\// }
 }
 export interface DbModAuthor {
   id: number; // int8 pk identity
@@ -105,6 +109,7 @@ export interface DbModNugget {
 export interface DbModSubscription {
   mod_id: number; // int8 pk fk(mods / cascade)
   user_id: string; // uuid pk fk(users / cascade)
+  release_id: number | null; // int8 null = null fk(releases / set null)
 }
 
 export interface DbRelease {

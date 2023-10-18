@@ -23,9 +23,12 @@ export default async function ModPageIndex({ params }: PageProps) {
 
   const { content } = await compileMDX(mod.description, o => (o.mdxOptions.format = "md"));
 
+  const releases = mod.releases;
+  delete (mod as any).releases;
+
   return (
     <>
-      <ModPage key={mod.id} mod={mod} releases={mod.releases} rscDescription={content} />
+      <ModPage mod={mod} releases={releases} rscDescription={content} />
       <SetCanonicalUrl url={`/mods/${mod.slug ?? mod.id}`} />
     </>
   );

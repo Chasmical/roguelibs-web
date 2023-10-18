@@ -122,6 +122,13 @@ img {
   max-width: 100%;
 }
 
+label {
+  margin-left: 0.5rem;
+  color: var(--color-secondary);
+  text-transform: uppercase;
+  font-size: 1.2rem;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -136,6 +143,8 @@ img.emoji {
 }
 
 .markdown {
+  font-family: var(--standard-font);
+
   p { line-height: 1.5em; }
 
   &, :is(div[role=tabpanel], div[role=panel]) {

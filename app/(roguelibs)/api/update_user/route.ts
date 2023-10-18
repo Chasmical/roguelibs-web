@@ -8,6 +8,22 @@ export async function POST(request: NextRequest) {
 
   const body = (await request.json()) as Partial<RestUser>;
 
+  const id = String(body.id);
+
+  const session = await api.getSession();
+  const [prevUser, myUser] = await Promise.all([
+    serviceApi.fetchUserById(id).catch(() => null),
+    session?.user.id ? api.fetchUserById(session.user.id).catch(() => null) : null,
+  ]);
+
+  if (!prevUser || !myUser || !(prevUser.id === myUser.id || myUser.is_admin)) {
+    return NextResponse.json({ error: "You're not authorized to edit this profile." }, { status: 403 });
+  }
+
+  const promises: PromiseLike<any>[] = [];
+
+  // ===== Create and await database requests
+
   const changes: Partial<RestUser> = {
     id: body.id,
     username: body.username,
@@ -17,27 +33,13 @@ export async function POST(request: NextRequest) {
     edited_at: new Date().toISOString(),
   };
 
-  const session = await api.getSession();
-  const [original, myUser] = await Promise.all([
-    serviceApi.fetchUserById(changes.id!).catch(() => null),
-    session?.user.id ? api.fetchUserById(session.user.id).catch(() => null) : null,
-  ]);
+  promises.push(serviceApi.Supabase.from("users").update([changes]).eq("id", id).select());
 
-  if (!original || !(original.id === myUser?.id || myUser?.is_admin)) {
-    return NextResponse.json({ error: "You're not authorized to edit this profile." }, { status: 403 });
-  }
-
-  const promises: PromiseLike<any>[] = [];
-
-  // ===== Create and await database requests
-
-  promises.push(serviceApi.Supabase.from("users").update([changes]).eq("id", changes.id).select());
-
-  const data = await Promise.all(promises);
+  await Promise.all(promises);
 
   // ===== Return new user
 
-  const newUser = await serviceApi.fetchUserById(changes.id!);
+  const newUser = await serviceApi.fetchUserById(id);
 
   return NextResponse.json(newUser, { status: 200 });
 }

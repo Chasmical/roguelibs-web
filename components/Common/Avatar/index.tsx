@@ -47,12 +47,14 @@ export default function Avatar({
   );
 }
 
+const uniqueAvatarPaths = [
+  "/logo-char1.png",
+  "/logo-char2.png",
+  "/keyart-char1.png",
+  "/keyart-char2.png",
+  "/keyart-char3.png",
+];
+
 export function selectUniqueAvatar(uid: string | number) {
-  return selectWithUid(uid, [
-    "/logo-char1.png",
-    "/logo-char2.png",
-    "/keyart-char1.png",
-    "/keyart-char2.png",
-    "/keyart-char3.png",
-  ]);
+  return selectWithUid(uid, uniqueAvatarPaths);
 }

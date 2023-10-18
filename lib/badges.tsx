@@ -1,6 +1,8 @@
 export type BadgeName = keyof typeof badgeNames;
 
 export const badgeNames = {
+  early_supporter: () => "Early Supporter",
+
   discord_member: () => "Registered Citizen",
   discord_activity_1: () => "Rookie Rogue",
   discord_activity_2: () => "Street Savvy",
@@ -32,6 +34,8 @@ export const badgeNames = {
 };
 
 export const badgeDescriptions: Record<BadgeName, (cxt: BadgeContext) => React.ReactNode> = {
+  early_supporter: ({ You }) => `${You} were on this site before it was officially released.`,
+
   discord_member: ({ You }) => `${You} are a member of SoR's official Discord server.`,
   discord_activity_1: ({ You }) => `${You}'ve sent over 200 messages on SoR's official Discord server.`,
   discord_activity_2: ({ You }) => `${You}'ve sent over 1'000 messages on SoR's official Discord server.`,

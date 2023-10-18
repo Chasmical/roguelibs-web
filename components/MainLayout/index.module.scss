@@ -36,16 +36,10 @@
   justify-content: space-around;
   padding: 1rem;
 
-  & > div {
+  > div {
     display: flex;
     flex-flow: column nowrap;
     align-items: flex-start;
     gap: 0.25rem;
-    > label {
-      margin-left: 0.5rem;
-      color: var(--color-secondary);
-      text-transform: uppercase;
-      font-size: 1.2rem;
-    }
   }
 }

@@ -1,19 +1,12 @@
 .wrapper {
-  background: none;
-  padding: 0; border-radius: 0;
-
   display: flex;
-  flex-flow: column nowrap;
+  flex-flow: column;
   gap: 0.5rem;
-}
-.section {
-  background: var(--color-background);
-  padding: 0.5rem 1rem; border-radius: 1rem;
-  min-height: 2.5rem;
 
-  &:nth-child(2) { flex-grow: 1; }
+  > :nth-child(2) {
+    flex-grow: 1;
+  }
 }
-
 .username-container {
   display: flex;
   align-items: center;
@@ -31,33 +24,6 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  padding: 0.5rem 0;
   min-width: 360px;
-}
-
-.badges-container {
-  display: flex;
-  flex-flow: row wrap;
-  overflow-y: auto;
-  max-height: calc(5rem + 4px);
-  padding: 2px;
-}
-.badge-info {
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: center;
-  gap: 0.25rem;
-}
-.badge-title {
-  font-size: 2rem;
-  text-align: center;
-}
-.badge-description {
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: center;
-  gap: 0.25rem;
-
-  font-size: 1.2rem;
-  text-align: center;
-  max-width: 300px;
 }

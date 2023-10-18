@@ -1,32 +1,24 @@
-import { RestUser, useApi } from "@lib/API";
+import { RestUser } from "@lib/API";
 import { useState } from "react";
-import styles from "./Details.module.scss";
-import Separator from "@components/Common/Separator";
 import { UserPageContext } from "@components/UserPage";
 import Popup from "@components/Common/Popup";
 import IconButton from "@components/Common/IconButton";
 import TextInput from "@components/Common/TextInput";
-import { BadgeContext, badgeDescriptions, badgeNames } from "@lib/badges";
-import Sprite from "@components/Common/Sprite";
-import Tooltip from "@components/Common/Tooltip";
+import indexStyles from "./index.module.scss";
+import styles from "./Details.module.scss";
+import TextArea from "@components/Common/TextArea";
+import MdxPreview from "@components/Specialized/MdxPreview";
 
-export default function UserPageDetails(context: UserPageContext) {
+export default function UserPageDetails(context: DescriptionSectionProps) {
   return (
     <div className={styles.wrapper}>
-      <div className={styles.section}>
-        <UsernameSection {...context} />
-      </div>
-      <div className={styles.section}>
-        <BadgesSection {...context} />
-      </div>
-      <div className={styles.section}>
-        <MiscellaneousSection />
-      </div>
+      <UsernameSection {...context} />
+      <DescriptionSection {...context} />
     </div>
   );
 }
 
-function UsernameSection({ user, original, mutateUser, canEdit }: UserPageContext) {
+export function UsernameSection({ user, original, mutateUser, canEdit }: UserPageContext) {
   const [prevUsername, setPrevUsername] = useState(original.username);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -63,7 +55,7 @@ function UsernameSection({ user, original, mutateUser, canEdit }: UserPageContex
   }
 
   return (
-    <>
+    <div className={indexStyles.partition}>
       <div className={styles.usernameContainer} data-tooltip-id="username">
         <div className={styles.username}>{user.username}</div>
         {canEdit && !isEditing && <IconButton type="edit" size={16} onClick={editUsername} />}
@@ -90,48 +82,57 @@ function UsernameSection({ user, original, mutateUser, canEdit }: UserPageContex
           </div>
         )}
       </Popup>
-    </>
+    </div>
   );
 }
 
-function BadgesSection({ user }: UserPageContext) {
-  const currentUser = useApi().currentUser;
-  const badgeContext = new BadgeContext(user.id === currentUser?.id);
-
-  return (
-    <>
-      <label>{"Badges"}</label>
-      <Separator />
-      <div className={styles.badgesContainer}>
-        {user.badges?.map(badge_name => {
-          return (
-            <div key={badge_name}>
-              <IconButton data-tooltip-id={badge_name} disabled="fake">
-                <Sprite src={`/badges/${badge_name}.png`} size={32} alpha={1} crisp />
-              </IconButton>
-              <Tooltip id={badge_name} delayShow={100} place="bottom">
-                {() => (
-                  <div className={styles.badgeInfo}>
-                    <span className={styles.badgeTitle}>{badgeNames[badge_name]?.()}</span>
-                    <Separator primary />
-                    <Sprite src={`/badges/${badge_name}.png`} size={128} alpha={1} crisp />
-                    <Separator primary />
-                    <div className={styles.badgeDescription}>{badgeDescriptions[badge_name]?.(badgeContext)}</div>
-                  </div>
-                )}
-              </Tooltip>
-            </div>
-          );
-        })}
-      </div>
-    </>
-  );
+export interface DescriptionSectionProps extends UserPageContext {
+  rscDescription: React.ReactNode;
 }
 
-function MiscellaneousSection() {
+export function DescriptionSection({ user, original, mutateUser, canEdit, rscDescription }: DescriptionSectionProps) {
+  const [rscSource] = useState(original.description);
+  const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  async function saveDescription() {
+    if (loading || user.description.length > 400) return;
+    try {
+      setLoading(true);
+
+      const diff = { id: user.id, description: user.description };
+      const response = await fetch(`${location.origin}/api/update_user`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(diff),
+      });
+      const newUser = (await response.json()) as RestUser;
+
+      mutateUser(u => Object.assign(u, newUser));
+      setIsEditing(false);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
-    <>
-      <label>{"Miscellaneous"}</label>
-    </>
+    <div className={indexStyles.partition}>
+      {isEditing ? (
+        <TextArea
+          value={user.description}
+          onChange={d => mutateUser(u => void (u.description = d))}
+          error={value => {
+            if (value.length > 4000) return "Description cannot exceed 4000 characters!";
+            return null;
+          }}
+        />
+      ) : user.description === rscSource ? (
+        <div className="markdown">{rscDescription}</div>
+      ) : (
+        <MdxPreview source={user.description} />
+      )}
+    </div>
   );
 }

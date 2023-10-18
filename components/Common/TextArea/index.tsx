@@ -11,7 +11,7 @@ export interface TextAreaProps {
   onChange?: (newValue: string) => void;
   autoTrimEnd?: boolean;
   height?: number;
-  error?: boolean | string | null | undefined;
+  error?: ((value: string) => boolean | string | null) | boolean | string | null | undefined;
   // ...props
   style?: React.CSSProperties;
 }
@@ -43,6 +43,10 @@ const TextArea = forwardRef(function TextArea(
     e.preventDefault();
     textareaRef.current?.focus();
   }, []);
+
+  if (typeof error === "function") {
+    error = error(value ?? "");
+  }
 
   return (
     <div className={clsx(styles.wrapper, className)} {...props}>
