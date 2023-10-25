@@ -12,6 +12,7 @@ import {
 } from "./Database";
 import { WrappedSupabaseClient, from } from "./API.Statement";
 import { BadgeName } from "@lib/badges";
+import { triggerDownload } from "@lib/utils/misc";
 
 export { useApi, ApiProvider, type ApiProviderProps } from "./API.Hooks";
 
@@ -170,12 +171,8 @@ export class RogueLibsApi extends WrappedSupabaseClient {
   }
 
   public async downloadFile(upload: DbUpload) {
-    const res = await this.Supabase.storage.from("uploads").download(upload.id + "/" + upload.filename);
-    return res.data;
-  }
-  public async signFileUrl(upload: DbUpload) {
-    const res = await this.Supabase.storage.from("uploads").createSignedUrl(upload.id + "/" + upload.filename, 60);
-    return res.data?.signedUrl ?? null;
+    const { data } = this.Supabase.storage.from("uploads").getPublicUrl("" + upload.id, { download: upload.filename! });
+    triggerDownload(document, data!.publicUrl, upload.filename!);
   }
 
   public fetchMdxPreview(uid: string) {

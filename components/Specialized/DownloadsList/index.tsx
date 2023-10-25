@@ -2,7 +2,7 @@
 import { DragDropContext, Draggable, Droppable, OnDragEndResponder } from "@hello-pangea/dnd";
 import { ImmerStateRecipe, ImmerStateSetter } from "@lib/hooks/useImmerState";
 import { createContext, useCallback, useContext, useId, useMemo, useState } from "react";
-import { reorder, triggerDownload } from "@lib/utils/misc";
+import { reorder } from "@lib/utils/misc";
 import IconButton from "@components/Common/IconButton";
 import Popup from "@components/Common/Popup";
 import TextInput from "@components/Common/TextInput";
@@ -87,8 +87,7 @@ export function Download({ file, index }: DownloadProps) {
     async (file: RestReleaseFile) => {
       try {
         setLoading(true);
-        const blob = await api.downloadFile(file.upload);
-        triggerDownload(document, blob!, file.upload.filename!);
+        await api.downloadFile(file.upload);
       } catch (error) {
         console.error(error);
       } finally {

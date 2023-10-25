@@ -32,13 +32,17 @@ export function reorder<T>(dnd: DropResult, containers: T[] | Record<string, T[]
   }
 }
 
-export function triggerDownload(document: Document, data: Blob | string, filename: string) {
-  const url = typeof data === "string" ? data : URL.createObjectURL(data);
+export function rentObjectURL(data: Blob | MediaSource, timeoutMs: number) {
+  const url = URL.createObjectURL(data);
+  setTimeout(() => URL.revokeObjectURL(url), timeoutMs);
+  return url;
+}
+
+export function triggerDownload(document: Document, dataOrUrl: Blob | string, filename: string) {
+  const url = typeof dataOrUrl === "string" ? dataOrUrl : rentObjectURL(dataOrUrl, 30 * 1000);
 
   const link = document.createElement("a");
-  link.href = url;
-  link.setAttribute("download", filename);
-  link.target = "_blank";
+  Object.assign(link, { href: url, download: filename, rel: "noopener" });
 
   document.body.appendChild(link);
   link.click();

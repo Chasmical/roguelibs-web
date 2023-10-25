@@ -147,13 +147,13 @@ export interface DbUpload {
   created_at: string; // timestamptz = now()
   edited_at: string | null; // timestamptz null = null
   type: DbUploadType; // int2 { [1;3] }
-  filename: string | null; // text null { length [1;64] }
+  filename: string; // text { length [1;64] }
   data: string | null; // text null
   hash: string | null; // text null { length = 32, match /^[0-9a-f]+$/ }
   size: number; // int4 { > 0 }
 }
 export enum DbUploadType {
-  Hosted = 1, // bucket path
+  Hosted = 1, // hosted at /uploads/{id}
   Embedded = 2, // base64 data
   External = 3, // external URL
 }
