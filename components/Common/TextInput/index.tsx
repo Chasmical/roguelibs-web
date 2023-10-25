@@ -1,5 +1,5 @@
 "use client";
-import { ChangeEventHandler, ForwardedRef, MouseEventHandler, forwardRef, useCallback, useRef } from "react";
+import { forwardRef, useCallback, useRef } from "react";
 import useMergedRefs from "@lib/hooks/useMergedRefs";
 import styles from "./index.module.scss";
 import clsx from "clsx";
@@ -19,11 +19,14 @@ export interface TextInputProps {
 
 const TextInput = forwardRef(function TextInput(
   { className, value, placeholder, onChange, prefix, suffix, autoTrimEnd, error, ...props }: TextInputProps,
-  forwardedRef: ForwardedRef<HTMLInputElement>,
+  forwardedRef: React.ForwardedRef<HTMLInputElement>,
 ) {
-  const inputOnChange = useCallback<ChangeEventHandler<HTMLInputElement>>(e => onChange?.(e.target.value), [onChange]);
+  const inputOnChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
+    e => onChange?.(e.target.value),
+    [onChange],
+  );
 
-  const inputOnBlur = useCallback<ChangeEventHandler<HTMLInputElement>>(
+  const inputOnBlur = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
     e => {
       if (autoTrimEnd === false) return;
       const value = e.target.value;
@@ -36,7 +39,7 @@ const TextInput = forwardRef(function TextInput(
   const inputRef = useRef<HTMLInputElement>(null);
   const ref = useMergedRefs(forwardedRef, inputRef);
 
-  const containerOnClick = useCallback<MouseEventHandler>(e => {
+  const containerOnClick = useCallback<React.MouseEventHandler>(e => {
     if (e.target === inputRef.current) return;
     e.preventDefault();
     inputRef.current?.focus();

@@ -16,9 +16,14 @@ export default function ModCard({ mod: initial }: ModCardProps) {
 
   return (
     <div className={styles.container}>
-      <Link href={modLink} tabIndex={-1}>
+      <Link href={modLink} tabIndex={-1} draggable="false">
         <div className={styles.window}>
-          <img className={styles.banner} src={mod.card_banner_url ?? mod.banner_url ?? "/placeholder-10.png"} alt="" />
+          <img
+            className={styles.banner}
+            src={mod.card_banner_url ?? mod.banner_url ?? "/placeholder-10.png"}
+            draggable="false"
+            alt=""
+          />
           <div className={styles.description}>{mod.card_description ?? mod.description}</div>
           <div className={styles.quickbar}>
             <NuggetButton className={styles.quickbarButton} mod={mod} mutateMod={mutateMod} iconSize={16} />

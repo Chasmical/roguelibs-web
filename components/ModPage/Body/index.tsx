@@ -1,9 +1,9 @@
 "use client";
+import { useState } from "react";
 import { ModPageContext } from "@components/ModPage";
 import MdxPreview from "@components/Specialized/MdxPreview";
 import TextArea from "@components/Common/TextArea";
 import styles from "./index.module.scss";
-import { useState } from "react";
 
 export interface ModPageBodyProps extends ModPageContext {
   rscDescription: React.ReactNode;
@@ -20,14 +20,23 @@ export function ModPageDescription({ mod, original, mutateMod, rscDescription, i
   const [rscSource] = useState(original.description);
 
   return (
-    <div>
+    <>
       {isEditing ? (
-        <TextArea value={mod.description} onChange={v => mutateMod(m => void (m.description = v))} />
+        <>
+          <label>{"Description"}</label>
+          <TextArea
+            className="markdown"
+            value={mod.description}
+            height="300px"
+            autoTrimEnd={false}
+            onChange={v => mutateMod(m => void (m.description = v))}
+          />
+        </>
       ) : mod.description === rscSource ? (
         <div className="markdown">{rscDescription}</div>
       ) : (
         <MdxPreview source={mod.description} />
       )}
-    </div>
+    </>
   );
 }

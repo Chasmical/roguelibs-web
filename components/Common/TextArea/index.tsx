@@ -1,5 +1,5 @@
 "use client";
-import { ChangeEventHandler, ForwardedRef, MouseEventHandler, forwardRef, useCallback, useRef } from "react";
+import { forwardRef, useCallback, useRef } from "react";
 import useMergedRefs from "@lib/hooks/useMergedRefs";
 import styles from "./index.module.scss";
 import clsx from "clsx";
@@ -10,7 +10,7 @@ export interface TextAreaProps {
   placeholder?: string | null | undefined;
   onChange?: (newValue: string) => void;
   autoTrimEnd?: boolean;
-  height?: number;
+  height?: string;
   error?: ((value: string) => boolean | string | null) | boolean | string | null | undefined;
   // ...props
   style?: React.CSSProperties;
@@ -18,14 +18,14 @@ export interface TextAreaProps {
 
 const TextArea = forwardRef(function TextArea(
   { className, value, onChange, placeholder, autoTrimEnd, height, error, ...props }: TextAreaProps,
-  forwardedRef: ForwardedRef<HTMLTextAreaElement>,
+  forwardedRef: React.ForwardedRef<HTMLTextAreaElement>,
 ) {
-  const textareaOnChange = useCallback<ChangeEventHandler<HTMLTextAreaElement>>(
+  const textareaOnChange = useCallback<React.ChangeEventHandler<HTMLTextAreaElement>>(
     e => onChange?.(e.target.value),
     [onChange],
   );
 
-  const textareaOnBlur = useCallback<ChangeEventHandler<HTMLTextAreaElement>>(
+  const textareaOnBlur = useCallback<React.ChangeEventHandler<HTMLTextAreaElement>>(
     e => {
       if (autoTrimEnd === false) return;
       const value = e.target.value;
@@ -38,19 +38,19 @@ const TextArea = forwardRef(function TextArea(
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const ref = useMergedRefs(forwardedRef, textareaRef);
 
-  const containerOnClick = useCallback<MouseEventHandler>(e => {
+  const containerOnClick = useCallback<React.MouseEventHandler>(e => {
     if (e.target === textareaRef.current) return;
     e.preventDefault();
     textareaRef.current?.focus();
   }, []);
 
   if (typeof error === "function") {
-    error = error(value ?? "");
+    error = error(value ?? "") ?? null;
   }
 
   return (
-    <div className={clsx(styles.wrapper, className)} {...props}>
-      <div className={clsx(styles.container, !!error && styles.error)} onClick={containerOnClick}>
+    <div className={clsx(styles.wrapper, !!error && styles.error, className)} {...props}>
+      <div className={styles.container} onClick={containerOnClick}>
         <textarea
           ref={ref}
           className={styles.textarea}
@@ -58,7 +58,7 @@ const TextArea = forwardRef(function TextArea(
           placeholder={placeholder ?? ""}
           onChange={textareaOnChange}
           onBlur={textareaOnBlur}
-          style={{ minHeight: `${(height ?? 1) * 1.15}em` }}
+          style={{ minHeight: height }}
         />
       </div>
       {error !== undefined && <div className={styles.errorField}>{error}</div>}

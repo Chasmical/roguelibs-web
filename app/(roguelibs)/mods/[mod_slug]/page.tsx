@@ -41,12 +41,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     title: mod.title,
-    description: mod.card_description,
+    description: mod.card_description ?? mod.description,
     authors: mod.authors.map(a => ({ name: a.user.username, url: `/user/${a.user.slug ?? a.user.id}` })),
     openGraph: {
       type: "article",
       title: mod.title,
-      description: mod.card_description,
+      description: mod.card_description ?? mod.description,
       url: `/mods/${mod.slug ?? mod.id}`,
       authors: mod.authors.map(a => a.user.username),
       publishedTime: mod.created_at,
@@ -59,7 +59,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     twitter: {
       card: "summary_large_image",
       title: mod.title,
-      description: mod.card_description,
+      description: mod.card_description ?? mod.description,
       images: [mod.card_banner_url ?? mod.banner_url ?? "/placeholder.png"],
     },
   };

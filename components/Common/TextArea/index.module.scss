@@ -1,23 +1,24 @@
 .wrapper {
   display: flex;
   flex-flow: column nowrap;
-  flex-grow: 1;
-}
-.container {
-  display: flex;
+
   outline: 1px solid var(--color-background-lightest);
   border-radius: 0.5rem;
   transition: all 0.2s ease;
-  padding: 0.5rem;
-  line-height: 2;
 
-  cursor: text;
   &:focus-within {
     outline: 1px solid var(--color-primary-light);
   }
   &.error {
     outline: 1px solid var(--color-danger);
   }
+}
+.container {
+  display: flex;
+  padding: 0.5rem;
+  line-height: 2;
+
+  cursor: text;
 }
 .textarea {
   width: 100%;
@@ -27,7 +28,7 @@
   border: none;
   outline: none;
   color: var(--color-main);
-  resize: none;
+  resize: vertical;
   line-height: 1.15;
 }
 .error-field {
