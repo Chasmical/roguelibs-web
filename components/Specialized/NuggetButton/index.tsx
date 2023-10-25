@@ -25,7 +25,7 @@ export default function NuggetButton({ mod, mutateMod, className, iconSize, ...p
   const [nuggetted, setNuggetted] = useState(api.currentUser?.mod_nuggets.includes(mod.id));
 
   const [nuggetCount, setNuggetCount] = useState<number | null>(null);
-  useMemo(() => setNuggetCount(mod.nugget_count), [mod]);
+  useMemo(() => void setNuggetCount(mod.nugget_count), [mod]);
 
   useEffect(() => {
     setNuggetted(api.currentUser?.mod_nuggets.includes(mod.id));

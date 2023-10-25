@@ -25,7 +25,7 @@ export default function SubscriptionButton({ mod, mutateMod, className, iconSize
   const [subscribed, setSubscribed] = useState(api.currentUser?.mod_subscriptions.includes(mod.id));
 
   const [subscriptionCount, setSubscriptionCount] = useState<number | null>(null);
-  useMemo(() => setSubscriptionCount(mod.subscription_count), [mod]);
+  useMemo(() => void setSubscriptionCount(mod.subscription_count), [mod]);
 
   useEffect(() => {
     setSubscribed(api.currentUser?.mod_subscriptions.includes(mod.id));
