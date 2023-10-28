@@ -1,7 +1,7 @@
 import { ScrollControllerProvider } from "@lib/hooks/useScrollPositionBlocker";
 import { CustomSearchParamsProvider } from "@lib/hooks/useSearchParams";
 import MainLayout from "@components/MainLayout";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { ApiProvider } from "@lib/API.Hooks";
 import localFont from "next/font/local";
 import "../global.scss";
@@ -41,9 +41,12 @@ export const metadata: Metadata = {
     description: "A mod-sharing platform for Streets of Rogue.",
     images: ["/logo.png"],
   },
+  generator: "Next.js",
+};
+
+export const viewport: Viewport = {
   colorScheme: "dark",
   themeColor: "#fbb946",
-  generator: "Next.js",
 };
 
 if (process.env.NODE_ENV === "development") {

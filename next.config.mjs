@@ -1,9 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  experimental: {
-    serverActions: true,
-  },
+  experimental: {},
 
   rewrites: async () => [
     { source: "/m/:mod_slug", destination: "/mods/:mod_slug" },

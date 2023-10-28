@@ -32,31 +32,37 @@ export default function remarkEmoji(options?: RemarkEmojiOptions): Transformer {
 
   return (tree: any) => {
     // replace emoji names with emojis
-    findAndReplace(tree, EmojiNameRegex, emojiName => {
-      return getEmoji(emojiName) ?? false;
-    });
+    findAndReplace(tree, [
+      EmojiNameRegex,
+      emojiName => {
+        return getEmoji(emojiName) ?? false;
+      },
+    ]);
     // replace emojis with twemojis
-    findAndReplace(tree, EmojiRegex, (_, escapes: string, emoji: string) => {
-      const codepoint = toCodePoints(emoji).join("-");
-      const src = base + size + codepoint + ext;
-      const ariaLabel = getEmojiDescription(emoji);
+    findAndReplace(tree, [
+      EmojiRegex,
+      (_, escapes: string, emoji: string) => {
+        const codepoint = toCodePoints(emoji).join("-");
+        const src = base + size + codepoint + ext;
+        const ariaLabel = getEmojiDescription(emoji);
 
-      if (escapes.length % 2 === 1) {
-        return escapes.slice(0, escapes.length / 2) + emoji;
-      }
+        if (escapes.length % 2 === 1) {
+          return escapes.slice(0, escapes.length / 2) + emoji;
+        }
 
-      const escapesContent: PhrasingContent = {
-        type: "text",
-        value: escapes.slice(0, escapes.length / 2),
-      };
-      const emojiContent: PhrasingContent = {
-        type: "image",
-        url: src,
-        data: { hProperties: { draggable: "false", alt: emoji, className, ariaLabel } },
-      };
+        const escapesContent: PhrasingContent = {
+          type: "text",
+          value: escapes.slice(0, escapes.length / 2),
+        };
+        const emojiContent: PhrasingContent = {
+          type: "image",
+          url: src,
+          data: { hProperties: { draggable: "false", alt: emoji, className, ariaLabel } },
+        };
 
-      return [escapesContent, emojiContent];
-    });
+        return [escapesContent, emojiContent];
+      },
+    ]);
   };
 }
 

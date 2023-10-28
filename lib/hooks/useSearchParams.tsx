@@ -1,17 +1,20 @@
 "use client";
 import { ReadonlyURLSearchParams, useSearchParams as useNextSearchParams } from "next/navigation";
-import { createContext, useCallback, useContext, useLayoutEffect, useState } from "react";
+import { Fragment, createContext, useCallback, useContext, useLayoutEffect, useState } from "react";
 
 type ReactStateReturn<T> = [value: T, updateValue: React.Dispatch<React.SetStateAction<T>>];
 type OverridenSearchParamsContext = ReactStateReturn<ReadonlyURLSearchParams>;
 const OverridenSearchParamsContext = createContext<OverridenSearchParamsContext | null>(null);
 
-export function CustomSearchParamsProvider({ children }: React.PropsWithChildren) {
+function CustomSearchParamsProviderClient({ children }: React.PropsWithChildren) {
   const params = useNextSearchParams();
   const value = useState<ReadonlyURLSearchParams>(params);
   useLayoutEffect(() => value[1](params), [params]);
   return <OverridenSearchParamsContext.Provider value={value}>{children}</OverridenSearchParamsContext.Provider>;
 }
+
+// prevents Next from thinking that the entire tree should be client-rendered
+export const CustomSearchParamsProvider = typeof window === "undefined" ? Fragment : CustomSearchParamsProviderClient;
 
 // Using Next's router creates a new page request on every change,
 // while using just window.history prevents useSearchParams from updating.
