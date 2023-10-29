@@ -30,7 +30,10 @@ export interface DatabaseFunctions {
   get_user_subscriptions: (e: DbUser) => number[];
   get_user_badges: (e: DbUser) => string[];
   upsert_mdx_preview: (e: { _source: string }) => string;
+  search_users: (e: { _term: string; _limit: number }) => UserSearchResult[];
 }
+
+export type UserSearchResult = DbUser & { similarity: number };
 
 interface Database {
   tables: DatabaseTables;

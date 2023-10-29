@@ -163,6 +163,10 @@ export class RogueLibsApi extends WrappedSupabaseClient {
     return this.selectOne(selectUserPersonal, u => u.eq("slug", user_slug)) as never;
   }
 
+  public searchUsers(term: string, max_count: number, abort?: AbortSignal) {
+    return this.rpc("search_users", { _term: term, _limit: max_count }, abort);
+  }
+
   public setModNugget(mod_id: number, nugget: boolean) {
     return this.rpc("set_mod_nugget", { _mod_id: mod_id, _nugget: nugget });
   }

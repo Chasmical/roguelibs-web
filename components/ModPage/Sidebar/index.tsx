@@ -38,6 +38,7 @@ export default function ModPageSidebar(props: ModPageContext) {
           mutateAuthors={isEditing ? mutateAuthors : undefined}
           isEditing={isEditing}
           hasChanges={hasChanges}
+          mod_id={mod.id}
         />
       </div>
       <div className={styles.section}>

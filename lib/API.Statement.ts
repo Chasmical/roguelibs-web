@@ -97,10 +97,11 @@ export class WrappedSupabaseClient {
 
   public rpc<FunctionName extends keyof DatabaseFunctions>(
     functionName: FunctionName,
-    ...args: Parameters<DatabaseFunctions[FunctionName]>
+    args: Parameters<DatabaseFunctions[FunctionName]>[0],
+    abort?: AbortSignal,
   ): Promise<ReturnType<DatabaseFunctions[FunctionName]>> {
-    return this.Supabase.rpc(functionName, args)
-      .throwOnError()
-      .then(res => res.data) as Promise<ReturnType<DatabaseFunctions[FunctionName]>>;
+    let builder = this.Supabase.rpc(functionName, args as any);
+    if (abort) builder = builder.abortSignal(abort);
+    return builder.throwOnError().then(res => res.data) as Promise<ReturnType<DatabaseFunctions[FunctionName]>>;
   }
 }

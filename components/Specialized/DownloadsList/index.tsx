@@ -144,12 +144,18 @@ export function Download({ file, index }: DownloadProps) {
                 value={file.title}
                 onChange={v => mutateFile(f => void (f.title = v || null))}
                 placeholder={file.upload?.filename}
+                error={value => {
+                  if (value.length > 64) return `Exceeded length limit (${value.length}/64).`;
+                }}
               />
               <label>{"Tooltip"}</label>
               <TextInput
                 value={file.tooltip}
                 onChange={v => mutateFile(f => void (f.tooltip = v || null))}
                 placeholder={"Not specified"}
+                error={value => {
+                  if (value.length > 128) return `Exceeded length limit (${value.length}/128).`;
+                }}
               />
             </div>
           )}

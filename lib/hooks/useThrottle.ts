@@ -13,7 +13,6 @@ export default function useThrottle<Func extends Function>(
   }, [delay]);
 
   useEffect(() => {
-    throttledCb.cancel();
     throttledCb();
   }, [throttledCb, ...deps]);
 }

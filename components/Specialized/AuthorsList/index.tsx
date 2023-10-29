@@ -11,6 +11,9 @@ import DragHandle from "@components/Common/DragHandle";
 import { RestModAuthor, useApi } from "@lib/API";
 import styles from "./index.module.scss";
 import clsx from "clsx";
+import UserSearch from "@components/Specialized/UserSearch";
+import { DbUser } from "@lib/Database";
+import Icon from "@components/Common/Icon";
 
 type RestAuthor = RestModAuthor;
 
@@ -28,9 +31,16 @@ export interface AuthorsListProps {
   mutateAuthors?: ImmerStateSetter<RestAuthor[]>;
   isEditing?: boolean;
   hasChanges?: boolean;
+  mod_id: number;
 }
 
-export default function AuthorsList({ authors: unsorted, mutateAuthors, isEditing, hasChanges }: AuthorsListProps) {
+export default function AuthorsList({
+  authors: unsorted,
+  mutateAuthors,
+  isEditing,
+  hasChanges,
+  mod_id,
+}: AuthorsListProps) {
   const listId = useId();
   const authors = useMemo(() => unsorted.slice().sort((a, b) => a.order - b.order), [unsorted]);
 
@@ -49,6 +59,27 @@ export default function AuthorsList({ authors: unsorted, mutateAuthors, isEditin
     [authors],
   );
 
+  function addAuthor(user: DbUser) {
+    mutateAuthors?.(authors => {
+      const author: RestModAuthor = {
+        id: undefined!,
+        mod_id: mod_id,
+        user_id: user.id,
+        user: user as any,
+        is_creator: false,
+        can_edit: false,
+        can_see: true,
+        created_at: new Date().toISOString(),
+        edited_at: null,
+        credit: null,
+        order: authors.length,
+      };
+      return [...authors, author];
+    });
+  }
+
+  const [term, setTerm] = useState("");
+
   return (
     <AuthorsListContext.Provider value={context}>
       <DragDropContext onDragEnd={onDragEnd}>
@@ -59,6 +90,17 @@ export default function AuthorsList({ authors: unsorted, mutateAuthors, isEditin
                 <Author author={author} index={i} key={author.user_id} />
               ))}
               {provided.placeholder}
+              {isEditing && (
+                <UserSearch
+                  className={styles.addAuthorButton}
+                  term={[term, setTerm]}
+                  onClick={addAuthor}
+                  disabled={user => authors.some(a => a.user_id === user.id)}
+                >
+                  <Icon type="add" />
+                  {"Add user"}
+                </UserSearch>
+              )}
             </div>
           )}
         </Droppable>
@@ -144,6 +186,9 @@ export function Author({ author, index }: AuthorProps) {
                 value={author.credit}
                 onChange={v => mutateAuthor(a => void (a.credit = v || null))}
                 placeholder={"Not specified"}
+                error={value => {
+                  if (value.length > 128) return `Exceeded length limit (${value.length}/128).`;
+                }}
               />
             </div>
           )}
