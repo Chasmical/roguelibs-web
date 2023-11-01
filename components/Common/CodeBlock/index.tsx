@@ -35,17 +35,22 @@ export default function CodeBlock({
   const code = useMemo(() => stringifyChildren(children).join("\n"), [children]);
   const [highlight, setHighlight] = useState(false);
 
-  useEffect(() => setHighlight(true), []);
-
-  try {
-    const aliased = usefulAliases[lang!];
-    aliased && console.log(`Detected language alias "${lang}" for "${aliased}". Maybe use "${aliased}" directly?`);
-    lang = aliased ?? lang;
-    if (lang) require("prismjs/components/prism-" + lang);
-  } catch (err) {
-    console.error(`"${lang}" is not a valid PrismJS language.`);
-    lang = undefined;
-  }
+  useEffect(() => {
+    try {
+      const aliased = usefulAliases[lang!];
+      aliased && console.log(`Detected language alias "${lang}" for "${aliased}". Maybe use "${aliased}" directly?`);
+      lang = aliased ?? lang;
+      if (lang) {
+        (async () => {
+          await import("prismjs/components/prism-" + lang);
+          setHighlight(true);
+        })();
+      }
+    } catch (err) {
+      console.error(`"${lang}" is not a valid PrismJS language.`);
+      lang = undefined;
+    }
+  }, [lang]);
 
   return (
     <div role="panel" className={clsx(styles.block, className)} {...props}>
