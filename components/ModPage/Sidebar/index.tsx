@@ -22,7 +22,7 @@ export default function ModPageSidebar(props: ModPageContext) {
     <div className={clsx(styles.wrapper, isEditing && styles.expanded)}>
       {release && (
         <div className={styles.section}>
-          <label>{"Latest download" + (release.files.length > 1 ? "s" : "")}</label>
+          <label>{"Latest download" + (release.files.length !== 1 ? "s" : "")}</label>
           <DownloadsList
             files={release.files}
             mutateFiles={isEditing ? mutateFiles : undefined}
@@ -32,7 +32,7 @@ export default function ModPageSidebar(props: ModPageContext) {
         </div>
       )}
       <div className={styles.section}>
-        <label>{"Author" + (mod.authors.length > 1 ? "s" : "")}</label>
+        <label>{"Author" + (mod.authors.length !== 1 ? "s" : "")}</label>
         <AuthorsList
           authors={mod.authors}
           mutateAuthors={isEditing ? mutateAuthors : undefined}
