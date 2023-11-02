@@ -30,7 +30,7 @@ export default IconButton;
 function extractIconProps(props: Partial<IconButtonProps>): IconProps | null {
   if ("type" in props && props.type !== undefined) {
     const iconProps: IconProps = { type: props.type };
-    const iconKeys: (keyof IconProps)[] = ["type", "alpha", "color", "crisp", "size", "width", "height"];
+    const iconKeys: (keyof IconProps)[] = ["type", "alpha", "size", "width", "height"];
 
     for (const propKey in props) {
       let key = propKey as keyof ChildlessIconButtonProps;

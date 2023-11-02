@@ -86,13 +86,8 @@ export function AccountInfo() {
       <div className={styles.actions}>
         <IconButton type="options" size={16} onClick={toggleAccountInfo} />
         <IconButton onClick={toggleNotifications}>
-          <Icon
-            type="bell"
-            color={unread ? "yellow" : "white"}
-            alpha={unread ? 1 : 0.5}
-            size={16}
-            className={clsx(unread && styles.bellWiggle)}
-          />
+          <Icon type="bell" alpha={unread ? 1 : 0.5} size={16} className={clsx(unread && styles.bellWiggle)} />
+          {/* color={unread ? "yellow" : "white"} */}
         </IconButton>
         <IconButton
           data-tooltip-id={signOutId}
