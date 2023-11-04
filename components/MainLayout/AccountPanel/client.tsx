@@ -22,7 +22,7 @@ export function SignInPanel() {
   async function handleSignIn() {
     await supabase.auth.signInWithOAuth({
       provider: "discord",
-      options: { redirectTo: `${location.origin}/auth/callback` },
+      options: { redirectTo: `${location.origin}/api/auth/callback` },
     });
     router.refresh();
   }
