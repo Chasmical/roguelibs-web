@@ -19,6 +19,7 @@ interface FilesListContext {
   mutateFiles?: ImmerStateSetter<RestReleaseFile[]>;
   isEditing?: boolean;
   hasChanges?: boolean;
+  linkTargetBlank?: boolean;
 }
 const FilesListContext = createContext<FilesListContext | null>(null);
 
@@ -27,9 +28,17 @@ export interface DownloadsListProps {
   mutateFiles?: ImmerStateSetter<RestReleaseFile[]>;
   isEditing?: boolean;
   hasChanges?: boolean;
+  release_id: number;
+  linkTargetBlank?: boolean;
 }
 
-export default function DownloadsList({ files: unsorted, mutateFiles, isEditing, hasChanges }: DownloadsListProps) {
+export default function DownloadsList({
+  files: unsorted,
+  mutateFiles,
+  isEditing,
+  hasChanges,
+  linkTargetBlank,
+}: DownloadsListProps) {
   const listId = useId();
   const files = useMemo(() => unsorted.slice().sort((a, b) => a.order - b.order), [unsorted]);
 
@@ -38,12 +47,16 @@ export default function DownloadsList({ files: unsorted, mutateFiles, isEditing,
       listId,
       files,
       mutateFiles,
-      isEditing: isEditing,
-      hasChanges: hasChanges,
+      isEditing,
+      hasChanges,
+      linkTargetBlank,
     };
-  }, [files, mutateFiles, isEditing, hasChanges]);
+  }, [files, mutateFiles, isEditing, hasChanges, linkTargetBlank]);
 
-  const onDragEnd = useCallback<OnDragEndResponder>(e => mutateFiles?.(() => reorder(e, files, "order")), [files]);
+  const onDragEnd = useCallback<OnDragEndResponder>(
+    e => mutateFiles?.(() => reorder(e, files, "order")),
+    [files, mutateFiles],
+  );
 
   return (
     <FilesListContext.Provider value={context}>

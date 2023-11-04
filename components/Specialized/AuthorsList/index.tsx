@@ -22,7 +22,7 @@ interface AuthorsListContext {
   authors: RestAuthor[];
   mutateAuthors: ImmerStateSetter<RestAuthor[]>;
   isEditing: boolean;
-  hasChanges: boolean;
+  linkTargetBlank: boolean;
 }
 const AuthorsListContext = createContext<AuthorsListContext | null>(null);
 
@@ -30,16 +30,16 @@ export interface AuthorsListProps {
   authors: RestModAuthor[];
   mutateAuthors?: ImmerStateSetter<RestAuthor[]>;
   isEditing?: boolean;
-  hasChanges?: boolean;
   mod_id: number;
+  linkTargetBlank?: boolean;
 }
 
 export default function AuthorsList({
   authors: unsorted,
   mutateAuthors,
   isEditing,
-  hasChanges,
   mod_id,
+  linkTargetBlank,
 }: AuthorsListProps) {
   const listId = useId();
   const authors = useMemo(() => unsorted.slice().sort((a, b) => a.order - b.order), [unsorted]);
@@ -50,13 +50,13 @@ export default function AuthorsList({
       authors,
       mutateAuthors: mutateAuthors ?? (() => {}),
       isEditing: isEditing ?? false,
-      hasChanges: hasChanges ?? false,
+      linkTargetBlank: linkTargetBlank ?? false,
     };
-  }, [authors, mutateAuthors, isEditing, hasChanges]);
+  }, [authors, mutateAuthors, isEditing, linkTargetBlank]);
 
   const onDragEnd = useCallback<OnDragEndResponder>(
     e => mutateAuthors?.(() => reorder(e, authors, "order")),
-    [authors],
+    [authors, mutateAuthors],
   );
 
   function addAuthor(user: DbUser) {
@@ -115,7 +115,7 @@ export interface AuthorProps {
 }
 
 export function Author({ author, index }: AuthorProps) {
-  const { listId, authors, mutateAuthors, isEditing, hasChanges } = useContext(AuthorsListContext)!;
+  const { listId, authors, mutateAuthors, isEditing, linkTargetBlank } = useContext(AuthorsListContext)!;
   const [editorOpen, setEditorOpen] = useState(false);
   const me = useApi().currentUser;
 
@@ -154,7 +154,7 @@ export function Author({ author, index }: AuthorProps) {
                 uid={user?.id}
                 size={48}
                 href={`/user/${user?.slug ?? user?.id}`}
-                blank={isEditing || hasChanges}
+                blank={linkTargetBlank}
               />
 
               <div className={clsx(styles.userInfo, author.credit && styles.withCredits)}>

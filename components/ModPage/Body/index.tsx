@@ -16,12 +16,12 @@ export default function ModPageBody(props: ModPageBodyProps) {
   );
 }
 
-export function ModPageDescription({ mod, original, mutateMod, rscDescription, isEditing }: ModPageBodyProps) {
+export function ModPageDescription({ mod, original, mutateMod, rscDescription, mode }: ModPageBodyProps) {
   const [rscSource] = useState(original.description);
 
   return (
     <>
-      {isEditing ? (
+      {mode === "edit" ? (
         <>
           <label>{"Description"}</label>
           <TextArea

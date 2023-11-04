@@ -10,7 +10,8 @@ import WebsiteLinkButton from "@components/Specialized/ExternalLinkButton/websit
 import clsx from "clsx";
 
 export default function ModPageSidebar(props: ModPageContext) {
-  const { mod, mutateMod, releases, isEditing, hasChanges } = props;
+  const { mod, mutateMod, releases, mode } = props;
+  const isEditing = mode === "edit";
 
   const mutateAuthors = useImmerSlice(mutateMod, "authors");
 
@@ -27,7 +28,8 @@ export default function ModPageSidebar(props: ModPageContext) {
             files={release.files}
             mutateFiles={isEditing ? mutateFiles : undefined}
             isEditing={isEditing}
-            hasChanges={hasChanges}
+            linkTargetBlank={!!mode}
+            release_id={release.id}
           />
         </div>
       )}
@@ -37,7 +39,7 @@ export default function ModPageSidebar(props: ModPageContext) {
           authors={mod.authors}
           mutateAuthors={isEditing ? mutateAuthors : undefined}
           isEditing={isEditing}
-          hasChanges={hasChanges}
+          linkTargetBlank={!!mode}
           mod_id={mod.id}
         />
       </div>

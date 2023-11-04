@@ -6,7 +6,7 @@ import Button from "@components/Common/Button";
 import Icon from "@components/Common/Icon";
 import { useApi } from "@lib/API.Hooks";
 
-export default function ModPageBreadcrumbs({ mod, original, isEditing, setIsEditing }: ModPageContext) {
+export default function ModPageBreadcrumbs({ mod, original, mode, setMode }: ModPageContext) {
   const me = useApi().currentUser;
   const canEdit = original.authors.some(a => a.user_id === me?.id) || me?.is_admin;
 
@@ -23,14 +23,14 @@ export default function ModPageBreadcrumbs({ mod, original, isEditing, setIsEdit
       </div>
       {">"}
       <div className={styles.breadcrumb}>
-        <Link href={`/mods/${original.slug}`} blank={isEditing}>
+        <Link href={`/mods/${original.slug}`} blank={!mode}>
           {mod.title}
         </Link>
       </div>
-      {canEdit && setIsEditing && (
+      {canEdit && !mode && (
         <Button
           style={{ fontSize: "1rem", marginLeft: "auto", padding: "0.25rem 0.5rem" }}
-          onClick={() => setIsEditing(!isEditing)}
+          onClick={() => setMode("edit")}
         >
           <Icon type="edit" size={24} />
           {"Edit"}
