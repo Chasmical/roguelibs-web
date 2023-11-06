@@ -10,7 +10,7 @@ export default function remarkAdmonition(options?: RemarkAdmonitionOptions): Tra
 
   return (tree: any) => {
     visit(tree, node => {
-      if (node.type === "textDirective" || node.type === "leafDirective" || node.type === "containerDirective") {
+      if (node.type === "containerDirective") {
         node.attributes = [
           { type: "mdxJsxAttribute", name: "type", value: node.name },
           ...Object.entries(node.attributes).map(([name, value]) => ({ type: "mdxJsxAttribute", name, value })),

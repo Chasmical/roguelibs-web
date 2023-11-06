@@ -18,10 +18,10 @@ export default function ModPageLeftButtons(props: ModPageContext) {
         <b>{"Created at:"}</b>
         <span>{formatDate(mod.created_at)}</span>
       </div>
-      {mod.edited_at && (
+      {(mod.edited_at || hasChanges) && (
         <div className={styles.panel}>
           <b>{"Edited at:"}</b>
-          <span>{hasChanges ? <CurrentDate /> : formatDate(mod.edited_at)}</span>
+          <span>{hasChanges ? <CurrentDate /> : formatDate(mod.edited_at!)}</span>
         </div>
       )}
       {mod.guid && <CopyGuidButton guid={mod.guid} />}

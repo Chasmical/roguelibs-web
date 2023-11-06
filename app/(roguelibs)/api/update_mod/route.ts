@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { createServerApi, createServiceApi, RestMod, RestModAuthor, RestUser } from "@lib/API";
 import { NextRequest, NextResponse } from "next/server";
+import { PostgrestResponse } from "@supabase/supabase-js";
 
 export async function POST(request: NextRequest) {
   const api = createServerApi({ cookies });
@@ -23,7 +24,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "You're not authorized to edit this mod." }, { status: 403 });
   }
 
-  const promises: PromiseLike<any>[] = [];
+  const promises: PromiseLike<PostgrestResponse<any>>[] = [];
 
   // ===== Create and await database requests
 
@@ -87,7 +88,12 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  await Promise.all(promises);
+  const results = await Promise.all(promises);
+  const errors = results.filter(r => r.error);
+  if (errors.length) {
+    console.error(errors);
+    return NextResponse.json({ error: errors.map(e => e.error?.message).join("\n") }, { status: 400 });
+  }
 
   // ===== Return new mod
 
@@ -114,9 +120,9 @@ function verifyAuthorPermissions(
 
   const myAuthor = prevAuthors.find(a => a.user_id === myUser.id);
 
-  const deletedAuthors = prevAuthors.filter(a => !newAuthors.some(b => a.user_id === b.user_id));
-  const updatedAuthors = newAuthors.filter(a => prevAuthors.some(b => a.user_id === b.user_id));
-  const addedAuthors = newAuthors.filter(a => !prevAuthors.some(b => a.user_id === b.user_id));
+  const deletedAuthors = prevAuthors.filter(a => !newAuthors.some(b => a.id === b.id));
+  const updatedAuthors = newAuthors.filter(a => prevAuthors.some(b => a.id === b.id));
+  const addedAuthors = newAuthors.filter(a => !prevAuthors.some(b => a.id === b.id));
 
   // ===== Permission checks on delete/insert/update
 
@@ -210,9 +216,28 @@ function verifyAuthorPermissions(
     return NextResponse.json({ error: `A mod must have only one author with creator permissions.` }, { status: 403 });
   }
 
+  // ===== Update keys check (in bulk upsert, missing values revert to default, which is a bit inconvenient)
+
+  for (let i = 0; i < updatedAuthors.length; i++) {
+    const prev = prevAuthors.find(a => a.id === updatedAuthors[i].id)!;
+    updatedAuthors[i] = applyDiff(prev, updatedAuthors[i], { user: false });
+  }
+
   return {
     deletedAuthors: deletedAuthors.map(a => a.id),
     updatedAuthors,
     addedAuthors,
   };
+}
+
+function applyDiff<T>(left: T, right: Partial<T>, opt?: Partial<Record<keyof T, false>>): T {
+  for (const key in left) {
+    const value = right[key];
+    if (opt?.[key] === false) {
+      delete left[key];
+    } else if (value !== undefined) {
+      left[key] = value;
+    }
+  }
+  return left;
 }

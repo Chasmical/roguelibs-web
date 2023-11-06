@@ -1,6 +1,6 @@
 import { useApi } from "@lib/API";
 import { DbUser, UserSearchResult } from "@lib/Database";
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import styles from "./index.module.scss";
 import Popup, { PopupProps } from "@components/Common/Popup";
 import useThrottle from "@lib/hooks/useThrottle";
@@ -33,6 +33,7 @@ export default function UserSearch({
   const [searching, setSearching] = useState(false);
   const [searchResultTerm, setSearchResultTerm] = useState("");
   const [searchResults, setSearchResults] = useState<UserSearchResult[]>([]);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useThrottle(() => {
     const ac = new AbortController();
@@ -75,9 +76,10 @@ export default function UserSearch({
         id={id}
         place="left"
         open={[isOpen, setIsOpen]}
+        afterShow={() => inputRef.current?.focus()}
         render={() => (
           <div className={styles.search}>
-            <TextInput value={term} onChange={setTerm} />
+            <TextInput ref={inputRef} value={term} onChange={setTerm} />
             <Separator bold />
             <div className={styles.results}>
               {term.length === 0 ? (
