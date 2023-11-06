@@ -66,7 +66,7 @@ export default function AuthorsList({
         mod_id: mod_id,
         user_id: user.id,
         user: user as any,
-        is_creator: false,
+        is_creator: !authors.length,
         can_edit: false,
         can_see: true,
         created_at: new Date().toISOString(),

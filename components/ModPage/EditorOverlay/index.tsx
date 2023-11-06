@@ -60,6 +60,7 @@ export default function ModPageEditorOverlay({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(changes),
       });
+      if (!response.ok) throw new Error(await response.text());
       const newMod = (await response.json()) as RestMod;
       setMode(null);
       setOriginal(newMod);

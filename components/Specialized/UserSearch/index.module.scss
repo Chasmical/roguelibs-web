@@ -1,4 +1,4 @@
-.button {
+.button.button {
   height: 50px;
   border-radius: 9999px;
   border-width: 1px;
@@ -14,15 +14,15 @@
   display: grid;
   grid-template-rows: repeat(5, 34px);
   gap: 0.5rem;
-}
-.result {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0;
-  background-color: var(--color-background);
-  border: 1px solid var(--color-background-lighter);
-  border-radius: 9999px;
+
+  .result {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0;
+    border: 1px solid var(--color-background-lighter);
+    border-radius: 9999px;
+  }
 }
 .label {
   text-align: center;
