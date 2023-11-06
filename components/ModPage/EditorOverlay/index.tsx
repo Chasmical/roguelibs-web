@@ -4,10 +4,14 @@ import Button from "@components/Common/Button";
 import Icon from "@components/Common/Icon";
 import clsx from "clsx";
 import { useState } from "react";
+import { structuralDiff } from "@lib/utils/diff";
+import { RestMod } from "@lib/API";
 
 export default function ModPageEditorOverlay({
+  mod,
   mutateMod,
   original,
+  setOriginal,
   mode,
   setMode,
   changes,
@@ -42,8 +46,24 @@ export default function ModPageEditorOverlay({
     if (!hasChanges) return;
     try {
       setSaving(true);
-      // TODO: implement saving mod
-      await new Promise(r => setTimeout(r, 2000));
+
+      const changes = structuralDiff(original, mod, {
+        id: true,
+        nugget_count: false,
+        subscription_count: false,
+        authors: {
+          user: false,
+        },
+      });
+      const response = await fetch(`${location.origin}/api/update_mod`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(changes),
+      });
+      const newMod = (await response.json()) as RestMod;
+      setMode(null);
+      setOriginal(newMod);
+      mutateMod(() => newMod);
     } finally {
       setSaving(false);
     }

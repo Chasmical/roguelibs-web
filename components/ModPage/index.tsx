@@ -14,7 +14,8 @@ export interface ModPageProps {
   releases: RestRelease[];
   rscDescription: React.ReactNode;
 }
-export default function ModPage({ mod: original, releases, rscDescription }: ModPageProps) {
+export default function ModPage({ mod: initialOriginal, releases, rscDescription }: ModPageProps) {
+  const [original, setOriginal] = useState<RestMod>(initialOriginal);
   const [mod, mutateMod] = useImmerState(original);
   const [mode, setMode] = useState<ModPageMode>(null);
 
@@ -24,8 +25,8 @@ export default function ModPage({ mod: original, releases, rscDescription }: Mod
       subscription_count: false,
       authors: { idBy: "user_id", user: false },
     });
-    return { mod, original, mutateMod, releases, mode, setMode, changes, hasChanges: !!changes.length };
-  }, [mod, releases, mode]);
+    return { mod, mutateMod, original, setOriginal, releases, mode, setMode, changes, hasChanges: !!changes.length };
+  }, [mod, original, releases, mode]);
 
   return (
     <div className={styles.container}>
@@ -42,8 +43,9 @@ export default function ModPage({ mod: original, releases, rscDescription }: Mod
 export type ModPageMode = "edit" | "preview" | null;
 export interface ModPageContext {
   mod: RestMod;
-  original: RestMod;
   mutateMod: ImmerStateSetter<RestMod>;
+  original: RestMod;
+  setOriginal: Dispatch<SetStateAction<RestMod>>;
   releases: RestRelease[];
   mode: ModPageMode;
   setMode: Dispatch<SetStateAction<ModPageMode>>;

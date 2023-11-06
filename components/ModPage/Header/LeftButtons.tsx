@@ -7,9 +7,10 @@ import IconButton from "@components/Common/IconButton";
 import Tooltip from "@components/Common/Tooltip";
 import { useId } from "react";
 import { formatDate } from "@lib/utils/date";
+import { CurrentDate } from "@lib/hooks/useCurrentDate";
 
 export default function ModPageLeftButtons(props: ModPageContext) {
-  const { mod } = props;
+  const { mod, hasChanges } = props;
 
   return (
     <div className={styles.container}>
@@ -20,7 +21,7 @@ export default function ModPageLeftButtons(props: ModPageContext) {
       {mod.edited_at && (
         <div className={styles.panel}>
           <b>{"Edited at:"}</b>
-          <span>{formatDate(mod.edited_at)}</span>
+          <span>{hasChanges ? <CurrentDate /> : formatDate(mod.edited_at)}</span>
         </div>
       )}
       {mod.guid && <CopyGuidButton guid={mod.guid} />}
