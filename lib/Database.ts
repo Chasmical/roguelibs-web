@@ -99,7 +99,7 @@ export interface DbModAuthor {
   user_id: string; // uuid fk(users / set default) = '00000000-0000-0000-0000-000000000000'
   created_at: string; // timestamptz = now()
   edited_at: string | null; // timestamptz null = null
-  credit: string | null; // text null = null { length [1;64] }
+  credit: string | null; // text null = null { length [1;128] }
   is_creator: boolean; // bool = false
   can_edit: boolean; // bool = false
   can_see: boolean; // bool = true

@@ -7,7 +7,7 @@ import ModPageBody from "@components/ModPage/Body";
 import ModPageSidebar from "@components/ModPage/Sidebar";
 import ModPageEditorOverlay from "@components/ModPage/EditorOverlay";
 import styles from "./index.module.scss";
-import diff from "@lib/utils/diff";
+import { diff } from "@lib/utils/diff";
 
 export interface ModPageProps {
   mod: RestMod;
@@ -25,7 +25,7 @@ export default function ModPage({ mod: initialOriginal, releases, rscDescription
       subscription_count: false,
       authors: { idBy: "user_id", user: false },
     });
-    return { mod, mutateMod, original, setOriginal, releases, mode, setMode, changes, hasChanges: !!changes.length };
+    return { mod, mutateMod, original, setOriginal, releases, mode, setMode, changes: [], hasChanges: !!changes };
   }, [mod, original, releases, mode]);
 
   return (
