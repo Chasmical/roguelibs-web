@@ -52,7 +52,7 @@ export default function MdxPreview({ source, className, onLoad, ...props }: MdxP
   return (
     <div className={clsx(styles.wrapper, className)} {...props}>
       {uid ? (
-        <iframe className={styles.iframe} src={`/mdx-preview/${uid}`} height={height ?? 300} allowTransparency />
+        <iframe className={styles.iframe} src={`/mdx-preview/${uid}`} height={height ?? 300} />
       ) : (
         <div>{"Loading..."}</div>
       )}

@@ -2,13 +2,11 @@ import { createServerApi } from "@lib/API";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { compileMDX } from "@lib/mdx";
-import MdxPreviewIndexClient from "@app/(internal)/mdx-preview/[uid]/client";
+import MdxPreviewIndexClient from "./client";
 
 interface PageProps {
   params: { uid: string };
 }
-
-// export const fetchCache = "default-no-store";
 
 export default async function MdxPreviewIndex({ params }: PageProps) {
   const api = createServerApi({ headers, cookies }, false);

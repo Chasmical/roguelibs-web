@@ -1,0 +1,7 @@
+html {
+  // different color-scheme forces browsers to use opaque background
+  color-scheme: light dark;
+}
+body {
+  background: transparent !important;
+}
