@@ -13,6 +13,7 @@ export default function Icon({ className, width, height, size, type, style, alph
 
   return (
     <div
+      role="icon"
       className={clsx(styles.icon, sheet.className, className)}
       style={{
         width: width ?? size,
