@@ -56,6 +56,7 @@ export function AccountInfo() {
   }
 
   const popupId = useId();
+  const popupSelector = "#" + CSS.escape(popupId);
   const signOutId = useId();
 
   const accountInfoOpen = useState(false);
@@ -82,7 +83,7 @@ export function AccountInfo() {
 
   return (
     <div className={styles.panel}>
-      <Avatar data-tooltip-id={popupId} src={user?.avatar_url} uid={user?.id} size={72} onClick={toggleAccountInfo} />
+      <Avatar id={popupId} src={user?.avatar_url} uid={user?.id} size={72} onClick={toggleAccountInfo} />
       <div className={styles.actions}>
         <IconButton type="options" size={16} onClick={toggleAccountInfo} />
         <IconButton onClick={toggleNotifications}>
@@ -97,7 +98,14 @@ export function AccountInfo() {
         />
         <Tooltip id={signOutId} place="left" content="Sign out" />
       </div>
-      <Popup id={popupId} open={accountInfoOpen} place="left" offset={16} className={styles.userPopup} noArrow>
+      <Popup
+        anchorSelect={popupSelector}
+        open={accountInfoOpen}
+        place="left"
+        offset={16}
+        className={styles.userPopup}
+        noArrow
+      >
         {() => (
           <div>
             <div className={styles.username}>{user?.username}</div>
@@ -106,7 +114,7 @@ export function AccountInfo() {
         )}
       </Popup>
       <Popup
-        id={popupId}
+        anchorSelect={popupSelector}
         open={notificationsOpen}
         place="left"
         offset={16}
@@ -117,9 +125,7 @@ export function AccountInfo() {
           <div className={styles.notificationList}>
             <div>{"New Notifications"}</div>
             <Separator />
-            {user?.notifications.map(notification => (
-              <Notification key={notification.id} value={notification} />
-            ))}
+            {user?.notifications.map(notification => <Notification key={notification.id} value={notification} />)}
           </div>
         )}
       </Popup>

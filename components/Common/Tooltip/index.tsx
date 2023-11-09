@@ -20,6 +20,13 @@ export default function Tooltip({ ...props }: TooltipProps) {
     (props as ReactTooltipProps).render = props.children;
     delete props.children;
   }
-  props.openOnClick && (props.delayHide ??= 3000);
+  if (props.openOnClick) {
+    props.delayHide ??= 3000;
+    if (props.delayHide) {
+      props.closeEvents ??= closeEvents;
+    }
+  }
   return ReactTooltip(props as ReactTooltipProps); // don't mount another component
 }
+
+const closeEvents: ReactTooltipProps["closeEvents"] = { mouseleave: true, blur: true };

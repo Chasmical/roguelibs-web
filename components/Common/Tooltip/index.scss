@@ -11,4 +11,7 @@
     border-right: 1px solid var(--color-primary);
     border-bottom: 1px solid var(--color-primary);
   }
+  &.react-tooltip__closing {
+    pointer-events: none;
+  }
 }
