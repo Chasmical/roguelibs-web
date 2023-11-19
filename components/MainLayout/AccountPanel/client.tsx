@@ -18,6 +18,7 @@ import { Provider as SupabaseAuthProvider } from "@supabase/supabase-js";
 export function SignInPanel() {
   const supabase = useSupabase();
   const router = useRouter();
+  const tooltipId = useId();
 
   async function signIn(provider: SupabaseAuthProvider) {
     await supabase.auth.signInWithOAuth({
@@ -27,13 +28,28 @@ export function SignInPanel() {
     router.refresh();
   }
 
+  const providerMap = {
+    discord: "Discord",
+    google: "Google",
+    github: "GitHub",
+  } as const;
+  const providers = Object.keys(providerMap) as (keyof typeof providerMap)[];
+
   return (
     <div className={clsx(styles.panel, styles.signInPanel)}>
       <div>{"Sign In with:"}</div>
       <div>
-        <IconButton type="discord" alpha={1} onClick={() => signIn("discord")} />
-        <IconButton type="google" alpha={1} onClick={() => signIn("google")} />
-        <IconButton type="github" alpha={1} onClick={() => signIn("github")} />
+        {providers.map(provider => (
+          <IconButton
+            key={provider}
+            data-tooltip-id={tooltipId}
+            data-tooltip-content={providerMap[provider]}
+            type={provider}
+            alpha={1}
+            onClick={() => signIn(provider)}
+          />
+        ))}
+        <Tooltip id={tooltipId} content="" place="bottom" />
       </div>
     </div>
   );
