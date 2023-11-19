@@ -31,6 +31,7 @@ const IconButtonClient = forwardRef(function IconButtonClient(
         className,
       )}
       onPointerDown={onPointerDown}
+      onFocus={e => e.currentTarget.blur()}
       {...props}
     >
       {children}

@@ -30,10 +30,11 @@ export default function ModPageEditorOverlay({
     }
   }
   function onEdit() {
+    if (mode === "edit") return;
     setMode("edit");
   }
   async function onPreview() {
-    if (!hasChanges) return;
+    if (mode === "preview") return;
     try {
       setLoadingPreview(true);
       setMode("preview");
