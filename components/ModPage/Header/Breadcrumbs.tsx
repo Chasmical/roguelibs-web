@@ -15,15 +15,19 @@ export default function ModPageBreadcrumbs({ mod, original, mode, setMode }: Mod
   return (
     <div className={styles.breadcrumbs}>
       <div className={styles.breadcrumb}>
-        <Link href="/">{"RL"}</Link>
+        <Link href="/" blank={!!mode}>
+          {"RL"}
+        </Link>
       </div>
       {">"}
       <div className={styles.breadcrumb}>
-        <Link href="/mods">{"Mods"}</Link>
+        <Link href="/mods" blank={!!mode}>
+          {"Mods"}
+        </Link>
       </div>
       {">"}
       <div className={styles.breadcrumb}>
-        <Link href={`/mods/${original.slug}`} blank={!mode}>
+        <Link href={`/mods/${original.slug}`} blank={!!mode}>
           {mod.title}
         </Link>
       </div>

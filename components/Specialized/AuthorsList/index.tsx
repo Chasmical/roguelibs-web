@@ -98,7 +98,7 @@ export default function AuthorsList({
                   disabled={user => authors.some(a => a.user_id === user.id)}
                 >
                   <Icon type="add" />
-                  {"Add user"}
+                  {"Add author"}
                 </UserSearch>
               )}
             </div>

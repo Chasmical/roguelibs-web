@@ -2,7 +2,6 @@
 import { useRouter } from "next/navigation";
 import styles from "./client.module.scss";
 import Avatar from "@components/Common/Avatar";
-import Button from "@components/Common/Button";
 import Icon from "@components/Common/Icon";
 import IconButton from "@components/Common/IconButton";
 import { useSupabase } from "@lib/hooks";
@@ -14,25 +13,28 @@ import clsx from "clsx";
 import Tooltip from "@components/Common/Tooltip";
 import { RestUserNotification } from "@lib/API";
 import { formatDateLocal } from "@lib/utils/date";
+import { Provider as SupabaseAuthProvider } from "@supabase/supabase-js";
 
 export function SignInPanel() {
   const supabase = useSupabase();
   const router = useRouter();
 
-  async function handleSignIn() {
+  async function signIn(provider: SupabaseAuthProvider) {
     await supabase.auth.signInWithOAuth({
-      provider: "discord",
+      provider,
       options: { redirectTo: `${location.origin}/api/auth/callback` },
     });
     router.refresh();
   }
 
   return (
-    <div className={styles.panel}>
-      <Button onClick={handleSignIn}>
-        <Icon type="discord" />
-        {"Sign In"}
-      </Button>
+    <div className={clsx(styles.panel, styles.signInPanel)}>
+      <div>{"Sign In with:"}</div>
+      <div>
+        <IconButton type="discord" alpha={1} onClick={() => signIn("discord")} />
+        <IconButton type="google" alpha={1} onClick={() => signIn("google")} />
+        <IconButton type="github" alpha={1} onClick={() => signIn("github")} />
+      </div>
     </div>
   );
 }
