@@ -61,8 +61,28 @@
 }
 .title {
   flex-grow: 1;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1rem;
   font-size: 2.5rem;
   text-shadow: var(--text-shadow);
   color: var(--color-white);
+  overflow: hidden;
+
+  > span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+.title-input {
+  margin-top: 1.15rem;
+
+  input {
+    text-shadow: var(--text-shadow);
+    color: var(--color-white);
+    text-align: center;
+    line-height: 1em;
+  }
 }

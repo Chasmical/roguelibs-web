@@ -6,9 +6,10 @@ import ModPageLeftButtons from "@components/ModPage/Header/LeftButtons";
 import ModPageRightButtons from "@components/ModPage/Header/RightButtons";
 import CopyLink from "@components/Specialized/CopyLink";
 import clsx from "clsx";
+import TextInput from "@components/Common/TextInput";
 
 export default function ModPageHeader(props: ModPageContext) {
-  const { mod } = props;
+  const { mod, mutateMod, mode } = props;
 
   const layout = bannerLayouts[mod.banner_layout - 1];
 
@@ -23,7 +24,21 @@ export default function ModPageHeader(props: ModPageContext) {
           alt=""
         />
         <div className={styles.header}>
-          <div className={styles.title}>{mod.title}</div>
+          <div className={styles.title}>
+            {mode !== "edit" ? (
+              <span>{mod.title}</span>
+            ) : (
+              <TextInput
+                className={styles.titleInput}
+                value={mod.title}
+                onChange={title => mutateMod(m => void (m.title = title))}
+                error={title => {
+                  if (title.length < 1) return "Title cannot be empty.";
+                  if (title.length > 64) return `Exceeded length limit (${title.length}/64).`;
+                }}
+              />
+            )}
+          </div>
           <CopyLink permanent href={`/m/${mod.id}`} place="left" />
         </div>
         <ModPageLeftButtons {...props} />
