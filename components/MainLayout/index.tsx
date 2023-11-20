@@ -26,15 +26,16 @@ export default function MainLayout({ className, children, ...props }: MainLayout
       <div className={styles.footer}>
         <div>
           <label>{"Other stuff"}</label>
-          {/* <Link href="/about">{"About RogueLibs"}</Link> */}
-          <Link href="https://github.com/SugarBarrel/roguelibs-web">{"The source code"}</Link>
+          <Link href="/about">{"About RogueLibs"}</Link>
+          <Link href="/privacy-policy">{"Privacy Policy"}</Link>
+          <Link href="/terms-of-service">{"Terms of Service"}</Link>
+          <Link href="https://github.com/SugarBarrel/roguelibs-web">{"Website's source repo"}</Link>
         </div>
         <div>
           <label>{"Guides and Information"}</label>
-          <Link href="https://sugarbarrel.github.io/RogueLibs/docs/user/installation">{"Installing mods"}</Link>
-          <Link href="https://sugarbarrel.github.io/RogueLibs/docs/dev/getting-started">{"Making mods"}</Link>
-          <br />
-          <Link href="https://sugarbarrel.github.io/SoRModHub">{"Old SoR ModHub"}</Link>
+          <Link href="/docs/user-guide/installation">{"Installing mods"}</Link>
+          <Link href="/docs/user-guide/troubleshooting">{"Troubleshooting"}</Link>
+          <Link href="/docs/getting-started/installation">{"Developing mods"}</Link>
         </div>
         <div>
           <label>{"Streets of Rogue"}</label>

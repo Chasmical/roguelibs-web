@@ -4,6 +4,8 @@ const nextConfig = {
   experimental: {},
 
   rewrites: async () => [
+    { source: "/tos", destination: "/terms-of-service" },
+    { source: "/privacy", destination: "/privacy-policy" },
     { source: "/m/:mod_slug", destination: "/mods/:mod_slug" },
     { source: "/u/:user_slug", destination: "/users/:user_slug" },
   ],

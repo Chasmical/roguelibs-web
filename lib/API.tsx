@@ -214,10 +214,26 @@ export function createServerApi(
   return new RogueLibsApi(supabase, null);
 }
 
-export function createServiceApi(service: "SERVICE_ROLE_API") {
+export function createServiceApi(
+  service: "SERVICE_ROLE_API",
+  nextOptions?: { revalidate?: number | false; tags?: string[] } | false,
+) {
   if (service !== "SERVICE_ROLE_API") return null!;
+
+  const customFetch = (req: any, options: any) => {
+    if (!options) options = {};
+    if (nextOptions) {
+      options.next = nextOptions;
+    }
+    if ((nextOptions == null && options.cache == null) || nextOptions === false) {
+      options.cache = "no-cache";
+    }
+    return fetch(req, options);
+  };
+
   const supabase = createSupabaseClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_KEY!, {
     auth: { flowType: "pkce" },
+    global: { fetch: customFetch },
   });
   return new RogueLibsApi(supabase, null);
 }

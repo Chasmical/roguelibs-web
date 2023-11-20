@@ -30,7 +30,7 @@ export interface AuthorsListProps {
   authors: RestModAuthor[];
   mutateAuthors?: ImmerStateSetter<RestAuthor[]>;
   isEditing?: boolean;
-  mod_id: number;
+  mod_id?: number;
   linkTargetBlank?: boolean;
 }
 
@@ -63,7 +63,7 @@ export default function AuthorsList({
     mutateAuthors?.(authors => {
       const author: RestModAuthor = {
         id: undefined!,
-        mod_id: mod_id,
+        mod_id: mod_id!,
         user_id: user.id,
         user: user as any,
         is_creator: !authors.length,
