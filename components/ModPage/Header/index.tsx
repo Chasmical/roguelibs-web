@@ -19,7 +19,7 @@ export default function ModPageHeader(props: ModPageContext) {
       <div className={styles.wrapper}>
         <img
           draggable="false"
-          className={clsx(styles.banner, styles[layout])}
+          className={clsx(styles.banner, layout)}
           src={mod.banner_url ?? "/placeholder.png"}
           alt=""
         />
@@ -48,11 +48,11 @@ export default function ModPageHeader(props: ModPageContext) {
   );
 }
 export const bannerLayouts = [
-  "widthTop",
-  "widthMiddle",
-  "widthBottom",
-  "heightLeft",
-  "heightCenter",
-  "heightRight",
-  "stretch",
+  styles.heightLeft,
+  styles.heightCenter,
+  styles.heightRight,
+  styles.widthTop,
+  styles.widthMiddle,
+  styles.widthBottom,
+  styles.stretch,
 ] as const;

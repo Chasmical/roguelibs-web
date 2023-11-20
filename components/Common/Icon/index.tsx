@@ -34,6 +34,7 @@ const commonIcons = createSpriteSheet({
     ["download", "upload", "options", "options_vert", "door", "bell", "check", "cross"],
     ["nugget", "discord", "gamebanana", "website", "google", "github"],
     ["info", "note", "lightbulb", "caution", "danger"],
+    ["align1", "align2", "align3", "align4", "align5", "align6", "align7"],
   ],
 });
 

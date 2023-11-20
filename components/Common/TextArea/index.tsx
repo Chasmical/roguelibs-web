@@ -11,7 +11,7 @@ export interface TextAreaProps {
   onChange?: (newValue: string) => void;
   autoTrimEnd?: boolean;
   height?: string;
-  error?: ((value: string) => boolean | string | null) | boolean | string | null | undefined;
+  error?: ((value: string) => string | null | undefined | void) | string | null | undefined;
   // ...props
   style?: React.CSSProperties;
 }
