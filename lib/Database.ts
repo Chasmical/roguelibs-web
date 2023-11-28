@@ -1,3 +1,4 @@
+import { ImageLayout } from "@components/Common/LayoutImage";
 import { BadgeName } from "@lib/badges";
 
 export interface DatabaseTables {
@@ -79,7 +80,7 @@ export interface DbMod {
   title: string; // text { length [1;64] }
   description: string; // text = '' { length <= 4000 }
   banner_url: string | null; // text null = null { length [1;255] }
-  banner_layout: number; // int2 = 5 { [1;7] }
+  banner_layout: ImageLayout; // int2 = 5 { [1;7] }
   is_public: boolean; // bool = false
   is_verified: boolean; // bool = false
   nugget_count: number; // int4 = 0
@@ -88,7 +89,7 @@ export interface DbMod {
   slug: string | null; // citext null = null { unique, length [3;32], match /^[0-9a-zA-Z._-]+$/, not match /^\d+$/ }
   card_description: string | null; // text null = null { length [1;255] }
   card_banner_url: string | null; // text null = null { length [1;255] }
-  card_banner_layout: number; // int2 = 5 { [1;7] }
+  card_banner_layout: ImageLayout; // int2 = 5 { [1;7] }
   github_repo: string | null; // text null = null { length <= 64, match /^[\w.-]+\/[\w.-]+$/ }
   gamebanana_id: number | null; // int4 null = null { > 0 }
   website_link: string | null; // text null = null { length <= 128, match /^https:\/\// }

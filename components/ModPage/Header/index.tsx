@@ -5,24 +5,17 @@ import ModPageBreadcrumbs from "./Breadcrumbs";
 import ModPageLeftButtons from "@components/ModPage/Header/LeftButtons";
 import ModPageRightButtons from "@components/ModPage/Header/RightButtons";
 import CopyLink from "@components/Specialized/CopyLink";
-import clsx from "clsx";
 import TextInput from "@components/Common/TextInput";
+import LayoutImage from "@components/Common/LayoutImage";
 
 export default function ModPageHeader(props: ModPageContext) {
   const { mod, mutateMod, mode } = props;
-
-  const layout = bannerLayouts[mod.banner_layout - 1];
 
   return (
     <>
       <ModPageBreadcrumbs {...props} />
       <div className={styles.wrapper}>
-        <img
-          draggable="false"
-          className={clsx(styles.banner, layout)}
-          src={mod.banner_url ?? "/placeholder.png"}
-          alt=""
-        />
+        <LayoutImage src={mod.banner_url ?? "/placeholder.png"} alt="" height="100%" layout={mod.banner_layout} />
         <div className={styles.header}>
           <div className={styles.title}>
             {mode !== "edit" ? (
@@ -47,12 +40,3 @@ export default function ModPageHeader(props: ModPageContext) {
     </>
   );
 }
-export const bannerLayouts = [
-  styles.heightLeft,
-  styles.heightCenter,
-  styles.heightRight,
-  styles.widthTop,
-  styles.widthMiddle,
-  styles.widthBottom,
-  styles.stretch,
-] as const;
