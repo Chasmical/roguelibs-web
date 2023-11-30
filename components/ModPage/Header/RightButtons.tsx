@@ -7,13 +7,21 @@ import { useId, useState } from "react";
 import Popup from "@components/Common/Popup";
 import SubscriptionButton from "@components/Specialized/SubscriptionButton";
 import NuggetButton from "@components/Specialized/NuggetButton";
+import { useApi } from "@lib/hooks";
+import Tooltip from "@components/Common/Tooltip";
 
 export default function ModPageRightButtons(props: ModPageContext) {
+  const tooltipId = useId();
+  const api = useApi();
+
   return (
     <div className={styles.container}>
       <div className={styles.row}>
-        <NuggetButton mod={props.mod} mutateMod={props.mutateMod} />
-        <SubscriptionButton mod={props.mod} mutateMod={props.mutateMod} />
+        <NuggetButton mod={props.mod} mutateMod={props.mutateMod} data-tooltip-id={tooltipId} />
+        <SubscriptionButton mod={props.mod} mutateMod={props.mutateMod} data-tooltip-id={tooltipId} />
+        {!api.currentUser && (
+          <Tooltip id={tooltipId} place="top" openOnClick variant="error" content="" delayHide={-1} />
+        )}
         <MiscButton {...props} />
       </div>
     </div>

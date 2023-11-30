@@ -14,7 +14,9 @@ export default function WebsiteLinkButton({ icon, href, label }: WebsiteLinkButt
 
   return (
     <div className={styles.button}>
-      <NextLink href={href!}>{icon}</NextLink>
+      <NextLink href={href!} tabIndex={-1}>
+        {icon}
+      </NextLink>
       <NextLink href={href!} className={styles.link}>
         {label ?? "Website"}
       </NextLink>

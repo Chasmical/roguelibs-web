@@ -17,9 +17,17 @@ export interface NuggetButtonProps extends Omit<ButtonProps, "onClick"> {
   iconSize?: number;
 }
 
-export default function NuggetButton({ mod, mutateMod, className, iconSize, ...props }: NuggetButtonProps) {
+export default function NuggetButton({
+  mod,
+  mutateMod,
+  className,
+  iconSize,
+  ["data-tooltip-id"]: providedTooltipId,
+  ...props
+}: NuggetButtonProps) {
   const api = useApi();
-  const tooltipId = useId();
+  const ownTooltipId = useId();
+  const tooltipId = providedTooltipId ?? ownTooltipId;
 
   const [loading, setLoading] = useState(false);
   const [nuggetted, setNuggetted] = useState(api.currentUser?.mod_nuggets.includes(mod.id));
@@ -49,14 +57,15 @@ export default function NuggetButton({ mod, mutateMod, className, iconSize, ...p
   return (
     <Button
       data-tooltip-id={tooltipId}
+      data-tooltip-content="You must sign in to rate mods!"
       className={clsx(styles.button, nuggetted && styles.set, className)}
       onClick={e => (e.preventDefault(), e.stopPropagation(), toggleNugget())}
       {...props}
     >
       <Icon type={loading ? "loading" : "nugget"} alpha={loading || nuggetted ? 1 : 0.5} size={iconSize} />
       {nuggetCount}
-      {!api.currentUser && (
-        <Tooltip id={tooltipId} place="top" openOnClick variant="error" content="You mush sign in to rate mods!" />
+      {!api.currentUser && !providedTooltipId && (
+        <Tooltip id={tooltipId} place="top" openOnClick variant="error" content="" delayHide={-1} />
       )}
     </Button>
   );

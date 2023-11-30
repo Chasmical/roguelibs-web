@@ -15,10 +15,13 @@ const IconButtonClient = forwardRef(function IconButtonClient(
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [fakeActive, setFakeActive] = useState(false);
 
-  const onPointerDown = useCallback(() => {
+  const onPointerDown = useCallback<React.PointerEventHandler<HTMLButtonElement>>(e => {
     setFakeActive(true);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => setFakeActive(false), 100);
+    timeoutRef.current = setTimeout(() => {
+      setFakeActive(false);
+      e.currentTarget.blur();
+    }, 100);
   }, []);
 
   return (
@@ -31,7 +34,6 @@ const IconButtonClient = forwardRef(function IconButtonClient(
         className,
       )}
       onPointerDown={onPointerDown}
-      onFocus={e => e.currentTarget.blur()}
       {...props}
     >
       {children}

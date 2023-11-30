@@ -10,7 +10,7 @@ export default function GameBananaButton({ id }: GameBananaButtonProps) {
 
   return (
     <div className={styles.button}>
-      <NextLink href={modHref}>
+      <NextLink href={modHref} tabIndex={-1}>
         <Icon type="gamebanana" />
       </NextLink>
       <NextLink className={styles.link} href={modHref} target="_blank">

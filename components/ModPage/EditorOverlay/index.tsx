@@ -38,7 +38,7 @@ export default function ModPageEditorOverlay({
     try {
       setLoadingPreview(true);
       setMode("preview");
-      await new Promise(r => setTimeout(r, 1500));
+      await new Promise(r => setTimeout(r, 1000));
     } finally {
       setLoadingPreview(false);
     }

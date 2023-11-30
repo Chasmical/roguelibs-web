@@ -12,7 +12,7 @@ export default function GitHubButton({ repo: repoName }: GitHubButtonProps) {
 
   return (
     <div className={styles.button}>
-      <NextLink href={repoHref ?? ownerHref}>
+      <NextLink href={repoHref ?? ownerHref} tabIndex={-1}>
         <GitHubIcon />
       </NextLink>
       <span>

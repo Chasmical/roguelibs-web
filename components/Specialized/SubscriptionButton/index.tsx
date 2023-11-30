@@ -17,9 +17,17 @@ export interface SubscriptionButtonProps extends Omit<ButtonProps, "onClick"> {
   iconSize?: number;
 }
 
-export default function SubscriptionButton({ mod, mutateMod, className, iconSize, ...props }: SubscriptionButtonProps) {
+export default function SubscriptionButton({
+  mod,
+  mutateMod,
+  className,
+  iconSize,
+  ["data-tooltip-id"]: providedTooltipId,
+  ...props
+}: SubscriptionButtonProps) {
   const api = useApi();
-  const tooltipId = useId();
+  const ownTooltipId = useId();
+  const tooltipId = providedTooltipId ?? ownTooltipId;
 
   const [loading, setLoading] = useState(false);
   const [subscribed, setSubscribed] = useState(api.currentUser?.mod_subscriptions.includes(mod.id));
@@ -51,20 +59,15 @@ export default function SubscriptionButton({ mod, mutateMod, className, iconSize
   return (
     <Button
       data-tooltip-id={tooltipId}
+      data-tooltip-content="You must sign in to subscribe to mods!"
       className={clsx(styles.button, subscribed && styles.set, className)}
       onClick={e => (e.preventDefault(), e.stopPropagation(), toggleSubscription())}
       {...props}
     >
       <Icon type={loading ? "loading" : "check"} alpha={loading || subscribed ? 1 : 0.5} size={iconSize} />
       {subscribed ? "Subscribed" : "Subscribe"}
-      {!api.currentUser && (
-        <Tooltip
-          id={tooltipId}
-          place="top"
-          openOnClick
-          variant="error"
-          content="You mush sign in to subscribe to mods!"
-        />
+      {!api.currentUser && !providedTooltipId && (
+        <Tooltip id={tooltipId} place="top" openOnClick variant="error" content="" delayHide={-1} />
       )}
     </Button>
   );
