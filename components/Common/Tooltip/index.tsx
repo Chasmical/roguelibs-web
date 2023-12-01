@@ -1,8 +1,8 @@
 "use client";
-import { Tooltip as ReactTooltip } from "react-tooltip";
+import { Tooltip as ReactTooltip, ITooltip } from "react-tooltip";
 import "./index.scss";
 
-export type ReactTooltipProps = Parameters<typeof ReactTooltip>[0];
+export type ReactTooltipProps = ITooltip;
 type TooltipRenderProp = NonNullable<ReactTooltipProps["render"]>;
 
 // safer props type (to prevent ambigious usage of content-rendering props)
@@ -26,7 +26,7 @@ export default function Tooltip({ ...props }: TooltipProps) {
       props.closeEvents ??= closeEvents;
     }
   }
-  return ReactTooltip(props as ReactTooltipProps); // don't mount another component
+  return <ReactTooltip {...(props as ReactTooltipProps)} />;
 }
 
 const closeEvents: ReactTooltipProps["closeEvents"] = { mouseleave: true, blur: true };
