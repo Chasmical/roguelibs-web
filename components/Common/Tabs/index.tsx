@@ -83,11 +83,11 @@ function TabsContainer({ lazy, children, tabs, selectedValue }: Pick<TabsProps, 
 
   return (
     <>
-      {items.map(key => {
-        const sub = tabs.filter(t => t.key === key.key);
+      {items.map(item => {
+        const sub = tabs.filter(t => t.key === item.key);
         const hidden = sub.every(t => t.value !== selectedValue);
         if (lazy && hidden) return null;
-        return cloneElement(key, { hidden });
+        return cloneElement(item, { hidden });
       })}
     </>
   );
@@ -143,7 +143,8 @@ function convertTabsChildren(children: React.ReactNode): Tab[] {
     const defaultIndex = convertDefaultIndex(child.props.default, values);
     let count = Math.max(values.length, labels.length);
     for (let i = 0; i < count; i++) {
-      let value = "" + (values[i] ?? labels[i] ?? `${child.key}${count > 1 ? "." + i : ""}`);
+      const simpleLabel = isSimpleValue(labels[i]);
+      let value = "" + (values[i] ?? (simpleLabel ? labels[i] : null) ?? `${child.key}${count > 1 ? "." + i : ""}`);
       let label = labels[i] ?? toTitleCase(value);
 
       tabs.push({
@@ -157,6 +158,9 @@ function convertTabsChildren(children: React.ReactNode): Tab[] {
   return tabs;
 }
 
+function isSimpleValue(value: unknown) {
+  return typeof value === "string" || typeof value === "number" || typeof value === "boolean";
+}
 function splitValues(str: string | string[] | null | undefined) {
   return !str ? null : Array.isArray(str) ? str : str.split(TabValueSeparator);
 }

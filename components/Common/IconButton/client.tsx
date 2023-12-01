@@ -16,11 +16,12 @@ const IconButtonClient = forwardRef(function IconButtonClient(
   const [fakeActive, setFakeActive] = useState(false);
 
   const onPointerDown = useCallback<React.PointerEventHandler<HTMLButtonElement>>(e => {
+    const buttonRef = e.currentTarget;
     setFakeActive(true);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
       setFakeActive(false);
-      e.currentTarget.blur();
+      buttonRef.blur();
     }, 100);
   }, []);
 

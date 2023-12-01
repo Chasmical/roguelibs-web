@@ -127,12 +127,11 @@ export function Download({ file, index }: DownloadProps) {
           <div
             ref={provided.innerRef}
             {...provided.draggableProps}
-            {...provided.dragHandleProps}
             className={styles.downloadWrapper}
             data-tooltip-id={itemId}
           >
-            {isEditing && <DragHandle />}
-            <div className={styles.download}>
+            {isEditing && <DragHandle {...provided.dragHandleProps} />}
+            <div className={styles.download} {...provided.dragHandleProps}>
               <Button className={className} onClick={() => download(file)}>
                 <Icon type={loading ? "loading" : "download"} size={24} />
                 {file.title || file.upload?.filename}

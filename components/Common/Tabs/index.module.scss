@@ -29,4 +29,7 @@
     border-bottom: 2px solid var(--color-primary);
     color: var(--color-primary);
   }
+  > label {
+    cursor: inherit;
+  }
 }
