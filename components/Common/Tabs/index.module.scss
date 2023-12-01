@@ -1,35 +1,46 @@
 .wrapper {
-  border: 2px solid var(--color-background-lighter);
+  border: 2px solid var(--color-background-light);
   border-radius: calc(0.5rem + 2px);
 }
 
 .tabs {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   padding-left: 0 !important;
+  border-bottom: 2px solid var(--color-background-light);
   margin-bottom: -2px !important;
+  --tab-text-color: var(--color-white);
+  --selected-tab-color: var(--color-primary);
+
+  &.faded {
+    --tab-text-color: var(--color-secondary);
+    --selected-tab-color: var(--color-main);
+  }
 }
 .tab {
   display: inline-flex;
-  padding: 1rem;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
   cursor: pointer;
-  color: var(--color-white);
+  color: var(--tab-text-color);
   margin-top: 0 !important;
+  margin-bottom: -2px;
 
   border-bottom: 2px solid transparent;
   border-radius: 0.5rem 0.5rem 0 0;
+  letter-spacing: 0.05em;
   font-weight: bold;
 
   transition: background-color 0.2s var(--smooth-transition);
+  div[role=icon] { opacity: 0.5; }
 
   &:hover {
     background-color: var(--color-overlay-2);
   }
   &.selected {
-    border-bottom: 2px solid var(--color-primary);
-    color: var(--color-primary);
-  }
-  > label {
-    cursor: inherit;
+    border-bottom: 2px solid var(--selected-tab-color);
+    color: var(--selected-tab-color);
+    div[role=icon] { opacity: 1; }
   }
 }

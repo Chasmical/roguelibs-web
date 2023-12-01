@@ -1,24 +1,26 @@
 "use client";
-import { Children, cloneElement, useMemo, useState } from "react";
+import { Children, cloneElement, useCallback, useMemo, useState } from "react";
 import useLocalStorage from "@lib/hooks/useLocalStorage";
 import useScrollPositionBlocker from "@lib/hooks/useScrollPositionBlocker";
 import { TabItemProps } from "@components/Common/TabItem";
 import styles from "./index.module.scss";
 import clsx from "clsx";
 import useQueryString from "@lib/hooks/useQueryString";
+import Icon, { IconType } from "@components/Common/Icon";
 
 export interface TabsProps extends TabsHookInput, Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue"> {
   lazy?: boolean;
   className?: string;
   children?: React.ReactNode;
+  faded?: boolean;
   // ...TabsHookInput props
 }
 
-export default function Tabs({ lazy, id, query, className, children, ...props }: TabsProps) {
+export default function Tabs({ lazy, id, query, className, children, faded, ...props }: TabsProps) {
   const tabs = useTabs(children, { id, query });
   return (
     <div role="panel" className={clsx(styles.wrapper, className)} {...props} defaultValue={undefined}>
-      <TabsHeader {...tabs} />
+      <TabsHeader {...tabs} faded={faded} />
       <TabsContainer lazy={lazy} {...tabs}>
         {children}
       </TabsContainer>
@@ -26,7 +28,7 @@ export default function Tabs({ lazy, id, query, className, children, ...props }:
   );
 }
 
-function TabsHeader({ tabs, selectedValue, selectValue }: TabsHookOutput) {
+function TabsHeader({ tabs, selectedValue, selectValue, faded }: TabsHookOutput & { faded?: boolean }) {
   const tabRefs: (HTMLLIElement | null)[] = [];
   const blockElementScrollPositionUntilNextRender = useScrollPositionBlocker();
 
@@ -54,9 +56,9 @@ function TabsHeader({ tabs, selectedValue, selectValue }: TabsHookOutput) {
   };
 
   return (
-    <ul role="tablist" aria-orientation="horizontal" className={styles.tabs}>
+    <ul role="tablist" aria-orientation="horizontal" className={clsx(styles.tabs, faded && styles.faded)}>
       {/* eslint-disable-next-line unused-imports/no-unused-vars */}
-      {tabs.map(({ value, label, key, ...attr }) => {
+      {tabs.map(({ value, label, key, icon, ...attr }) => {
         const isSelected = selectedValue === value;
         return (
           <li
@@ -70,6 +72,7 @@ function TabsHeader({ tabs, selectedValue, selectValue }: TabsHookOutput) {
             {...attr}
             className={clsx(styles.tab, isSelected && styles.selected, (attr as any).className)}
           >
+            {icon && <Icon type={icon} size={24} />}
             {label ?? value}
           </li>
         );
@@ -96,8 +99,9 @@ function TabsContainer({ lazy, children, tabs, selectedValue }: Pick<TabsProps, 
 interface Tab {
   value: string;
   label: React.ReactNode;
-  default?: boolean;
+  default: boolean;
   key: React.Key | null;
+  icon: IconType | null | undefined;
 }
 interface TabsHookInput {
   id?: string;
@@ -114,21 +118,27 @@ export function useTabs(children: React.ReactNode, { id, query }: TabsHookInput)
     return convertTabsChildren(children);
   }, [children]);
 
-  const [storedValue, setStoredValue] = useLocalStorage(id);
-  const [queryValue, setQueryValue] = useQueryString(query ? id : undefined);
-  const [simpleState, setSimpleState] = useState(getDefaultValue);
-
   function getDefaultValue() {
     return (tabs.find(t => t.default) ?? tabs[0]).value;
   }
 
-  const selectedValue = queryValue ?? storedValue ?? simpleState;
+  const [simpleState, setSimpleState] = useState(getDefaultValue);
+  const [storedState, setStoredState] = useLocalStorage(id);
+  const [queryState, setQueryState] = useQueryString(query ? id : undefined);
 
-  const selectValue = (newValue: string) => {
+  const selectValue = useCallback((newValue: string) => {
     setSimpleState(newValue);
-    setStoredValue(newValue);
-    setQueryValue(newValue === getDefaultValue() ? null : newValue);
-  };
+    setStoredState(newValue);
+    setQueryState(newValue === getDefaultValue() ? null : newValue);
+  }, []);
+
+  const aggregatedValue = queryState ?? storedState ?? simpleState;
+  const selectedValue = useMemo(() => {
+    if (tabs.some(t => t.value === aggregatedValue)) return aggregatedValue;
+    const value = getDefaultValue();
+    selectValue(value);
+    return value;
+  }, [aggregatedValue, tabs]);
 
   return { tabs, selectedValue, selectValue };
 }
@@ -152,6 +162,7 @@ function convertTabsChildren(children: React.ReactNode): Tab[] {
         value: value.toLowerCase(),
         label: label,
         default: i === defaultIndex,
+        icon: child.props.icon,
       });
     }
   }
