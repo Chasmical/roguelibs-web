@@ -36,7 +36,7 @@
   font-weight: bold;
 
   transition: background-color 0.2s var(--smooth-transition);
-  div[role=icon] { opacity: 0.5; }
+  > div[role=icon] { opacity: 0.5; }
 
   &:hover {
     background-color: var(--color-overlay-2);
@@ -44,6 +44,6 @@
   &.selected {
     border-bottom: 2px solid var(--selected-tab-color);
     color: var(--selected-tab-color);
-    div[role=icon] { opacity: 1; }
+    > div[role=icon] { opacity: 1; }
   }
 }

@@ -2,13 +2,13 @@ import type { Transformer } from "unified";
 import { findAndReplace } from "mdast-util-find-and-replace";
 import type { PhrasingContent } from "mdast";
 import { get as getEmoji } from "node-emoji";
-import { toCodePoints } from "twemoji-parser";
-import twemojiRegex from "twemoji-parser/dist/lib/regex"; // see ./twemoji-parser.d.ts
+import { toCodePoints } from "@twemoji/parser";
+import twemojiRegex from "@twemoji/parser/dist/lib/regex"; // see ./twemoji-parser.d.ts
 import { gemoji } from "gemoji";
 
 // Code adapted and repurposed from the following plugins:
 // - https://github.com/rhysd/remark-emoji
-// - https://github.com/twitter/twemoji-parser
+// - https://github.com/jdecked/twemoji-parser
 // - https://github.com/florianeckerstorfer/remark-a11y-emoji
 
 const EmojiNameRegex = /:\+1:|:-1:|:[\w-]+:/g;
@@ -17,18 +17,21 @@ const EmojiRegex = new RegExp(`(\\\\*)(${twemojiRegex.source})`, "g");
 
 export interface RemarkEmojiOptions {
   className?: string;
-  base?: string;
-  size?: string | number;
-  ext?: string;
+  buildUrl?: (codepoints: string, type: "png" | "svg") => string;
+  type?: "png" | "svg";
 }
 
 export default function remarkEmoji(options?: RemarkEmojiOptions): Transformer {
   options ??= {};
 
   const className = options.className ?? "emoji";
-  const base = options.base ?? "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/";
-  const size = (coerceSize(options.size) ?? "72x72") + "/";
-  const ext = options.ext ?? ".png";
+  const buildUrl = options.buildUrl ?? defaultBuildUrl;
+  function defaultBuildUrl(codepoints: string, type: "png" | "svg") {
+    return type === "png"
+      ? `https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/72x72/${codepoints}.png`
+      : `https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/svg/${codepoints}.svg`;
+  }
+  const type = options.type ?? "png";
 
   return (tree: any) => {
     // replace emoji names with emojis
@@ -42,8 +45,8 @@ export default function remarkEmoji(options?: RemarkEmojiOptions): Transformer {
     findAndReplace(tree, [
       EmojiRegex,
       (_, escapes: string, emoji: string) => {
-        const codepoint = toCodePoints(emoji).join("-");
-        const src = base + size + codepoint + ext;
+        const codepoints = toCodePoints(emoji).join("-");
+        const src = buildUrl(codepoints, type);
         const ariaLabel = getEmojiDescription(emoji);
 
         if (escapes.length % 2 === 1) {
@@ -64,10 +67,6 @@ export default function remarkEmoji(options?: RemarkEmojiOptions): Transformer {
       },
     ]);
   };
-}
-
-function coerceSize(val: string | number | undefined) {
-  return typeof val !== "number" ? val : val + "x" + val;
 }
 
 function findGemoji(emoji: string) {
@@ -91,6 +90,5 @@ const SkintoneMap = {
   "\uD83C\uDFFD": "skin tone 4",
   "\uD83C\uDFFE": "skin tone 5",
   "\uD83C\uDFFF": "skin tone 6",
-  undefined: "",
 };
 const SkintoneRegex = new RegExp(Object.keys(SkintoneMap).join("|"), "g");
