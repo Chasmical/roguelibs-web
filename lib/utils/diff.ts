@@ -88,6 +88,30 @@ function diffArray<T, O extends ArrayDiffOptions<T> = ArrayDiffOptions<T>>(
   return hasActualChanges ? res : undefined;
 }
 
+export function apply<T>(original: T, diff: Diff<T, DiffOptions<T>>): T;
+export function apply<T>(original: T, diff: T): T {
+  if (diff === undefined) return original;
+  if ((original as any) === undefined) return diff;
+  if (Array.isArray(diff)) {
+    const key = "id" as keyof T;
+    const idBy = (item: T) => item[key];
+
+    return diff.map(item => {
+      const id = idBy(item);
+      const prev = (original as any[]).find(o => idBy(o) === id);
+      return apply(prev, item);
+    }) as T;
+  }
+  if (typeof diff === "object" && diff) {
+    const clone: Partial<T> = {};
+    for (const key in original) {
+      clone[key] = apply(original[key], diff[key] as never);
+    }
+    return clone as T;
+  }
+  return diff;
+}
+
 const c: DiffOptions<RestMod> = {
   guid: false,
   authors: { idBy: "id", user: false },

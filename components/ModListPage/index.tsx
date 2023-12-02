@@ -8,7 +8,7 @@ export interface ModListPageProps {
   mods: RestMod[];
 }
 export default function ModListPage({ mods: initialMods }: ModListPageProps) {
-  const [mods, setMods] = useState(initialMods);
+  const [mods] = useState(initialMods);
 
   return (
     <div className={styles.container}>

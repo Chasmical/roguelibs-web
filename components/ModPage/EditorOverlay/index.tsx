@@ -1,4 +1,3 @@
-import { ModPageContext } from "@components/ModPage";
 import styles from "./index.module.scss";
 import Button from "@components/Common/Button";
 import Icon from "@components/Common/Icon";
@@ -6,38 +5,37 @@ import clsx from "clsx";
 import { useState } from "react";
 import { RestMod } from "@lib/API";
 import { diff } from "@lib/utils/diff";
+import { selectHasChanges, useModPage, useModPageDispatch, useModPageStore } from "../redux";
 
-export default function ModPageEditorOverlay({
-  mod,
-  mutateMod,
-  original,
-  setOriginal,
-  mode,
-  setMode,
-  changes,
-  hasChanges,
-}: ModPageContext) {
+export default function ModPageEditorOverlay() {
+  const store = useModPageStore();
+  const dispatch = useModPageDispatch();
+
   const [saving, setSaving] = useState(false);
   const [loadingPreview, setLoadingPreview] = useState(false);
+
+  const mode = useModPage(s => s.mode);
+  const hasChanges = useModPage(selectHasChanges);
+  const changes: string[] = [];
+
   const stageIndex = saving ? 3 : mode === "edit" ? 1 : mode === "preview" ? 2 : 0;
 
   function onCancel() {
     if (hasChanges) {
-      setMode("edit");
-      mutateMod(() => original);
+      dispatch(s => ((s.mod = s.original), (s.mode = "edit")));
     } else {
-      setMode(null);
+      dispatch(s => (s.mode = null));
     }
   }
   function onEdit() {
     if (mode === "edit") return;
-    setMode("edit");
+    dispatch(s => (s.mode = "edit"));
   }
   async function onPreview() {
     if (mode === "preview") return;
     try {
       setLoadingPreview(true);
-      setMode("preview");
+      dispatch(s => (s.mode = "preview"));
       await new Promise(r => setTimeout(r, 1000));
     } finally {
       setLoadingPreview(false);
@@ -47,14 +45,15 @@ export default function ModPageEditorOverlay({
     if (!hasChanges) return;
     try {
       setSaving(true);
+      const original = store.getState().original;
+      const mod = store.getState().mod;
 
       const changes = diff(original, mod, {
         nugget_count: false,
         subscription_count: false,
-        authors: {
-          user: false,
-        },
+        authors: { user: false },
       });
+
       const response = await fetch(`${location.origin}/api/update_mod`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -62,9 +61,12 @@ export default function ModPageEditorOverlay({
       });
       if (!response.ok) throw new Error(await response.text());
       const newMod = (await response.json()) as RestMod;
-      setMode(null);
-      setOriginal(newMod);
-      mutateMod(() => newMod);
+
+      dispatch(s => {
+        s.mode = null;
+        s.original = newMod;
+        s.mod = newMod;
+      });
     } finally {
       setSaving(false);
     }

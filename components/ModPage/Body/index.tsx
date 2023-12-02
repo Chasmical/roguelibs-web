@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { ModPageContext } from "@components/ModPage";
 import MdxPreview from "@components/Specialized/MdxPreview";
 import TextArea from "@components/Common/TextArea";
 import styles from "./index.module.scss";
@@ -9,28 +8,29 @@ import Icon, { IconType } from "@components/Common/Icon";
 import TextInput from "@components/Common/TextInput";
 import Tabs from "@components/Common/Tabs";
 import TabItem from "@components/Common/TabItem";
+import { useModPage, useModPageDispatch } from "../redux";
 import clsx from "clsx";
 
-export interface ModPageBodyProps extends ModPageContext {
+export interface ModPageBodyProps {
+  rscSource: string;
   rscDescription: React.ReactNode;
 }
 export default function ModPageBody(props: ModPageBodyProps) {
-  const { original } = props;
-  const [rscSource] = useState(original.description);
+  const mode = useModPage(s => s.mode);
 
   return (
     <div className={styles.wrapper}>
       <Tabs className={styles.bodyTabs} lazy faded>
         <TabItem icon="copy" label="Description">
-          <ModPageDescription {...props} rscSource={rscSource} />
+          <ModPageDescription {...props} />
         </TabItem>
         <TabItem icon="copy" label="Releases">
-          <ModPageReleases {...props} />
+          <ModPageReleases />
         </TabItem>
-        {props.mode === "edit" && (
+        {mode === "edit" && (
           <>
             <TabItem icon="copy" label="Banner">
-              <ModPageBanner {...props} />
+              <ModPageBanner />
             </TabItem>
           </>
         )}
@@ -39,24 +39,26 @@ export default function ModPageBody(props: ModPageBodyProps) {
   );
 }
 
-export function ModPageDescription(props: ModPageBodyProps & { rscSource: string }) {
-  const { mod, rscSource, mutateMod, rscDescription, mode } = props;
+export function ModPageDescription({ rscSource, rscDescription }: ModPageBodyProps) {
+  const dispatch = useModPageDispatch();
+  const mode = useModPage(s => s.mode);
+  const description = useModPage(s => s.mod.description);
 
   if (mode !== "edit") {
-    if (mod.description === rscSource) {
+    if (description === rscSource) {
       return <div className="markdown">{rscDescription}</div>;
     }
-    return <MdxPreview source={mod.description} />;
+    return <MdxPreview source={description} />;
   }
 
   return (
     <TextArea
       className="markdown"
-      value={mod.description}
+      value={description}
       minHeight="100%"
       style={{ height: "100%" }}
       autoTrimEnd={false}
-      onChange={v => mutateMod(m => void (m.description = v))}
+      onChange={v => dispatch(s => (s.mod.description = v))}
       error={description => {
         if (description.length > 4000) return `Exceeded length limit (${description.length}/4000).`;
       }}
@@ -64,23 +66,27 @@ export function ModPageDescription(props: ModPageBodyProps & { rscSource: string
   );
 }
 
-export function ModPageReleases(props: ModPageBodyProps) {
+export function ModPageReleases() {
   return null;
 }
 
-export function ModPageBanner({ mod, mutateMod }: ModPageBodyProps) {
+export function ModPageBanner() {
+  const dispatch = useModPageDispatch();
+  const banner_url = useModPage(s => s.mod.banner_url);
+  const banner_layout = useModPage(s => s.mod.banner_layout);
+
   const [fileUrl, setFileUrl] = useState<string | null>(null);
 
   function onChange(value: string) {
     setFileUrl(null);
-    mutateMod(m => void (m.banner_url = value || null));
+    dispatch(s => (s.mod.banner_url = value || null));
   }
   function onUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
     const url = URL.createObjectURL(file);
     setFileUrl(url);
-    mutateMod(m => void (m.banner_url = url));
+    dispatch(s => (s.mod.banner_url = url || null));
   }
 
   useEffect(() => {
@@ -94,7 +100,7 @@ export function ModPageBanner({ mod, mutateMod }: ModPageBodyProps) {
         <Tabs style={{ height: 150 }}>
           <TabItem label="External URL">
             <TextInput
-              value={mod.banner_url}
+              value={banner_url}
               placeholder={"/placeholder.png"}
               onChange={onChange}
               error={banner_url => {
@@ -111,8 +117,8 @@ export function ModPageBanner({ mod, mutateMod }: ModPageBodyProps) {
         {[1, 2, 3, 4, 5, 6, 7].map(num => (
           <Button
             key={num}
-            className={clsx(mod.banner_layout === num && styles.active)}
-            onClick={() => mutateMod(m => void (m.banner_layout = num))}
+            className={clsx(banner_layout === num && styles.active)}
+            onClick={() => dispatch(s => (s.mod.banner_layout = num))}
           >
             <Icon type={("align" + num) as IconType} />
           </Button>

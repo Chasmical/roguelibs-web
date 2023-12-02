@@ -2,24 +2,21 @@
 import Button, { ButtonProps } from "@components/Common/Button";
 import Icon from "@components/Common/Icon";
 import Tooltip from "@components/Common/Tooltip";
-import { DbMod } from "@lib/Database";
 import { useApi } from "@lib/hooks";
-import { ImmerStateSetter } from "@lib/hooks/useImmerState";
 import { arrayToggle } from "@lib/utils/misc";
-import { useEffect, useId, useMemo, useState } from "react";
-import { RestMod } from "@lib/API";
+import { useEffect, useId, useState } from "react";
 import styles from "./index.module.scss";
 import clsx from "clsx";
 
-export interface SubscriptionButtonProps extends Omit<ButtonProps, "onClick"> {
-  mod: DbMod;
-  mutateMod?: ImmerStateSetter<RestMod>;
+export interface SubscriptionButtonProps extends Omit<ButtonProps, "onClick" | "onChange"> {
+  mod_id: number;
+  onChange?: (newValue: number) => void;
   iconSize?: number;
 }
 
 export default function SubscriptionButton({
-  mod,
-  mutateMod,
+  mod_id,
+  onChange,
   className,
   iconSize,
   ["data-tooltip-id"]: providedTooltipId,
@@ -30,24 +27,19 @@ export default function SubscriptionButton({
   const tooltipId = providedTooltipId ?? ownTooltipId;
 
   const [loading, setLoading] = useState(false);
-  const [subscribed, setSubscribed] = useState(api.currentUser?.mod_subscriptions.includes(mod.id));
-
-  const [subscriptionCount, setSubscriptionCount] = useState<number | null>(null);
-  useMemo(() => void setSubscriptionCount(mod.subscription_count), [mod]);
+  const [subscribed, setSubscribed] = useState(api.currentUser?.mod_subscriptions.includes(mod_id));
 
   useEffect(() => {
-    setSubscribed(api.currentUser?.mod_subscriptions.includes(mod.id));
+    setSubscribed(api.currentUser?.mod_subscriptions.includes(mod_id));
   }, [api.currentUser]);
 
   async function toggleSubscription() {
     if (loading || !api.currentUser) return;
     setLoading(true);
     try {
-      const newSubscriptionCount = await api.setModSubscription(mod.id, !subscribed);
-      mutateMod
-        ? mutateMod(m => void (m.subscription_count = newSubscriptionCount))
-        : setSubscriptionCount(newSubscriptionCount);
-      arrayToggle(api.currentUser!, "mod_subscriptions", mod.id, !subscribed);
+      const newSubscriptionCount = await api.setModSubscription(mod_id, !subscribed);
+      onChange?.(newSubscriptionCount);
+      arrayToggle(api.currentUser!, "mod_subscriptions", mod_id, !subscribed);
       setSubscribed(!subscribed);
     } catch (error) {
       console.error(error);

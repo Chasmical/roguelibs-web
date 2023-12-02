@@ -11,7 +11,7 @@ export default function ModPageHeaderSkeleton() {
     <>
       <ModPageBreadcrumbsSkeleton />
       <div className={clsx(styles.wrapper, styles.expanded)}>
-        <Skeleton className={clsx(styles.banner, styles.heightCenter)} />
+        <Skeleton width="100%" height="100%" />
         <div className={styles.header}>
           <div className={styles.title}>
             <Skeleton width={300} />

@@ -1,42 +1,57 @@
 "use client";
 import styles from "./index.module.scss";
-import { ModPageContext } from "@components/ModPage";
 import ModPageBreadcrumbs from "./Breadcrumbs";
-import ModPageLeftButtons from "@components/ModPage/Header/LeftButtons";
-import ModPageRightButtons from "@components/ModPage/Header/RightButtons";
+import ModPageLeftButtons from "./LeftButtons";
+import ModPageRightButtons from "./RightButtons";
 import CopyLink from "@components/Specialized/CopyLink";
 import TextInput from "@components/Common/TextInput";
 import LayoutImage from "@components/Common/LayoutImage";
+import { useModPage, useModPageDispatch } from "../redux";
 
-export default function ModPageHeader(props: ModPageContext) {
-  const { mod, mutateMod, mode } = props;
+export default function ModPageHeader() {
+  const id = useModPage(s => s.mod.id);
 
   return (
     <>
-      <ModPageBreadcrumbs {...props} />
+      <ModPageBreadcrumbs />
       <div className={styles.wrapper}>
-        <LayoutImage src={mod.banner_url ?? "/placeholder.png"} alt="" height="100%" layout={mod.banner_layout} />
+        <ModBanner />
         <div className={styles.header}>
           <div className={styles.title}>
-            {mode !== "edit" ? (
-              <span>{mod.title}</span>
-            ) : (
-              <TextInput
-                className={styles.titleInput}
-                value={mod.title}
-                onChange={title => mutateMod(m => void (m.title = title))}
-                error={title => {
-                  if (title.length < 1) return "Title cannot be empty.";
-                  if (title.length > 64) return `Exceeded length limit (${title.length}/64).`;
-                }}
-              />
-            )}
+            <ModTitle />
           </div>
-          <CopyLink permanent href={`/m/${mod.id}`} place="left" />
+          <CopyLink permanent href={`/m/${id}`} place="left" />
         </div>
-        <ModPageLeftButtons {...props} />
-        <ModPageRightButtons {...props} />
+        <ModPageLeftButtons />
+        <ModPageRightButtons />
       </div>
     </>
+  );
+}
+
+function ModBanner() {
+  const banner_url = useModPage(s => s.mod.banner_url);
+  const banner_layout = useModPage(s => s.mod.banner_layout);
+
+  return <LayoutImage src={banner_url ?? "/placeholder.png"} alt="" height="100%" layout={banner_layout} />;
+}
+
+function ModTitle() {
+  const mode = useModPage(s => s.mode);
+  const dispatch = useModPageDispatch();
+  const title = useModPage(s => s.mod.title);
+
+  if (mode !== "edit") return <span>{title}</span>;
+
+  return (
+    <TextInput
+      className={styles.titleInput}
+      value={title}
+      onChange={title => dispatch(m => (m.mod.title = title))}
+      error={title => {
+        if (title.length < 1) return "Title cannot be empty.";
+        if (title.length > 64) return `Exceeded length limit (${title.length}/64).`;
+      }}
+    />
   );
 }

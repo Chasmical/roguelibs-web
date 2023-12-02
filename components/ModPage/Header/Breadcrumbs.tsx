@@ -1,14 +1,14 @@
 "use client";
-import { ModPageContext } from "@components/ModPage";
 import styles from "./Breadcrumbs.module.scss";
 import Link from "@components/Common/Link";
 import Button from "@components/Common/Button";
 import Icon from "@components/Common/Icon";
 import { useApi } from "@lib/API.Hooks";
+import { useModPage, useModPageDispatch } from "../redux";
 
-export default function ModPageBreadcrumbs({ mod, original, mode, setMode }: ModPageContext) {
-  const me = useApi().currentUser;
-  const canEdit = original.authors.some(a => a.user_id === me?.id) || me?.is_admin;
+export default function ModPageBreadcrumbs() {
+  const mode = useModPage(s => s.mode);
+  const originalSlug = useModPage(s => s.original.slug);
 
   // TODO: move the crumbs up, split the editing controls into a separate component/file
 
@@ -27,19 +27,34 @@ export default function ModPageBreadcrumbs({ mod, original, mode, setMode }: Mod
       </div>
       {">"}
       <div className={styles.breadcrumb}>
-        <Link href={`/mods/${original.slug}`} blank={!!mode}>
-          {mod.title}
+        <Link href={`/mods/${originalSlug}`} blank={!!mode}>
+          <BreadcrumbTitle />
         </Link>
       </div>
-      {canEdit && !mode && (
-        <Button
-          style={{ fontSize: "1rem", marginLeft: "auto", padding: "0.25rem 0.5rem" }}
-          onClick={() => setMode("edit")}
-        >
-          <Icon type="edit" size={24} />
-          {"Edit"}
-        </Button>
-      )}
+      {!mode && <EditButton />}
     </div>
+  );
+}
+
+function BreadcrumbTitle() {
+  return useModPage(s => s.mod.title);
+}
+
+function EditButton() {
+  const me = useApi().currentUser;
+
+  const dispatch = useModPageDispatch();
+  const canEdit = useModPage(s => s.original.authors.some(a => a.user_id === me?.id) || me?.is_admin);
+
+  if (!canEdit) return null;
+
+  return (
+    <Button
+      style={{ fontSize: "1rem", marginLeft: "auto", padding: "0.25rem 0.5rem" }}
+      onClick={() => dispatch(s => (s.mode = "edit"))}
+    >
+      <Icon type="edit" size={24} />
+      {"Edit"}
+    </Button>
   );
 }

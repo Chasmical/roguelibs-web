@@ -2,7 +2,7 @@
 import { Children, cloneElement, useCallback, useMemo, useState } from "react";
 import useLocalStorage from "@lib/hooks/useLocalStorage";
 import useScrollPositionBlocker from "@lib/hooks/useScrollPositionBlocker";
-import TabItem, { TabItemProps } from "@components/Common/TabItem";
+import { TabItemProps } from "@components/Common/TabItem";
 import styles from "./index.module.scss";
 import clsx from "clsx";
 import useQueryString from "@lib/hooks/useQueryString";
@@ -184,12 +184,12 @@ function getTabItemElements(children: React.ReactNode) {
 
   const handleChild = (child: React.ReactNode, keyPrefix: string) => {
     if (typeof child === "object" && child !== null && "type" in child) {
-      if (child.type === TabItem) {
-        tabItems.push(keyPrefix ? cloneElement(child, { key: keyPrefix + child.key }) : child);
-      }
       if ((child.type as any) === Symbol.for("react.fragment")) {
         keyPrefix += child.key;
         Children.toArray(child.props.children).forEach(sub => handleChild(sub, keyPrefix));
+      } else {
+        // if (child.type === TabItem)
+        tabItems.push(keyPrefix ? cloneElement(child, { key: keyPrefix + child.key }) : child);
       }
     }
   };

@@ -1,13 +1,12 @@
 "use client";
 import { RestMod, RestRelease } from "@lib/API";
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
-import useImmerState, { ImmerStateSetter } from "@lib/hooks/useImmerState";
-import ModPageHeader from "./Header";
-import ModPageBody from "@components/ModPage/Body";
-import ModPageSidebar from "@components/ModPage/Sidebar";
-import ModPageEditorOverlay from "@components/ModPage/EditorOverlay";
+import { useState } from "react";
 import styles from "./index.module.scss";
-import { diff } from "@lib/utils/diff";
+import { ModPageProvider, createStore } from "./redux";
+import ModPageHeader from "./Header";
+import ModPageBody from "./Body";
+import ModPageSidebar from "./Sidebar";
+import ModPageEditorOverlay from "./EditorOverlay";
 
 export interface ModPageProps {
   mod: RestMod;
@@ -15,40 +14,18 @@ export interface ModPageProps {
   rscDescription: React.ReactNode;
 }
 export default function ModPage({ mod: initialOriginal, releases, rscDescription }: ModPageProps) {
-  const [original, setOriginal] = useState<RestMod>(initialOriginal);
-  const [mod, mutateMod] = useImmerState(original);
-  const [mode, setMode] = useState<ModPageMode>(null);
-
-  const context = useMemo<ModPageContext>(() => {
-    const changes = diff(original, mod, {
-      nugget_count: false,
-      subscription_count: false,
-      authors: { idBy: "user_id", user: false },
-    });
-    return { mod, mutateMod, original, setOriginal, releases, mode, setMode, changes: [], hasChanges: !!changes };
-  }, [mod, original, releases, mode]);
+  const [store] = useState(() => createStore(initialOriginal, releases));
 
   return (
-    <div className={styles.container}>
-      <ModPageHeader {...context} />
-      <div className={styles.sides}>
-        <ModPageBody {...context} rscDescription={rscDescription} />
-        <ModPageSidebar {...context} />
+    <ModPageProvider store={store}>
+      <div className={styles.container}>
+        <ModPageHeader />
+        <div className={styles.sides}>
+          <ModPageBody rscSource={initialOriginal.description} rscDescription={rscDescription} />
+          <ModPageSidebar />
+        </div>
+        <ModPageEditorOverlay />
       </div>
-      <ModPageEditorOverlay {...context} />
-    </div>
+    </ModPageProvider>
   );
-}
-
-export type ModPageMode = "edit" | "preview" | null;
-export interface ModPageContext {
-  mod: RestMod;
-  mutateMod: ImmerStateSetter<RestMod>;
-  original: RestMod;
-  setOriginal: Dispatch<SetStateAction<RestMod>>;
-  releases: RestRelease[];
-  mode: ModPageMode;
-  setMode: Dispatch<SetStateAction<ModPageMode>>;
-  changes: string[];
-  hasChanges: boolean;
 }
