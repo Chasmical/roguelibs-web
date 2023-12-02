@@ -1,24 +1,24 @@
 .wrapper {
   display: flex;
   flex-flow: column nowrap;
-
-  outline: 1px solid var(--color-background-lightest);
-  border-radius: 0.5rem;
-  transition: all 0.2s ease;
-
-  &:focus-within {
-    outline: 1px solid var(--color-primary-light);
-  }
-  &.error {
-    outline: 1px solid var(--color-danger);
-  }
 }
 .container {
   display: flex;
-  padding: 0.5rem;
+  border: 1px solid var(--color-background-lightest);
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
   line-height: 2;
 
+  height: 100%;
+  padding: 0.5rem;
+
   cursor: text;
+  &:focus-within {
+    border: 1px solid var(--color-primary-light);
+  }
+  &.error {
+    border: 1px solid var(--color-danger);
+  }
 }
 .textarea {
   width: 100%;
@@ -33,6 +33,7 @@
 }
 .error-field {
   display: block;
+  font-size: 1rem;
   margin: 0 1rem;
   color: var(--color-danger-dark);
   min-height: 1.15rem;

@@ -1,4 +1,6 @@
 .wrapper {
+  display: flex;
+  flex-flow: column;
   border: 2px solid var(--color-background-light);
   border-radius: calc(0.5rem + 2px);
 }
@@ -9,9 +11,10 @@
   padding-left: 0 !important;
   border-bottom: 2px solid var(--color-background-light);
   margin-bottom: -2px !important;
+  z-index: 1;
+
   --tab-text-color: var(--color-white);
   --selected-tab-color: var(--color-primary);
-
   &.faded {
     --tab-text-color: var(--color-secondary);
     --selected-tab-color: var(--color-main);

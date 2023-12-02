@@ -10,14 +10,14 @@ export interface TextAreaProps {
   placeholder?: string | null | undefined;
   onChange?: (newValue: string) => void;
   autoTrimEnd?: boolean;
-  height?: string;
+  minHeight?: string;
   error?: ((value: string) => string | null | undefined | void) | string | null | undefined;
   // ...props
   style?: React.CSSProperties;
 }
 
 const TextArea = forwardRef(function TextArea(
-  { className, value, onChange, placeholder, autoTrimEnd, height, error, ...props }: TextAreaProps,
+  { className, value, onChange, placeholder, autoTrimEnd, minHeight, error, ...props }: TextAreaProps,
   forwardedRef: React.ForwardedRef<HTMLTextAreaElement>,
 ) {
   const textareaOnChange = useCallback<React.ChangeEventHandler<HTMLTextAreaElement>>(
@@ -49,16 +49,16 @@ const TextArea = forwardRef(function TextArea(
   }
 
   return (
-    <div className={clsx(styles.wrapper, !!error && styles.error, className)} {...props}>
-      <div className={styles.container} onClick={containerOnClick}>
+    <div className={clsx(styles.wrapper, className)} {...props}>
+      <div className={clsx(styles.container, !!error && styles.error)} onClick={containerOnClick}>
         <textarea
           ref={ref}
           className={styles.textarea}
           value={value ?? ""}
-          placeholder={placeholder ?? ""}
+          placeholder={placeholder ?? undefined}
           onChange={textareaOnChange}
           onBlur={textareaOnBlur}
-          style={{ minHeight: height }}
+          style={{ minHeight: minHeight }}
         />
       </div>
       {error !== undefined && <div className={styles.errorField}>{error}</div>}

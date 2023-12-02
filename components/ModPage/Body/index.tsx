@@ -6,60 +6,61 @@ import TextArea from "@components/Common/TextArea";
 import styles from "./index.module.scss";
 import Button from "@components/Common/Button";
 import Icon, { IconType } from "@components/Common/Icon";
-import clsx from "clsx";
 import TextInput from "@components/Common/TextInput";
 import Tabs from "@components/Common/Tabs";
 import TabItem from "@components/Common/TabItem";
+import clsx from "clsx";
 
 export interface ModPageBodyProps extends ModPageContext {
   rscDescription: React.ReactNode;
 }
 export default function ModPageBody(props: ModPageBodyProps) {
+  const { original } = props;
+  const [rscSource] = useState(original.description);
+
   return (
     <div className={styles.wrapper}>
       <Tabs className={styles.bodyTabs} lazy faded>
         <TabItem icon="copy" label="Description">
-          <ModPageDescription {...props} />
+          <ModPageDescription {...props} rscSource={rscSource} />
         </TabItem>
         <TabItem icon="copy" label="Releases">
           <ModPageReleases {...props} />
         </TabItem>
         {props.mode === "edit" && (
-          <TabItem icon="copy" label="Banner">
-            <ModPageBanner {...props} />
-          </TabItem>
+          <>
+            <TabItem icon="copy" label="Banner">
+              <ModPageBanner {...props} />
+            </TabItem>
+          </>
         )}
       </Tabs>
     </div>
   );
 }
 
-export function ModPageDescription(props: ModPageBodyProps) {
-  const { mod, original, mutateMod, rscDescription, mode } = props;
-  const [rscSource] = useState(original.description);
+export function ModPageDescription(props: ModPageBodyProps & { rscSource: string }) {
+  const { mod, rscSource, mutateMod, rscDescription, mode } = props;
+
+  if (mode !== "edit") {
+    if (mod.description === rscSource) {
+      return <div className="markdown">{rscDescription}</div>;
+    }
+    return <MdxPreview source={mod.description} />;
+  }
 
   return (
-    <>
-      {mode === "edit" ? (
-        <>
-          <label>{"Description"}</label>
-          <TextArea
-            className="markdown"
-            value={mod.description}
-            height="300px"
-            autoTrimEnd={false}
-            onChange={v => mutateMod(m => void (m.description = v))}
-            error={description => {
-              if (description.length > 4000) return `Exceeded length limit (${description.length}/4000).`;
-            }}
-          />
-        </>
-      ) : mod.description === rscSource ? (
-        <div className="markdown">{rscDescription}</div>
-      ) : (
-        <MdxPreview source={mod.description} />
-      )}
-    </>
+    <TextArea
+      className="markdown"
+      value={mod.description}
+      minHeight="100%"
+      style={{ height: "100%" }}
+      autoTrimEnd={false}
+      onChange={v => mutateMod(m => void (m.description = v))}
+      error={description => {
+        if (description.length > 4000) return `Exceeded length limit (${description.length}/4000).`;
+      }}
+    />
   );
 }
 

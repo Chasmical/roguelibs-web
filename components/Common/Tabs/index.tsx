@@ -2,7 +2,7 @@
 import { Children, cloneElement, useCallback, useMemo, useState } from "react";
 import useLocalStorage from "@lib/hooks/useLocalStorage";
 import useScrollPositionBlocker from "@lib/hooks/useScrollPositionBlocker";
-import { TabItemProps } from "@components/Common/TabItem";
+import TabItem, { TabItemProps } from "@components/Common/TabItem";
 import styles from "./index.module.scss";
 import clsx from "clsx";
 import useQueryString from "@lib/hooks/useQueryString";
@@ -21,14 +21,12 @@ export default function Tabs({ lazy, id, query, className, children, faded, ...p
   return (
     <div role="panel" className={clsx(styles.wrapper, className)} {...props} defaultValue={undefined}>
       <TabsHeader {...tabs} faded={faded} />
-      <TabsContainer lazy={lazy} {...tabs}>
-        {children}
-      </TabsContainer>
+      <TabsContainer {...tabs} lazy={lazy} />
     </div>
   );
 }
 
-function TabsHeader({ tabs, selectedValue, selectValue, faded }: TabsHookOutput & { faded?: boolean }) {
+function TabsHeader({ tabs, selectedValue, selectValue, faded }: TabsHookOutput & Pick<TabsProps, "faded">) {
   const tabRefs: (HTMLLIElement | null)[] = [];
   const blockElementScrollPositionUntilNextRender = useScrollPositionBlocker();
 
@@ -81,19 +79,13 @@ function TabsHeader({ tabs, selectedValue, selectValue, faded }: TabsHookOutput 
   );
 }
 
-function TabsContainer({ lazy, children, tabs, selectedValue }: Pick<TabsProps, "lazy" | "children"> & TabsHookOutput) {
-  const items = Children.toArray(children).filter(Boolean) as React.ReactElement<TabItemProps>[];
-
-  return (
-    <>
-      {items.map(item => {
-        const sub = tabs.filter(t => t.key === item.key);
-        const hidden = sub.every(t => t.value !== selectedValue);
-        if (lazy && hidden) return null;
-        return cloneElement(item, { hidden });
-      })}
-    </>
-  );
+function TabsContainer({ lazy, elements, tabs, selectedValue }: TabsHookOutput & Pick<TabsProps, "lazy">) {
+  return elements.map(item => {
+    const sub = tabs.filter(t => t.key === item.key);
+    const hidden = sub.every(t => t.value !== selectedValue);
+    if (lazy && hidden) return null;
+    return cloneElement(item, { hidden });
+  });
 }
 
 interface Tab {
@@ -111,12 +103,12 @@ interface TabsHookOutput {
   tabs: Tab[];
   selectedValue: string;
   selectValue: (newValue: string) => void;
+  elements: React.ReactElement<TabItemProps>[];
 }
 
 export function useTabs(children: React.ReactNode, { id, query }: TabsHookInput): TabsHookOutput {
-  const tabs = useMemo(() => {
-    return convertTabsChildren(children);
-  }, [children]);
+  const elements = useMemo(() => getTabItemElements(children), [children]);
+  const tabs = useMemo(() => convertTabsChildren(elements), [elements]);
 
   function getDefaultValue() {
     return (tabs.find(t => t.default) ?? tabs[0]).value;
@@ -140,14 +132,15 @@ export function useTabs(children: React.ReactNode, { id, query }: TabsHookInput)
     return value;
   }, [aggregatedValue, tabs]);
 
-  return { tabs, selectedValue, selectValue };
+  return { tabs, elements, selectedValue, selectValue };
 }
 
 const TabValueSeparator = /[,;|]/;
 
-function convertTabsChildren(children: React.ReactNode): Tab[] {
+function convertTabsChildren(tabItemElements: React.ReactElement<TabItemProps>[]) {
   const tabs: Tab[] = [];
-  for (const child of Children.toArray(children).filter(Boolean) as React.ReactElement<TabItemProps>[]) {
+
+  for (const child of tabItemElements) {
     const values = splitValues(child.props.values) ?? [child.props.value];
     const labels = splitValues(child.props.labels) ?? [child.props.label];
     const defaultIndex = convertDefaultIndex(child.props.default, values);
@@ -166,6 +159,7 @@ function convertTabsChildren(children: React.ReactNode): Tab[] {
       });
     }
   }
+
   return tabs;
 }
 
@@ -181,9 +175,25 @@ function convertDefaultIndex(value: string | number | boolean | null | undefined
   if (typeof value === "number") return value;
   return values.indexOf(value);
 }
-function toTitleCase(str: string): string;
-function toTitleCase(str: string | null | undefined): string | undefined;
-function toTitleCase(str: string | null | undefined): string | undefined {
-  if (!str) return undefined;
+function toTitleCase(str: string): string {
   return str.charAt(0).toUpperCase() + str.substring(1);
+}
+
+function getTabItemElements(children: React.ReactNode) {
+  const tabItems: React.ReactElement<TabItemProps>[] = [];
+
+  const handleChild = (child: React.ReactNode, keyPrefix: string) => {
+    if (typeof child === "object" && child !== null && "type" in child) {
+      if (child.type === TabItem) {
+        tabItems.push(keyPrefix ? cloneElement(child, { key: keyPrefix + child.key }) : child);
+      }
+      if ((child.type as any) === Symbol.for("react.fragment")) {
+        keyPrefix += child.key;
+        Children.toArray(child.props.children).forEach(sub => handleChild(sub, keyPrefix));
+      }
+    }
+  };
+  Children.toArray(children).forEach(child => handleChild(child, ""));
+
+  return tabItems;
 }
