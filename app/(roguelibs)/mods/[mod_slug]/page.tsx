@@ -21,7 +21,7 @@ export default async function ModPageIndex({ params }: PageProps) {
     return <div>{`Oops, looks like a mod with a URL slug "${params.mod_slug}" could not be found`}</div>;
   }
 
-  const { content } = await compileMDX(mod.description, o => (o.mdxOptions.format = "md"));
+  const { content } = await compileMDX(mod.description, { github_repo: mod.github_repo });
 
   const releases = mod.releases;
   delete (mod as any).releases;

@@ -14,7 +14,7 @@ export default async function MdxPreviewIndex({ params }: PageProps) {
   const preview = await api.fetchMdxPreview(params.uid);
   if (!preview) notFound();
 
-  const { content } = await compileMDX(preview.source, o => (o.mdxOptions.format = "md"));
+  const { content } = await compileMDX(preview.source);
 
   return <MdxPreviewIndexClient>{content}</MdxPreviewIndexClient>;
 }

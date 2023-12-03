@@ -16,8 +16,8 @@ export interface TabsProps extends TabsHookInput, Omit<React.HTMLAttributes<HTML
   // ...TabsHookInput props
 }
 
-export default function Tabs({ lazy, id, query, className, children, faded, ...props }: TabsProps) {
-  const tabs = useTabs(children, { id, query });
+export default function Tabs({ lazy, local, query, className, children, faded, ...props }: TabsProps) {
+  const tabs = useTabs(children, { local, query });
   return (
     <div role="panel" className={clsx(styles.wrapper, className)} {...props} defaultValue={undefined}>
       <TabsHeader {...tabs} faded={faded} />
@@ -96,8 +96,8 @@ interface Tab {
   icon: IconType | null | undefined;
 }
 interface TabsHookInput {
-  id?: string;
-  query?: boolean;
+  local?: string;
+  query?: string;
 }
 interface TabsHookOutput {
   tabs: Tab[];
@@ -106,7 +106,7 @@ interface TabsHookOutput {
   elements: React.ReactElement<TabItemProps>[];
 }
 
-export function useTabs(children: React.ReactNode, { id, query }: TabsHookInput): TabsHookOutput {
+export function useTabs(children: React.ReactNode, { local, query }: TabsHookInput): TabsHookOutput {
   const elements = useMemo(() => getTabItemElements(children), [children]);
   const tabs = useMemo(() => convertTabsChildren(elements), [elements]);
 
@@ -115,8 +115,8 @@ export function useTabs(children: React.ReactNode, { id, query }: TabsHookInput)
   }
 
   const [simpleState, setSimpleState] = useState(getDefaultValue);
-  const [storedState, setStoredState] = useLocalStorage(id);
-  const [queryState, setQueryState] = useQueryString(query ? id : undefined);
+  const [storedState, setStoredState] = useLocalStorage(local);
+  const [queryState, setQueryState] = useQueryString(query);
 
   const selectValue = useCallback((newValue: string) => {
     setSimpleState(newValue);

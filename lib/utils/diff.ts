@@ -5,8 +5,8 @@ export type IsUnknown<Type> = IsAny<Type> extends true ? false : unknown extends
 type DiffOptionsNonFalse<T> = T extends (infer E)[]
   ? ArrayDiffOptions<E>
   : T extends object
-  ? ObjectDiffOptions<T>
-  : never;
+    ? ObjectDiffOptions<T>
+    : never;
 
 export type DiffOptions<T> = DiffOptionsNonFalse<T> | false;
 
@@ -18,10 +18,10 @@ type DiffDefined<T, O extends DiffOptions<T>> = T extends (infer E)[]
     ? ArrayDiff<E, O>
     : never
   : T extends object
-  ? O extends ObjectDiffOptions<T>
-    ? ObjectDiff<T, O>
-    : never
-  : T;
+    ? O extends ObjectDiffOptions<T>
+      ? ObjectDiff<T, O>
+      : never
+    : T;
 
 export type Diff<T, O extends DiffOptions<T>> = IsAny<O> extends true
   ? DiffDefined<T, DiffOptions<T>> | undefined

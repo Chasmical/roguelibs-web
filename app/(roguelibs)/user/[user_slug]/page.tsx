@@ -22,7 +22,7 @@ export default async function UserPageIndex({ params }: PageProps) {
     return <div>{`Oops, looks like user with a URL slug "${params.user_slug}" could not be found`}</div>;
   }
 
-  const { content } = await compileMDX(user.description, o => (o.mdxOptions.format = "md"));
+  const { content } = await compileMDX(user.description);
 
   return (
     <>

@@ -20,7 +20,7 @@ export default function ModPageBody(props: ModPageBodyProps) {
 
   return (
     <div className={styles.wrapper}>
-      <Tabs className={styles.bodyTabs} lazy faded>
+      <Tabs className={styles.bodyTabs} query="tab" faded lazy>
         <TabItem icon="copy" label="Description">
           <ModPageDescription {...props} />
         </TabItem>

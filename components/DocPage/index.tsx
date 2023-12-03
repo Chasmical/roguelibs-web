@@ -13,7 +13,7 @@ export interface DocPageProps extends FileFetchInfo {
 export default async function DocPage(props: DocPageProps) {
   const source = await fetchFile(props);
 
-  const { content } = await compileMDX<Frontmatter>(source);
+  const { content } = await compileMDX<Frontmatter>(source, { format: "mdx" });
 
   return (
     <div className={styles.wrapper}>

@@ -13,6 +13,7 @@ import rehypeCodeMeta from "@lib/mdx/rehype-code-meta";
 import rehypeOverrideJsx from "@lib/mdx/rehype-override-jsx";
 import remarkMentions from "@lib/mdx/remark-mentions";
 import remarkInlineHexColor from "@lib/mdx/remark-inline-hex-color";
+import remarkGitHub from "@lib/mdx/remark-github";
 
 // TODO: newer versions of MDX plugins are available, but the latest version of next-mdx-remote doesn't work with them at the moment.
 
@@ -28,6 +29,7 @@ export const RemarkPlugins: PluggableList = [
   remarkInlineHexColor,
   remarkEmoji,
   [remarkEmbed, { size: [400, 225], componentNames: [["YouTube", "YouTubeEmbed"]] }],
+  remarkGitHub,
 ];
 
 export const RehypePlugins: PluggableList = [rehypeOverrideJsx, rehypeCodeMeta, rehypeKatex];
