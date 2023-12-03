@@ -1,6 +1,7 @@
 .wrapper {
   flex-grow: 1;
   border-radius: 1rem;
+  min-width: 0; // flexbox magic
   min-height: 300px;
 
   .body-tabs {
@@ -9,6 +10,27 @@
     border-radius: 1rem;
     height: 100%;
   }
+}
+
+.release-list {
+  display: flex;
+  flex-flow: column;
+  gap: 0.5rem;
+}
+.release-card {
+  display: flex;
+  flex-flow: column;
+  background-color: var(--color-background-dark);
+  border-radius: 1rem;
+  border: 1px solid var(--color-background-light);
+}
+.release-title {
+  font-size: 1.5rem;
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-background-light);
+}
+.release-changelog {
+  padding: 1rem;
 }
 
 .edit-banner {

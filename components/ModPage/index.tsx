@@ -12,8 +12,9 @@ export interface ModPageProps {
   mod: RestMod;
   releases: RestRelease[];
   rscDescription: React.ReactNode;
+  rscChangelogs: React.ReactNode[];
 }
-export default function ModPage({ mod: initialOriginal, releases, rscDescription }: ModPageProps) {
+export default function ModPage({ mod: initialOriginal, releases, rscDescription, rscChangelogs }: ModPageProps) {
   const [store] = useState(() => createStore(initialOriginal, releases));
 
   return (
@@ -21,7 +22,11 @@ export default function ModPage({ mod: initialOriginal, releases, rscDescription
       <div className={styles.container}>
         <ModPageHeader />
         <div className={styles.sides}>
-          <ModPageBody rscSource={initialOriginal.description} rscDescription={rscDescription} />
+          <ModPageBody
+            rscSource={initialOriginal.description}
+            rscDescription={rscDescription}
+            rscChangelogs={rscChangelogs}
+          />
           <ModPageSidebar />
         </div>
         <ModPageEditorOverlay />

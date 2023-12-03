@@ -14,6 +14,7 @@ import clsx from "clsx";
 export interface ModPageBodyProps {
   rscSource: string;
   rscDescription: React.ReactNode;
+  rscChangelogs: React.ReactNode[];
 }
 export default function ModPageBody(props: ModPageBodyProps) {
   const mode = useModPage(s => s.mode);
@@ -25,7 +26,7 @@ export default function ModPageBody(props: ModPageBodyProps) {
           <ModPageDescription {...props} />
         </TabItem>
         <TabItem icon="copy" label="Releases">
-          <ModPageReleases />
+          <ModPageReleases rscChangelogs={props.rscChangelogs} />
         </TabItem>
         {mode === "edit" && (
           <>
@@ -39,7 +40,7 @@ export default function ModPageBody(props: ModPageBodyProps) {
   );
 }
 
-export function ModPageDescription({ rscSource, rscDescription }: ModPageBodyProps) {
+function ModPageDescription({ rscSource, rscDescription }: ModPageBodyProps) {
   const dispatch = useModPageDispatch();
   const mode = useModPage(s => s.mode);
   const description = useModPage(s => s.mod.description);
@@ -66,11 +67,26 @@ export function ModPageDescription({ rscSource, rscDescription }: ModPageBodyPro
   );
 }
 
-export function ModPageReleases() {
-  return null;
+function ModPageReleases({ rscChangelogs }: Pick<ModPageBodyProps, "rscChangelogs">) {
+  const releases = useModPage(s => s.releases);
+
+  return (
+    <div className={styles.releaseList}>
+      {releases.map((r, i) => {
+        return (
+          <div key={r.id} className={styles.releaseCard}>
+            <div className={styles.releaseTitle}>{r.title}</div>
+            <div className={clsx("markdown concise", styles.releaseChangelog)}>
+              {rscChangelogs[i]}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 
-export function ModPageBanner() {
+function ModPageBanner() {
   const dispatch = useModPageDispatch();
   const banner_url = useModPage(s => s.mod.banner_url);
   const banner_layout = useModPage(s => s.mod.banner_layout);

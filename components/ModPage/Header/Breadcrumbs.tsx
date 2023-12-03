@@ -37,7 +37,8 @@ export default function ModPageBreadcrumbs() {
 }
 
 function BreadcrumbTitle() {
-  return useModPage(s => s.mod.title);
+  const title = useModPage(s => s.mod.title);
+  return <span>{title}</span>;
 }
 
 function EditButton() {

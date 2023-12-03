@@ -148,12 +148,14 @@ img.emoji {
 
   p { line-height: 1.5em; }
 
+  --panel-margin-bottom: 1.25rem;
+
   &, :is(div[role=tabpanel], div[role=panel]) {
     > :is(h1, h2, h3, h4, h5, h6) {
       margin-top: 0;
     }
     > :is(p, ul, ol, h4, h5, h6, img, table, hr, div[role=panel]) {
-      margin-bottom: 1.25rem;
+      margin-bottom: var(--panel-margin-bottom);
       &:last-child { margin-bottom: 0; }
     }
   }
@@ -164,5 +166,13 @@ img.emoji {
   h3 { font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1.25rem; }
 
   li + li { margin-top: 0.25rem; }
+
+  &.concise {
+    --panel-margin-bottom: 0.5rem;
+
+    h1 { margin-bottom: 0.5rem; }
+    h2 { margin-top: 1rem; margin-bottom: 0.25rem; }
+    h3 { margin-top: 0.5rem; margin-bottom: 0; }
+  }
 
 }

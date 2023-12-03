@@ -26,9 +26,16 @@ export default async function ModPageIndex({ params }: PageProps) {
   const releases = mod.releases;
   delete (mod as any).releases;
 
+  const releaseContents = await Promise.all(
+    releases.map(async r => {
+      const { content } = await compileMDX(r.changelog, { github_repo: mod.github_repo });
+      return content;
+    }),
+  );
+
   return (
     <>
-      <ModPage mod={mod} releases={releases} rscDescription={content} />
+      <ModPage mod={mod} releases={releases} rscDescription={content} rscChangelogs={releaseContents} />
       <SetCanonicalUrl url={`/mods/${mod.slug ?? mod.id}`} />
     </>
   );

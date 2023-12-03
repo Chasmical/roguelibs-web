@@ -123,6 +123,8 @@ export interface DbRelease {
   edited_at: string | null; // timestamptz null = null
   version: string | null; // text null = null { length <= 32, satisfy is_compatible_semver function }
   slug: string | null; // citext null = null { unique(mod_id), length [1;32], match /^[0-9a-zA-Z._-]+$/, not match /^\d+$/ }
+  title: string | null; // text null = null { length [1;128] }
+  changelog: string; // text = '' { length <= 1000 }
   is_public: boolean; // bool = false
 }
 export interface DbReleaseFile {
