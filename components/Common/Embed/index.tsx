@@ -1,5 +1,5 @@
 import { HTMLAttributes, useMemo } from "react";
-import { oEmbedResponse } from "@lib/mdx/remark-embed";
+import { oEmbedResponse } from "@lib/mdx/plugins/remark-embed";
 import YouTubeEmbed from "./youtube";
 import DefaultEmbed from "./default";
 

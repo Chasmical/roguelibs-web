@@ -1,5 +1,5 @@
 import { HTMLAttributes, useMemo } from "react";
-import { oEmbedResponse } from "@lib/mdx/remark-embed";
+import { oEmbedResponse } from "@lib/mdx/plugins/remark-embed";
 import styles from "./index.module.scss";
 import clsx from "clsx";
 import Link from "@components/Common/Link";

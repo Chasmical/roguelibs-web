@@ -1,6 +1,6 @@
 "use client";
 import { HTMLAttributes, useMemo, useState } from "react";
-import { oEmbedVideoResponse } from "@lib/mdx/remark-embed";
+import { oEmbedVideoResponse } from "@lib/mdx/plugins/remark-embed";
 import styles from "./index.module.scss";
 import clsx from "clsx";
 

@@ -2,7 +2,7 @@ import type { Transformer } from "unified";
 import { findAndReplace } from "mdast-util-find-and-replace";
 
 export interface RemarkGitHubOptions {
-  repo: string | null;
+  repo: string | null | undefined;
 }
 
 const CommitShaRegex = /\b([0-9a-f]{40})\b/g;

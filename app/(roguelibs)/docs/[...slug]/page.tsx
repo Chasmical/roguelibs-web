@@ -1,8 +1,9 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SetCanonicalUrl from "@components/Specialized/SetCanonicalUrl";
-import DocPage, { DocPageProps, extractFrontmatter, fetchFile } from "@components/DocPage";
+import DocPage, { DocPageProps, Frontmatter, fetchFile } from "@components/DocPage";
 import { findDirectoryWithTarget } from "@lib/utils/file";
+import { extractFrontmatter } from "@lib/mdx/frontmatter";
 
 interface PageProps {
   params: { slug: string[] };
@@ -33,7 +34,7 @@ function resolveSlug(slug: string[]): [path: string, url: string] {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const [path, url] = resolveSlug(params.slug);
   const source = await fetchFile({ ...props, path });
-  const frontmatter = extractFrontmatter(source);
+  const frontmatter = extractFrontmatter<Frontmatter>(source);
   if (!frontmatter) notFound();
 
   return {

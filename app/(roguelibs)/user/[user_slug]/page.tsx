@@ -1,12 +1,14 @@
 import UserPage from "@components/UserPage";
 import UserPageSkeleton from "@components/UserPage/skeleton";
 import SetCanonicalUrl from "@components/Specialized/SetCanonicalUrl";
+import { selectUniqueAvatar } from "@components/Common/Avatar";
 import { Metadata } from "next";
 import { createServerApi } from "@lib/API";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
-import { selectUniqueAvatar } from "@components/Common/Avatar";
-import { compileMDX } from "@lib/mdx";
+import { compileMdx } from "@lib/mdx";
+import configurePlugins from "@lib/mdx/plugins";
+import configureComponents from "@lib/mdx/components";
 
 interface PageProps {
   params: { user_slug: string };
@@ -22,7 +24,10 @@ export default async function UserPageIndex({ params }: PageProps) {
     return <div>{`Oops, looks like user with a URL slug "${params.user_slug}" could not be found`}</div>;
   }
 
-  const { content } = await compileMDX(user.description);
+  const { content } = await compileMdx(user.description, {
+    ...configurePlugins(),
+    components: configureComponents(),
+  });
 
   return (
     <>

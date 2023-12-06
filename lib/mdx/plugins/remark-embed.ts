@@ -29,6 +29,7 @@ export async function fetchOEmbedProviders() {
 export interface RemarkEmbedOptions {
   providers?: oEmbedProvider[] | (() => oEmbedProvider[] | Promise<oEmbedProvider[]>);
   extraProviders?: oEmbedProvider[] | (() => oEmbedProvider[]);
+  componentName?: string;
   componentNames?: [provider_name: string, componentName: string][];
   size?: [width: number, height: number];
 }
@@ -92,7 +93,7 @@ export default function remarkEmbed(options?: RemarkEmbedOptions): Transformer {
           { type: "mdxJsxAttribute", name: "data", value: JSON.stringify(response) },
         ];
         node.type = "mdxJsxFlowElement";
-        node.name = endpoint.componentName ?? "Embed";
+        node.name = endpoint.componentName ?? options?.componentName ?? "Embed";
         node.children = [];
       } catch (error) {
         console.error(error);
@@ -112,11 +113,11 @@ export default function remarkEmbed(options?: RemarkEmbedOptions): Transformer {
   };
 }
 
-interface oEmbedEndpointInternal extends oEmbedEndpoint {
-  schemes: RegExp[];
-}
 interface oEmbedProviderInternal extends oEmbedProvider {
   endpoints: oEmbedEndpointInternal[];
+}
+interface oEmbedEndpointInternal extends oEmbedEndpoint {
+  schemes: RegExp[];
 }
 
 export interface oEmbedProvider {

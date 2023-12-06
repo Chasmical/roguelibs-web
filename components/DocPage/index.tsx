@@ -1,7 +1,8 @@
-import { compileMDX } from "@lib/mdx";
 import { readFile } from "fs/promises";
-import yaml from "js-yaml";
 import DocSidebar from "@components/DocPage/Sidebar";
+import { compileMdx } from "@lib/mdx";
+import configurePlugins from "@lib/mdx/plugins";
+import configureComponents from "@lib/mdx/components";
 import styles from "./index.module.scss";
 import clsx from "clsx";
 import "katex/dist/katex.min.css";
@@ -13,7 +14,11 @@ export interface DocPageProps extends FileFetchInfo {
 export default async function DocPage(props: DocPageProps) {
   const source = await fetchFile(props);
 
-  const { content } = await compileMDX<Frontmatter>(source, { format: "mdx" });
+  const { content } = await compileMdx<Frontmatter>(source, {
+    format: "mdx",
+    ...configurePlugins(),
+    components: configureComponents(),
+  });
 
   return (
     <div className={styles.wrapper}>
@@ -46,9 +51,4 @@ export async function fetchFile({ repo, branch, path, serveLocal }: FileFetchInf
   const url = `https://raw.githubusercontent.com/${repo}/${branch ?? "main"}/${path}`;
   const res = await fetch(url, { next: { tags: ["docs"] } });
   return await res.text();
-}
-
-export function extractFrontmatter(source: string) {
-  const frontmatterEnd = Math.max(source.indexOf("\n---", 1), 0);
-  return yaml.load(source.slice(0, frontmatterEnd)) as Frontmatter;
 }

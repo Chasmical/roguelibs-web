@@ -23,7 +23,7 @@ export default function rehypeCodeMeta(options?: RehypeCodeMetaOptions): Transfo
 
 const MetaAttributeRegex = /([^\s=]+)(?:="([^"]+)"|=([^\s]+))?/g;
 
-function parseMeta(meta: string | null | undefined): Record<string, unknown> | void {
+function parseMeta(meta: string | null | undefined): Record<string, unknown> | undefined {
   meta = meta?.trim();
   if (meta) {
     const matches = [...meta.matchAll(MetaAttributeRegex)];

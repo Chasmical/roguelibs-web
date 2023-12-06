@@ -5,7 +5,9 @@ import { Metadata } from "next";
 import { createServerApi } from "@lib/API";
 import { headers, cookies } from "next/headers";
 import { notFound } from "next/navigation";
-import { compileMDX } from "@lib/mdx";
+import { compileMdx } from "@lib/mdx";
+import configurePlugins from "@lib/mdx/plugins";
+import configureComponents from "@lib/mdx/components";
 
 interface PageProps {
   params: { mod_slug: string };
@@ -21,14 +23,20 @@ export default async function ModPageIndex({ params }: PageProps) {
     return <div>{`Oops, looks like a mod with a URL slug "${params.mod_slug}" could not be found`}</div>;
   }
 
-  const { content } = await compileMDX(mod.description, { github_repo: mod.github_repo });
+  const { content } = await compileMdx(mod.description, {
+    ...configurePlugins({ gitHubRepo: mod.github_repo }),
+    components: configureComponents(),
+  });
 
   const releases = mod.releases;
   delete (mod as any).releases;
 
   const releaseContents = await Promise.all(
     releases.map(async r => {
-      const { content } = await compileMDX(r.changelog, { github_repo: mod.github_repo });
+      const { content } = await compileMdx(r.changelog, {
+        ...configurePlugins({ gitHubRepo: mod.github_repo }),
+        components: configureComponents(),
+      });
       return content;
     }),
   );
