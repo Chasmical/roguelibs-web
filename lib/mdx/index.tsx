@@ -27,7 +27,11 @@ export async function compileMdx<Frontmatter extends object>(
   markdown: VFileCompatible,
   options: MdxOptions,
 ): Promise<CompileResult<Frontmatter>> {
-  const vfile: Readonly<VFile> = new VFile(markdown);
+  const vfile = new VFile(markdown);
+
+  // TODO: remark-heading-id doesn't work with JSX, so we're escaping JSX acorns via regex
+  const regex = /^(#{1,6} [^\n]+?)\s*({#[^\n]+})$/gm;
+  vfile.value = String(vfile).replaceAll(regex, (match, title, id) => `${title} \\${id}`);
 
   const frontmatter = extractFrontmatter<Frontmatter>(vfile, true);
 
@@ -37,6 +41,7 @@ export async function compileMdx<Frontmatter extends object>(
     remarkPlugins: options.remarkPlugins,
     outputFormat: "function-body",
     providerImportSource: undefined,
+    development: process.env.NODE_ENV === "development",
   };
 
   const source = String(await compile(vfile, compileOptions));

@@ -19,7 +19,7 @@ export function createStore(mod: RestMod, releases: RestRelease[]) {
       state ??= initialState;
       if (action.type === "mutate") {
         state = produce(state, s => {
-          action.payload(s);
+          (action.payload as any)(s);
         });
       }
       return state;
