@@ -8,7 +8,6 @@ import Icon from "@components/Common/Icon";
 import Tooltip from "@components/Common/Tooltip";
 
 (typeof global !== "undefined" ? global : window).Prism = Prism;
-// require("prismjs/components/prism-csharp");
 
 export interface CodeBlockProps extends React.HTMLAttributes<HTMLElement> {
   title?: string;
@@ -33,30 +32,28 @@ export default function CodeBlock({
   ...props
 }: CodeBlockProps) {
   const code = useMemo(() => stringifyChildren(children).join("\n"), [children]);
-  const [highlight, setHighlight] = useState(false);
+  const [language, setLanguage] = useState<string | null>(null);
 
   useEffect(() => {
     try {
-      const aliased = usefulAliases[lang!];
-      aliased && console.log(`Detected language alias "${lang}" for "${aliased}". Maybe use "${aliased}" directly?`);
-      lang = aliased ?? lang;
+      lang = usefulAliases[lang!] ?? lang;
       if (lang) {
         (async () => {
           await import("prismjs/components/prism-" + lang);
-          setHighlight(true);
+          setLanguage(lang);
         })();
       }
     } catch (err) {
       console.error(`"${lang}" is not a valid PrismJS language.`);
-      lang = undefined;
+      setLanguage(null);
     }
   }, [lang]);
 
   return (
     <div role="panel" className={clsx(styles.block, className)} {...props}>
       {title && <div className={styles.title}>{title}</div>}
-      {highlight ? (
-        <Highlight code={code} language={lang ?? "text"}>
+      {language ? (
+        <Highlight code={code} language={language}>
           {({ className, style, tokens, getLineProps, getTokenProps }) => (
             <div className={styles.contents}>
               <pre className={clsx(styles.pre, className)} style={style}>
