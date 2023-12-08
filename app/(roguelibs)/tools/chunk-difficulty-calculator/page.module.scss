@@ -1,0 +1,34 @@
+.container {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  padding: 2rem;
+
+  > p {
+    text-wrap: balance;
+    text-align: center;
+  }
+}
+.split {
+  align-self: normal;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: flex-start;
+  justify-content: space-evenly;
+}
+.inputs {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 1rem;
+}
+button.players-button {
+  padding: 4px 8px;
+  .players-grid {
+    display: inline-grid;
+    grid-template-columns: auto auto;
+  }
+}
+
+.first-district-floor :is(th, td) {
+  border-top-width: 3px;
+}
