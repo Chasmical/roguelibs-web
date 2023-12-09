@@ -1,0 +1,229 @@
+
+## Basic Markdown
+
+```mdx title="/markdown-features/common.mdx"
+#### Heading
+
+RogueLibs' site **supports** *basic* [Markdown](https://commonmark.org/help/), ***and more***!
+
+![Green cube, pixel art, isometric](https://roguelibs.com/Generic.png)
+
+> Thanks, I ~~hate~~ *absolutely love* it!
+> – Resistance Leader (probably)
+```
+
+<BrowserWindow address="/markdown-features/common.mdx">
+#### Heading
+
+RogueLibs' site **supports** *basic* [Markdown](https://commonmark.org/help/), ***and more***!
+
+![Green cube, pixel art, isometric](https://roguelibs.com/Generic.png)
+
+> Thanks, I ~~hate~~ *absolutely love* it!
+> – Resistance Leader (probably)
+</BrowserWindow>
+
+## Links and embeds
+
+```mdx title="/markdown-features/links-and-embeds.mdx"
+Hey, check out this mod that @Abbysssal made:
+
+https://www.youtube.com/watch?v=nZLEowA6lm8
+
+Don't worry, the `<iframe>` is lazily loaded, so YouTube doesn't get a chance to track you.
+Can't say the same for other sites yet, though. It's a little time-consuming to isolate them like this.
+```
+
+<BrowserWindow address="/markdown-features/links-and-embeds.mdx">
+Hey, check out this mod that @Abbysssal made:
+
+https://www.youtube.com/watch?v=nZLEowA6lm8
+
+Don't worry, the `<iframe>` is lazily loaded, so YouTube doesn't get a chance to track you.
+Can't say the same for other sites yet, though. It's a little time-consuming to isolate them like this.
+</BrowserWindow>
+
+## Code blocks
+
+`````mdx title="/markdown-features/code-blocks.mdx"
+You can highlight your code blocks by appending the language code to the triple backticks.
+We use **PrismJS** for syntax highlighting - it [supports almost 300 different languages](https://prismjs.com/#supported-languages)!
+
+```cs
+public class MyAwesomeItem : CustomItem
+{
+    [RLSetup]
+    public static void Setup()
+    {
+        RogueLibs.CreateCustomItem<MyAwesomeItem>();
+    }
+}
+```
+`````
+
+<BrowserWindow address="/markdown-features/code-blocks.mdx">
+You can highlight your code blocks by appending the language code to the triple backticks.
+We use **PrismJS** for syntax highlighting - it [supports almost 300 different languages](https://prismjs.com/#supported-languages)!
+
+```cs
+public class MyAwesomeItem : CustomItem
+{
+    [RLSetup]
+    public static void Setup()
+    {
+        RogueLibs.CreateCustomItem<MyAwesomeItem>();
+    }
+}
+```
+</BrowserWindow>
+
+:::info{title="Syntax language aliases"}
+RogueLibs also defines a few useful language aliases to make things easier:
+
+- You can write `cs` instead of `csharp`;
+- `xml`/`html`/`svg`/`csproj` instead of `markup`;
+- `js`/`ts` instead of `javascript`/`typescript`;
+- `md`/`mdx` instead of `markdown`;
+- `sh`/`shell` instead of `bash`;
+- `ps` instead of `powershell`;
+- *and some more*.
+:::
+
+### Customizing code blocks
+
+`````mdx title="/markdown-features/code-blocks-2.mdx"
+```cs title="/MyAwesomeSolution/MyAwesomeProject/MyAwesomeThing.cs"
+public class MyAwesomeThing
+{
+}
+```
+
+```svg nocopy nonums wrap
+<svg version="1.1" viewBox="0 0 16 16" width="32" height="32" aria-hidden><path fill="#e6edf3" d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path></svg>
+```
+`````
+
+<BrowserWindow address="/markdown-features/code-blocks-2.mdx">
+```cs title="/MyAwesomeSolution/MyAwesomeProject/MyAwesomeThing.cs"
+public class MyAwesomeThing
+{
+}
+```
+
+```svg nocopy nonums wrap
+<svg version="1.1" viewBox="0 0 16 16" width="32" height="32" aria-hidden><path fill="#e6edf3" d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path></svg>
+```
+</BrowserWindow>
+
+:::info{title="Customization options"}
+- `title=""` allows you to specify the *"path"* to the file;
+- `nocopy` removes the Copy button;
+- `nonums` removes line numbers;
+- `wrap` makes the code wrap, by default. The wrapping is not pretty at the moment, but it will be worked on!
+:::
+
+## Admonitions
+
+```mdx title="/markdown-features/admonitions.mdx"
+:::note{title="This is a note"}
+***Lorem*** ipsum dolor *sit amet*, `consectetur` adipiscing elit.
+:::
+
+:::tip{title="This is a tip"}
+***Lorem*** ipsum dolor *sit amet*, `consectetur` adipiscing elit.
+:::
+
+:::info{title="This is information"}
+***Lorem*** ipsum dolor *sit amet*, `consectetur` adipiscing elit.
+:::
+
+:::caution{title="This is a caution"}
+***Lorem*** ipsum dolor *sit amet*, `consectetur` adipiscing elit.
+:::
+
+:::danger{title="This is something dangerous"}
+***Lorem*** ipsum dolor *sit amet*, `consectetur` adipiscing elit.
+:::
+```
+
+<BrowserWindow address="/markdown-features/admonitions.mdx">
+:::note{title="This is a note"}
+***Lorem*** ipsum dolor *sit amet*, `consectetur` adipiscing elit.
+:::
+
+:::tip{title="This is a tip"}
+***Lorem*** ipsum dolor *sit amet*, `consectetur` adipiscing elit.
+:::
+
+:::info{title="This is information"}
+***Lorem*** ipsum dolor *sit amet*, `consectetur` adipiscing elit.
+:::
+
+:::caution{title="This is a caution"}
+***Lorem*** ipsum dolor *sit amet*, `consectetur` adipiscing elit.
+:::
+
+:::danger{title="This is something dangerous"}
+***Lorem*** ipsum dolor *sit amet*, `consectetur` adipiscing elit.
+:::
+</BrowserWindow>
+
+## Emojis
+
+RogueLibs uses [Twemoji](https://github.com/jdecked/twemoji) for emojis, and supports `:github-emoji:` syntax.
+
+```mdx title="/markdown-features/emojis.mdx"
+🤣 💀 🎉 ✨
+
+:rofl: :skull: :tada: :sparkles: 
+
+\🤣 \💀 \🎉 \✨
+```
+
+<BrowserWindow address="/markdown-features/emojis.mdx">
+🤣 💀 🎉 ✨
+
+:rofl: :skull: :tada: :sparkles: 
+
+\🤣 \💀 \🎉 \✨
+</BrowserWindow>
+
+## GitHub links
+
+If your mod is connected to a GitHub repository, commit SHAs are automatically converted into links:
+
+```mdx title="/markdown-features/github-integration.mdx"
+Changelog v4.0.0-beta.8:
+- 🌐 Localized Discord link in the menu (9a33020d37ef57eb33c25f6bf2b9fbab7bd59c00);
+- 🥅 Added more tracing to RogueLibsPatcher (5b9b16b8885fd6df04beb68beeb0d73f18cf04af);
+- 🧩 Brought hook metadata classes back for backwards compatibility (5fc876c5cb17ae38bf263d64af697eb1540adccc);
+- 🔒 Stripped full path to .pdb from release assembly (ff4cb5854d0557538999b4fa54ebb3e5fdcdfdb8);
+```
+
+<BrowserWindow address="/markdown-features/github-integration.mdx">
+Changelog v4.0.0-beta.8:
+- 🌐 Localized Discord link in the menu (9a33020d37ef57eb33c25f6bf2b9fbab7bd59c00);
+- 🥅 Added more tracing to RogueLibsPatcher (5b9b16b8885fd6df04beb68beeb0d73f18cf04af);
+- 🧩 Brought hook metadata classes back for backwards compatibility (5fc876c5cb17ae38bf263d64af697eb1540adccc);
+- 🔒 Stripped full path to .pdb from release assembly (ff4cb5854d0557538999b4fa54ebb3e5fdcdfdb8);
+</BrowserWindow>
+
+## Color squares
+
+```mdx title="/markdown-features/color-squares.mdx"
+These color squares support **simple** CSS colors!
+
+Hex-colors: `#F00`, `#4F82A9`, `#4F82A940`.
+RGB/RGBA: `rgb(192, 40, 98)`, `rgba(192 40 98 / 50%)`.
+HSL/HSLA: `hsl(120deg 100% 75%)`, `hsl(3.14rad 75% 25%)`.
+```
+
+<BrowserWindow address="/markdown-features/color-squares.mdx">
+These color squares support **simple** CSS colors!
+
+Hex-colors: `#F00`, `#4F82A9`, `#4F82A940`.
+RGB/RGBA: `rgb(192, 40, 98)`, `rgba(192 40 98 / 50%)`.
+HSL/HSLA: `hsl(120deg 100% 75%)`, `hsl(3.14rad 75% 25%)`.
+</BrowserWindow>
+
+{/* Document explicit heading ids */}
