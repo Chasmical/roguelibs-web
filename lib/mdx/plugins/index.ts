@@ -9,7 +9,7 @@ import remarkBreaks from "remark-breaks";
 import remarkMath from "remark-math";
 // import remarkExtendedTable from "remark-extended-table";
 import remarkMentions from "./remark-mentions";
-import remarkInlineHexColor from "./remark-inline-hex-color";
+import remarkInlineCssColor from "./remark-inline-css-color";
 import remarkEmoji from "./remark-emoji";
 import remarkEmbed from "./remark-embed";
 import remarkGitHub from "./remark-github";
@@ -45,7 +45,7 @@ export function configureRemarkPlugins(config?: RemarkConfiguration): PluggableL
     [remarkMath, { singleDollarTextMath: false }],
     // [remarkExtendedTable, { colspanWithEmpty: true }],
     remarkMentions,
-    remarkInlineHexColor,
+    remarkInlineCssColor,
     remarkEmoji,
     [remarkEmbed, { size: [400, 225], componentNames: [["YouTube", "YouTubeEmbed"]] }],
     [remarkGitHub, { repo: config?.gitHubRepo }],
