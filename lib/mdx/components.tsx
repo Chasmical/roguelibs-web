@@ -8,6 +8,7 @@ import Tabs from "@components/Common/Tabs";
 import TabItem from "@components/Common/TabItem";
 import InlineHexColor from "@components/Common/InlineHexColor";
 import InventoryTooltipPreview from "@components/Specialized/InventoryTooltipPreview";
+import BrowserWindow from "@components/Common/BrowserWindow";
 import type { MdxComponentProps } from ".";
 
 export interface ComponentsConfig {}
@@ -24,5 +25,6 @@ export default function configureComponents(config?: ComponentsConfig): MdxCompo
     TabItem: TabItem,
     InlineHexColor: InlineHexColor,
     InventoryTooltipPreview: InventoryTooltipPreview,
+    BrowserWindow: BrowserWindow,
   };
 }
