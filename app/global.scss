@@ -121,6 +121,11 @@ th, td {
 img {
   max-width: 100%;
 }
+hr {
+  border-width: 3px;
+  border-style: outset;
+  border-color: var(--color-secondary);
+}
 
 label {
   margin-left: 0.5rem;
@@ -166,6 +171,11 @@ img.emoji {
   h3 { font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1.25rem; }
 
   li + li { margin-top: 0.25rem; }
+
+  blockquote {
+    border-left: 4px solid var(--color-secondary);
+    padding: 0 1rem;
+  }
 
   &.concise {
     --panel-margin-bottom: 0.5rem;
