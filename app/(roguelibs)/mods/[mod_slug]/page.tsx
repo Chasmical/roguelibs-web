@@ -24,6 +24,7 @@ export default async function ModPageIndex({ params }: PageProps) {
   }
 
   const { content } = await compileMdx(mod.description, {
+    format: mod.is_verified ? "mdx" : "md",
     ...configurePlugins({ gitHubRepo: mod.github_repo }),
     components: configureComponents(),
   });
@@ -34,6 +35,7 @@ export default async function ModPageIndex({ params }: PageProps) {
   const releaseContents = await Promise.all(
     releases.map(async r => {
       const { content } = await compileMdx(r.changelog, {
+        format: mod.is_verified ? "mdx" : "md",
         ...configurePlugins({ gitHubRepo: mod.github_repo }),
         components: configureComponents(),
       });

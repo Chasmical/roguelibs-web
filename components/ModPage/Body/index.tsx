@@ -44,12 +44,13 @@ function ModPageDescription({ rscSource, rscDescription }: ModPageBodyProps) {
   const dispatch = useModPageDispatch();
   const mode = useModPage(s => s.mode);
   const description = useModPage(s => s.mod.description);
+  const is_verified = useModPage(s => s.mod.is_verified);
 
   if (mode !== "edit") {
     if (description === rscSource) {
       return <div className="markdown">{rscDescription}</div>;
     }
-    return <MdxPreview source={description} />;
+    return <MdxPreview source={description} is_verified={is_verified} />;
   }
 
   return (

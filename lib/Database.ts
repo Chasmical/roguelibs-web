@@ -30,7 +30,7 @@ export interface DatabaseFunctions {
   get_user_nuggets: (e: DbUser) => number[];
   get_user_subscriptions: (e: DbUser) => number[];
   get_user_badges: (e: DbUser) => string[];
-  upsert_mdx_preview: (e: { _source: string }) => string;
+  upsert_mdx_preview: (e: { _source: string; _is_verified: boolean }) => string;
   search_users: (e: { _term: string; _limit: number }) => UserSearchResult[];
 }
 
@@ -179,4 +179,5 @@ export interface DbMdxPreview {
   created_by: string; // uuid fk(users / cascade)
   created_at: string; // timestamptz = now()
   source: string; // text
+  is_verified: boolean; // bool = false
 }

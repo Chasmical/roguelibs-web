@@ -1,4 +1,4 @@
-create or replace function public.upsert_mdx_preview(_source text)
+create or replace function public.upsert_mdx_preview(_source text, _is_verified bool)
 returns uuid security definer as
 $$
 declare
@@ -14,12 +14,13 @@ begin
   into _uid;
 
   if _uid is null then
-    insert into public.mdx_previews(source)
-    values(_source)
+    insert into public.mdx_previews(source, is_verified)
+    values(_source, _is_verified)
     returning uid into _uid;
   else
     update public.mdx_previews
     set source = _source
+      , is_verified = _is_verified
     where uid = _uid;
   end if;
 

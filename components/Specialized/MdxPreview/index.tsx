@@ -7,12 +7,13 @@ import clsx from "clsx";
 
 export interface MdxPreviewProps extends HTMLProps<HTMLDivElement> {
   source: string;
+  is_verified?: boolean;
   className?: string;
   onLoad?: () => void;
   // ...props
   style?: React.CSSProperties;
 }
-export default function MdxPreview({ source, className, onLoad, ...props }: MdxPreviewProps) {
+export default function MdxPreview({ source, is_verified, className, onLoad, ...props }: MdxPreviewProps) {
   const api = useApi();
   const [loading, setLoading] = useState(false);
   const [uid, setUid] = useState<string | null>(null);
@@ -21,7 +22,7 @@ export default function MdxPreview({ source, className, onLoad, ...props }: MdxP
   async function updateMdxPreview() {
     try {
       setLoading(true);
-      setUid(await api.upsertMdxPreview(source));
+      setUid(await api.upsertMdxPreview(source, is_verified ?? false));
     } catch (error) {
       console.error(error);
       setLoading(false);
@@ -35,7 +36,7 @@ export default function MdxPreview({ source, className, onLoad, ...props }: MdxP
       );
     }
     updateMdxPreview();
-  }, [source]);
+  }, [source, is_verified ?? false]);
 
   useWindowEvent(
     "message",

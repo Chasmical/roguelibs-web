@@ -182,8 +182,8 @@ export class RogueLibsApi extends WrappedSupabaseClient {
   public fetchMdxPreview(uid: string) {
     return this.selectOne(selectMdxPreview, p => p.eq("uid", uid));
   }
-  public upsertMdxPreview(source: string) {
-    return this.rpc("upsert_mdx_preview", { _source: source });
+  public upsertMdxPreview(source: string, is_verified = false) {
+    return this.rpc("upsert_mdx_preview", { _source: source, _is_verified: is_verified });
   }
 }
 

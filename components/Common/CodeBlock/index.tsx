@@ -136,6 +136,7 @@ const usefulAliases: Record<string, string | undefined> = {
   svg: "markup",
   yml: "yaml",
   md: "markdown",
+  mdx: "markdown",
   sh: "bash",
   shell: "bash",
   ps: "powershell",

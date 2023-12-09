@@ -17,6 +17,7 @@ export default async function MdxPreviewIndex({ params }: PageProps) {
   if (!preview) notFound();
 
   const { content } = await compileMdx(preview.source, {
+    format: preview.is_verified ? "mdx" : "md",
     ...configurePlugins(),
     components: configureComponents(),
   });
