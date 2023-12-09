@@ -10,12 +10,12 @@ export function ScrollControllerProvider({ children }: { children: React.ReactNo
 }
 
 export default function useScrollPositionBlocker(): (element: HTMLElement) => void {
-  const scrollController = useContext(ScrollBlockContext)!;
+  const scrollController = useContext(ScrollBlockContext);
   const nextLayoutEffectCallbackRef = useRef<(() => void) | undefined>(undefined);
 
   const blockElementScrollPositionUntilNextRender = useCallback(
     (element: HTMLElement) => {
-      if (!element) return;
+      if (!element || !scrollController) return;
       scrollController.current = [element, element.getBoundingClientRect().top];
 
       nextLayoutEffectCallbackRef.current = () => {
