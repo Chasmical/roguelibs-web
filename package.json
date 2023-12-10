@@ -22,6 +22,7 @@
     "js-yaml": "^4.1.0",
     "katex": "^0.16.9",
     "lodash": "^4.17.21",
+    "md5": "^2.3.0",
     "nanoid": "^5.0.4",
     "next": "^14.0.3",
     "node-emoji": "^2.1.3",
@@ -43,6 +44,7 @@
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
     "@types/lodash": "^4.14.202",
+    "@types/md5": "^2.3.5",
     "@types/mdx": "^2.0.10",
     "@types/node": "^20.10.3",
     "@types/react": "^18.2.42",

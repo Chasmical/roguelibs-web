@@ -157,6 +157,7 @@ export interface DbUpload {
   data: string | null; // text null
   hash: string | null; // text null { length = 32, match /^[0-9a-f]+$/ }
   size: number; // int4 { > 0 }
+  uploaded_by: string; // uuid fk(users / set default) = '00000000-0000-0000-0000-000000000000'
 }
 export enum DbUploadType {
   Hosted = 1, // hosted at /uploads/{id}
