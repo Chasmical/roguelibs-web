@@ -18,6 +18,15 @@ export default function remarkAdmonition(options?: RemarkAdmonitionOptions): Tra
         node.type = "mdxJsxFlowElement";
         node.name = componentName;
       }
+      if (node.type === "textDirective" && node.name === "icon") {
+        node.attributes = [
+          { type: "mdxJsxAttribute", name: "type", value: node.children?.[0]?.value },
+          ...Object.entries(node.attributes).map(([name, value]) => ({ type: "mdxJsxAttribute", name, value })),
+        ];
+        node.type = "mdxJsxFlowElement";
+        node.name = "Icon";
+        node.children = [];
+      }
     });
   };
 }
