@@ -23,6 +23,20 @@ RogueLibs' site **supports** *basic* [Markdown](https://commonmark.org/help/), *
 > – Resistance Leader (probably)
 </BrowserWindow>
 
+## Explicit heading links
+
+```mdx title="/markdown-features/explicit-heading-ids.mdx"
+## This heading link is auto-generated
+
+## This has a custom one {#custom-name} 
+```
+
+<BrowserWindow address="/markdown-features/explicit-heading-ids.mdx">
+## This heading's link is auto-generated
+
+## This heading has a custom link {#custom-name}
+</BrowserWindow>
+
 ## Links and embeds
 
 ```mdx title="/markdown-features/links-and-embeds.mdx"
@@ -226,4 +240,3 @@ RGB/RGBA: `rgb(192, 40, 98)`, `rgba(192 40 98 / 50%)`.
 HSL/HSLA: `hsl(120deg 100% 75%)`, `hsl(3.14rad 75% 25%)`.
 </BrowserWindow>
 
-{/* Document explicit heading ids */}
