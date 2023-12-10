@@ -10,9 +10,8 @@ const hue = `${num}(?:deg|grad|rad|turn)?`;
 
 const colorFuncs = [
   // Hex colors: #000, #0000, #000000, #00000000
-  `#[0-9a-fA-F]{3,4}`,
-  `#[0-9a-fA-F]{6}`,
-  `#[0-9a-fA-F]{8}`,
+  `#(?:[0-9a-fA-F]{3}){1,2}`,
+  `#(?:[0-9a-fA-F]{4}){1,2}`,
   // Legacy rgb/rgba: rgb(1,2,3), rgba(1,2,3,4)
   String.raw`rgb\(\s*${num}\s*,\s*${num}\s*,\s*${num}\s*\)`,
   String.raw`rgba\(\s*(?:${num}%|0)\s*,\s*(?:${num}%|0)\s*,\s*(?:${num}%|0)\s*,\s*${num}%?\s*\)`,
@@ -36,7 +35,7 @@ export default function remarkInlineCssColor(options?: RemarkInlineCssColorOptio
 
       Object.assign(node, {
         type: "mdxJsxFlowElement",
-        name: "InlineHexColor",
+        name: "InlineCssColor",
         attributes: [{ type: "mdxJsxAttribute", name: "color", value: node.value }],
       });
     });

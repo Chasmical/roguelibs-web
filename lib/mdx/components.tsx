@@ -6,7 +6,7 @@ import YouTubeEmbed from "@components/Common/Embed/youtube";
 import Link from "@components/Common/Link";
 import Tabs from "@components/Common/Tabs";
 import TabItem from "@components/Common/TabItem";
-import InlineHexColor from "@components/Common/InlineHexColor";
+import InlineCssColor from "@components/Common/InlineCssColor";
 import InventoryTooltipPreview from "@components/Specialized/InventoryTooltipPreview";
 import BrowserWindow from "@components/Common/BrowserWindow";
 import type { MdxComponentProps } from ".";
@@ -23,7 +23,7 @@ export default function configureComponents(config?: ComponentsConfig): MdxCompo
     YouTubeEmbed: YouTubeEmbed,
     Tabs: Tabs,
     TabItem: TabItem,
-    InlineHexColor: InlineHexColor,
+    InlineCssColor: InlineCssColor,
     InventoryTooltipPreview: InventoryTooltipPreview,
     BrowserWindow: BrowserWindow,
   };
