@@ -8,11 +8,16 @@ export interface IconProps extends Omit<SpriteProps, "src" | "color" | "crisp"> 
 }
 
 export default function Icon({ className, width, height, size, type, style, alpha, ...props }: IconProps) {
-  const sheet = sheets.find(s => type in s.offsets)!;
+  let sheet = sheets.find(s => type in s.offsets);
+  if (!sheet) {
+    console.warn(`Icon of type "${type}" could not be found.`);
+    sheet = commonIcons;
+    type = "not_found";
+  }
   const offset = sheet.offsets[type];
 
   return (
-    <div
+    <span
       role="icon"
       className={clsx(styles.icon, sheet.className, className)}
       style={{
@@ -23,7 +28,7 @@ export default function Icon({ className, width, height, size, type, style, alph
         ...style,
       }}
       {...props}
-    ></div>
+    ></span>
   );
 }
 
@@ -32,7 +37,7 @@ const commonIcons = createSpriteSheet({
   types: [
     ["add", "edit", "copy", "save", "link", "visibility", "visibility_off", "undo"],
     ["download", "upload", "options", "options_vert", "door", "bell", "check", "cross"],
-    ["person"],
+    ["person", "not_found"],
     [],
     ["nugget", "discord", "gamebanana", "website", "google", "github"],
     ["info", "note", "lightbulb", "caution", "danger"],
