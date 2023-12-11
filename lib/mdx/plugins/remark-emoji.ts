@@ -45,7 +45,7 @@ export default function remarkEmoji(options?: RemarkEmojiOptions): Transformer {
     findAndReplace(tree, [
       EmojiRegex,
       (_, escapes: string, emoji: string) => {
-        const codepoints = toCodePoints(emoji).join("-");
+        const codepoints = toCodePoints(removeVS16s(emoji)).join("-");
         const src = buildUrl(codepoints, type);
         const ariaLabel = getEmojiDescription(emoji);
 
@@ -68,6 +68,11 @@ export default function remarkEmoji(options?: RemarkEmojiOptions): Transformer {
     ]);
   };
 }
+
+// Variation Selector-16 - irrelevant without a zero-width joiner
+const vs16RegExp = /\uFE0F/g;
+const zeroWidthJoiner = String.fromCharCode(0x200d);
+const removeVS16s = (emoji: string) => (emoji.indexOf(zeroWidthJoiner) < 0 ? emoji.replace(vs16RegExp, "") : emoji);
 
 function findGemoji(emoji: string) {
   return gemoji.find(item => item.emoji === emoji);
