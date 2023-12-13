@@ -1,6 +1,6 @@
 "use client";
 import { HTMLProps, useEffect, useState } from "react";
-import { useWindowEvent } from "@lib/hooks/useEvent";
+import useEvent from "@lib/hooks/useEvent";
 import { useApi } from "@lib/hooks";
 import styles from "./index.module.scss";
 import clsx from "clsx";
@@ -38,17 +38,13 @@ export default function MdxPreview({ source, is_verified, className, onLoad, ...
     updateMdxPreview();
   }, [source, is_verified ?? false]);
 
-  useWindowEvent(
-    "message",
-    event => {
-      if (event.data?.type !== "iframeHeight") return;
-      let prev = false;
-      setLoading(v => ((prev = v), false));
-      prev && onLoad?.();
-      setHeight(event.data.height);
-    },
-    [],
-  );
+  useEvent(window, "message", event => {
+    if (event.data?.type !== "iframeHeight") return;
+    let prev = false;
+    setLoading(v => ((prev = v), false));
+    prev && onLoad?.();
+    setHeight(event.data.height);
+  });
 
   return (
     <div className={clsx(styles.wrapper, className)} {...props}>

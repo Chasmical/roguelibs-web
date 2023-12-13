@@ -40,6 +40,7 @@ module.exports = {
     "react-hooks/exhaustive-deps": "off", // the amount of extra dependencies is excessive
     "no-empty": "off", // annoying
     "@next/next/no-img-element": "off", // not useful at the moment
+    "no-undef": "off", // TypeScript does it better
   },
   globals: {
     React: true,
