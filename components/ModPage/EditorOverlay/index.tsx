@@ -6,6 +6,7 @@ import { useState } from "react";
 import { RestMod } from "@lib/API";
 import { diff } from "@lib/utils/diff";
 import { selectHasChanges, useModPage, useModPageDispatch, useModPageStore } from "../redux";
+import useBeforeUnload from "@lib/hooks/useBeforeUnload";
 
 export default function ModPageEditorOverlay() {
   const store = useModPageStore();
@@ -17,6 +18,8 @@ export default function ModPageEditorOverlay() {
   const mode = useModPage(s => s.mode);
   const hasChanges = useModPage(selectHasChanges);
   const changes: string[] = [];
+
+  useBeforeUnload(() => !!mode && hasChanges);
 
   const stageIndex = saving ? 3 : mode === "edit" ? 1 : mode === "preview" ? 2 : 0;
 
