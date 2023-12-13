@@ -119,12 +119,16 @@ export class RogueLibsApi extends WrappedSupabaseClient {
     return this.selectOne(selectMod, r => r.eq("slug", slug));
   }
 
-  public fetchModWithReleasesById(id: number) {
-    return this.selectOne(selectModWithReleases, m => m.eq("id", id));
+  public async fetchModWithReleasesById(id: number) {
+    const mod = await this.selectOne(selectModWithReleases, m => m.eq("id", id));
+    mod?.releases.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
+    return mod;
   }
-  public fetchModWithReleasesBySlug(slug: string | number) {
-    if (!Number.isNaN(+slug)) return this.fetchModWithReleasesById(+slug);
-    return this.selectOne(selectModWithReleases, m => m.eq("slug", slug));
+  public async fetchModWithReleasesBySlug(slug: string | number) {
+    if (!Number.isNaN(+slug)) return await this.fetchModWithReleasesById(+slug);
+    const mod = await this.selectOne(selectModWithReleases, m => m.eq("slug", slug));
+    mod?.releases.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
+    return mod;
   }
 
   public fetchReleaseById(id: number) {

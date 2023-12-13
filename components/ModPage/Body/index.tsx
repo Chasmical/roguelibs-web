@@ -9,6 +9,7 @@ import TextInput from "@components/Common/TextInput";
 import Tabs from "@components/Common/Tabs";
 import TabItem from "@components/Common/TabItem";
 import { useModPage, useModPageDispatch } from "../redux";
+import ModPageReleases from "./ReleaseList";
 import clsx from "clsx";
 
 export interface ModPageBodyProps {
@@ -21,7 +22,7 @@ export default function ModPageBody(props: ModPageBodyProps) {
 
   return (
     <div className={styles.wrapper}>
-      <Tabs className={styles.bodyTabs} query="tab" faded lazy>
+      <Tabs className={styles.bodyTabs} query="tab" faded>
         <TabItem icon="copy" label="Description">
           <ModPageDescription {...props} />
         </TabItem>
@@ -65,25 +66,6 @@ function ModPageDescription({ rscSource, rscDescription }: ModPageBodyProps) {
         if (description.length > 4000) return `Exceeded length limit (${description.length}/4000).`;
       }}
     />
-  );
-}
-
-function ModPageReleases({ rscChangelogs }: Pick<ModPageBodyProps, "rscChangelogs">) {
-  const releases = useModPage(s => s.releases);
-
-  return (
-    <div className={styles.releaseList}>
-      {releases.map((r, i) => {
-        return (
-          <div key={r.id} className={styles.releaseCard}>
-            <div className={styles.releaseTitle}>{r.title}</div>
-            <div className={clsx("markdown concise", styles.releaseChangelog)}>
-              {rscChangelogs[i]}
-            </div>
-          </div>
-        );
-      })}
-    </div>
   );
 }
 
