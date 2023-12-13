@@ -1,5 +1,6 @@
 "use client";
-import { HTMLAttributes, Ref, forwardRef, useCallback, useRef, useState } from "react";
+import { HTMLAttributes, Ref, forwardRef } from "react";
+import useDebounce from "@lib/hooks/useDebounce";
 import styles from "./index.module.scss";
 import clsx from "clsx";
 
@@ -12,18 +13,7 @@ const IconButtonClient = forwardRef(function IconButtonClient(
   { className, disabled, children, ...props }: IconButtonClientProps,
   ref: Ref<HTMLButtonElement>,
 ) {
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [fakeActive, setFakeActive] = useState(false);
-
-  const onPointerDown = useCallback<React.PointerEventHandler<HTMLButtonElement>>(e => {
-    const buttonRef = e.currentTarget;
-    setFakeActive(true);
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => {
-      setFakeActive(false);
-      buttonRef.blur();
-    }, 100);
-  }, []);
+  const [fakeActive, startFakeActive] = useDebounce((button: HTMLButtonElement) => button.blur(), 100);
 
   return (
     <button
@@ -34,7 +24,7 @@ const IconButtonClient = forwardRef(function IconButtonClient(
         fakeActive && styles.fakeActive,
         className,
       )}
-      onPointerDown={onPointerDown}
+      onPointerDown={e => startFakeActive(e.currentTarget)}
       {...props}
     >
       {children}
