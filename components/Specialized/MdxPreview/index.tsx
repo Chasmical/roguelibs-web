@@ -1,11 +1,11 @@
 "use client";
-import { HTMLProps, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useEvent from "@lib/hooks/useEvent";
 import { useApi } from "@lib/hooks";
 import styles from "./index.module.scss";
 import clsx from "clsx";
 
-export interface MdxPreviewProps extends HTMLProps<HTMLDivElement> {
+export interface MdxPreviewProps extends React.HTMLProps<HTMLDivElement> {
   source: string;
   is_verified?: boolean;
   className?: string;

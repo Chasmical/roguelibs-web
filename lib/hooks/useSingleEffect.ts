@@ -1,6 +1,6 @@
-import { EffectCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
-function useSingleEffectImpl(effect: EffectCallback, deps: []) {
+function useSingleEffectImpl(effect: React.EffectCallback, deps: []) {
   const ref = useRef(false);
   useEffect(() => {
     if (ref.current) return;

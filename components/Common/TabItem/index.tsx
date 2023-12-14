@@ -1,10 +1,9 @@
 "use client";
 import { IconType } from "@components/Common/Icon";
-import { HTMLAttributes } from "react";
 import styles from "./index.module.scss";
 import clsx from "clsx";
 
-export interface TabItemProps extends Omit<HTMLAttributes<HTMLDivElement>, "children"> {
+export interface TabItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
   className?: string;
   children?: React.ReactNode | (() => React.ReactNode);
   // ...otherProps

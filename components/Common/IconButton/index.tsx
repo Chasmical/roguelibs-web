@@ -1,8 +1,8 @@
-import { ForwardedRef, HTMLAttributes, forwardRef } from "react";
+import { forwardRef } from "react";
 import Icon, { IconProps } from "@components/Common/Icon";
 import IconButtonClient from "@components/Common/IconButton/client";
 
-type HTMLButtonProps = HTMLAttributes<HTMLButtonElement>;
+type HTMLButtonProps = React.HTMLAttributes<HTMLButtonElement>;
 interface BaseProps extends Omit<HTMLButtonProps, "disabled" | "children" | "type"> {
   disabled?: boolean | "fake";
 }
@@ -13,7 +13,7 @@ export type IconButtonProps = ChildlessIconButtonProps | ChildfulIconButtonProps
 
 const IconButton = forwardRef(function IconButton(
   { children, ...buttonProps }: IconButtonProps,
-  ref: ForwardedRef<HTMLButtonElement>,
+  ref: React.ForwardedRef<HTMLButtonElement>,
 ) {
   const iconProps = extractIconProps(buttonProps);
 

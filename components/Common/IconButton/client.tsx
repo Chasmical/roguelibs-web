@@ -1,17 +1,17 @@
 "use client";
-import { HTMLAttributes, Ref, forwardRef } from "react";
+import { forwardRef } from "react";
 import useDebounce from "@lib/hooks/useDebounce";
 import styles from "./index.module.scss";
 import clsx from "clsx";
 
-type HTMLButtonProps = HTMLAttributes<HTMLButtonElement>;
+type HTMLButtonProps = React.HTMLAttributes<HTMLButtonElement>;
 export interface IconButtonClientProps extends Omit<HTMLButtonProps, "disabled"> {
   disabled?: boolean | "fake";
 }
 
 const IconButtonClient = forwardRef(function IconButtonClient(
   { className, disabled, children, ...props }: IconButtonClientProps,
-  ref: Ref<HTMLButtonElement>,
+  ref: React.Ref<HTMLButtonElement>,
 ) {
   const [fakeActive, startFakeActive] = useDebounce((button: HTMLButtonElement) => button.blur(), 100);
 

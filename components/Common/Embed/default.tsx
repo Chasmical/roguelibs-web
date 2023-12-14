@@ -1,10 +1,10 @@
-import { HTMLAttributes, useMemo } from "react";
+import { useMemo } from "react";
 import { oEmbedResponse } from "@lib/mdx/plugins/remark-embed";
 import styles from "./index.module.scss";
 import clsx from "clsx";
 import Link from "@components/Common/Link";
 
-export interface DefaultEmbedProps extends HTMLAttributes<HTMLElement> {
+export interface DefaultEmbedProps extends React.HTMLAttributes<HTMLElement> {
   url: string;
   data: oEmbedResponse | string;
   className?: string;

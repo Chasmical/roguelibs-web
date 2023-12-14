@@ -1,9 +1,8 @@
 import Link from "@components/Common/Link";
 import styles from "./index.module.scss";
-import { HTMLProps } from "react";
 import { selectWithUid } from "@lib/utils/misc";
 
-export interface AvatarProps extends Omit<HTMLProps<HTMLDivElement>, "size" | "src"> {
+export interface AvatarProps extends Omit<React.HTMLProps<HTMLDivElement>, "size" | "src"> {
   src: string | null | undefined;
   uid?: string | number;
   size?: string | number;

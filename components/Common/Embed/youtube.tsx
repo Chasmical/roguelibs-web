@@ -1,10 +1,10 @@
 "use client";
-import { HTMLAttributes, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { oEmbedVideoResponse } from "@lib/mdx/plugins/remark-embed";
 import styles from "./index.module.scss";
 import clsx from "clsx";
 
-export interface EmbedProps extends HTMLAttributes<HTMLElement> {
+export interface EmbedProps extends React.HTMLAttributes<HTMLElement> {
   url: string;
   data: oEmbedVideoResponse | string;
   className?: string;

@@ -1,8 +1,7 @@
 import styles from "./index.module.scss";
-import { HTMLAttributes } from "react";
 import clsx from "clsx";
 
-export interface CodeProps extends HTMLAttributes<HTMLElement> {
+export interface CodeProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   // ...props
   style?: React.CSSProperties;

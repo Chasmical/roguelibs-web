@@ -5,7 +5,7 @@ import Avatar from "@components/Common/Avatar";
 import Icon from "@components/Common/Icon";
 import IconButton from "@components/Common/IconButton";
 import { useSupabase } from "@lib/hooks";
-import { MouseEvent, useEffect, useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { useApi } from "@lib/API.Hooks";
 import Popup from "@components/Common/Popup";
 import Separator from "@components/Common/Separator";
@@ -87,12 +87,12 @@ export function AccountInfo() {
     }
   }, [user]);
 
-  function toggleAccountInfo(e: MouseEvent<HTMLElement>) {
+  function toggleAccountInfo(e: React.MouseEvent<HTMLElement>) {
     e.stopPropagation();
     notificationsOpen[1](false);
     accountInfoOpen[1](v => !v);
   }
-  function toggleNotifications(e: MouseEvent<HTMLElement>) {
+  function toggleNotifications(e: React.MouseEvent<HTMLElement>) {
     e.stopPropagation();
     accountInfoOpen[1](false);
     notificationsOpen[1](v => !v);

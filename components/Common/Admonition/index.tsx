@@ -1,12 +1,11 @@
 import styles from "./index.module.scss";
-import { HTMLAttributes } from "react";
 import clsx from "clsx";
 import Icon, { IconType } from "@components/Common/Icon";
 
 export type AdmonitionType = "note" | "tip" | "info" | "caution" | "danger";
 export type AdmonitionTypeAlias = keyof typeof aliases;
 
-export interface AdmonitionProps extends HTMLAttributes<HTMLElement> {
+export interface AdmonitionProps extends React.HTMLAttributes<HTMLElement> {
   type: AdmonitionType | AdmonitionTypeAlias;
   title?: string;
   className?: string;

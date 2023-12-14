@@ -28,7 +28,7 @@ export default function Tabs({ lazy, local, query, className, children, faded, .
 
 function TabsHeader({ tabs, selectedValue, selectValue, faded }: TabsHookOutput & Pick<TabsProps, "faded">) {
   const tabRefs: (HTMLLIElement | null)[] = [];
-  const blockElementScrollPositionUntilNextRender = useScrollPositionBlocker();
+  const blockScrollUntilNextRender = useScrollPositionBlocker();
 
   const handleTabChange = (
     event: React.FocusEvent<HTMLLIElement> | React.MouseEvent<HTMLLIElement> | React.KeyboardEvent<HTMLLIElement>,
@@ -36,7 +36,7 @@ function TabsHeader({ tabs, selectedValue, selectValue, faded }: TabsHookOutput 
     const newTabValue = tabs[tabRefs.indexOf(event.currentTarget)].value;
 
     if (newTabValue !== selectedValue) {
-      blockElementScrollPositionUntilNextRender(event.currentTarget);
+      blockScrollUntilNextRender(event.currentTarget);
       selectValue(newTabValue);
     }
   };
