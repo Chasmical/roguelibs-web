@@ -1,18 +1,13 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo } from "react";
+import useLatest from "@lib/hooks/useLatest";
 import lodashThrottle from "lodash/throttle";
 
-export default function useThrottle<Func extends Function>(
-  cb: Func,
-  [delay, ...deps]: [number, ...React.DependencyList],
-) {
-  const cbRef = useRef(cb);
-  cbRef.current = cb;
+export default function useThrottle(callback: () => void, [delay, ...deps]: [number, ...React.DependencyList]) {
+  const callbackRef = useLatest(callback);
 
   const throttledCb = useMemo(() => {
-    return lodashThrottle((...args) => cbRef.current(...args), delay, { leading: true, trailing: true });
+    return lodashThrottle(() => callbackRef.current(), delay, { leading: true, trailing: true });
   }, [delay]);
 
-  useEffect(() => {
-    throttledCb();
-  }, [throttledCb, ...deps]);
+  useEffect(() => void throttledCb(), [throttledCb, ...deps]);
 }

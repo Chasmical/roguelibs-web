@@ -26,12 +26,12 @@ export default function useEvent<Target extends EventTarget, Type extends string
   const handlerRef = useLatest(handler);
 
   useEffect(() => {
-    if (!target) return;
-
     function listener(this: Target, event: Event) {
       handlerRef.current.apply(this, [event]);
     }
-    target.addEventListener(type, listener);
-    return () => target.removeEventListener(type, listener);
+    if (target) {
+      target.addEventListener(type, listener);
+      return () => target.removeEventListener(type, listener);
+    }
   }, [target, type]);
 }

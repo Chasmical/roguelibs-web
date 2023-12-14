@@ -9,7 +9,7 @@ export default function useLocalStorage(key: string | null | undefined) {
 export interface StorageSlot {
   readonly get: () => string | null | undefined;
   readonly set: (newValue: string | null | undefined) => void;
-  readonly listen: (onChange: (event: StorageEvent) => void) => () => void;
+  readonly listen: (onChange: () => void) => () => void;
 }
 
 const noopStorageSlot: StorageSlot = {
@@ -34,7 +34,7 @@ export function createStorageSlot(key: string | null | undefined): StorageSlot {
       return storageArea.getItem(key);
     },
     set: newValue => {
-      newValue ??= null;
+      newValue = newValue == null ? null : "" + newValue;
       const oldValue = storageArea.getItem(key);
       if (oldValue === newValue) return;
       newValue === null ? storageArea.removeItem(key) : storageArea.setItem(key, newValue);
@@ -43,7 +43,7 @@ export function createStorageSlot(key: string | null | undefined): StorageSlot {
     },
     listen: onChange => {
       const listener = (event: StorageEvent) => {
-        event.storageArea === storageArea && event.key === key && onChange(event);
+        event.storageArea === storageArea && event.key === key && onChange();
       };
       window.addEventListener("storage", listener);
       return () => window.removeEventListener("storage", listener);

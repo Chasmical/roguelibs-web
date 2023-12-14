@@ -2,6 +2,8 @@
 import { ReadonlyURLSearchParams, useSearchParams as useNextSearchParams } from "next/navigation";
 import { Fragment, createContext, useCallback, useContext, useLayoutEffect, useState } from "react";
 
+// TODO: move useSearchParams to a subscription-based model
+
 type ReactStateReturn<T> = [value: T, updateValue: React.Dispatch<React.SetStateAction<T>>];
 type OverridenSearchParamsContext = ReactStateReturn<ReadonlyURLSearchParams>;
 const OverridenSearchParamsContext = createContext<OverridenSearchParamsContext | null>(null);

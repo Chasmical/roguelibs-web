@@ -5,18 +5,10 @@ import { useCallback, useRef, useState } from "react";
 export default function useDebounce<Args extends any[]>(
   callback: (...args: Args) => void,
   wait: number,
-): [active: boolean, start: (...args: Args) => void, reset: () => void] {
+): [waiting: boolean, start: (...args: Args) => void, reset: () => void] {
   const callbackRef = useLatest(callback);
   const [waiting, setWaiting] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout>();
-
-  const reset = useCallback(() => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = undefined;
-      setWaiting(false);
-    }
-  }, []);
 
   const start = useCallback(
     (...args: Args) => {
@@ -28,6 +20,14 @@ export default function useDebounce<Args extends any[]>(
     },
     [wait],
   );
+
+  const reset = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = undefined;
+      setWaiting(false);
+    }
+  }, []);
 
   return [waiting, start, reset];
 }
