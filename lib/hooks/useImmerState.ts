@@ -1,18 +1,17 @@
 "use client";
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useReducer } from "react";
 import { produce, type Draft } from "immer";
 
-export type ImmerStateRecipe<T> = (draft: Draft<T>) => T | undefined;
+export type ImmerStateRecipe<T> = (draft: Draft<T>) => T | void;
 export type ImmerStateSetter<T> = (recipe: ImmerStateRecipe<T>) => void;
+export type ImmerStateReducer<T> = (current: T, recipe: ImmerStateRecipe<T>) => T;
 
-export default function useImmerState<T>(defaultState: T | (() => T)) {
-  const [state, setState] = useState<T>(defaultState);
+function init<T>(initialState: T | (() => T)): T {
+  return typeof initialState === "function" ? (initialState as () => T)() : initialState;
+}
 
-  const mutateState = useCallback((recipe: (draft: Draft<T>) => void) => {
-    setState(current => produce(current, recipe));
-  }, []);
-
-  return [state, mutateState] as [T, ImmerStateSetter<T>];
+export default function useImmerState<T>(initialState: T | (() => T)): [state: T, dispatch: ImmerStateSetter<T>] {
+  return useReducer(produce as ImmerStateReducer<T>, initialState, init);
 }
 
 export function useImmerSlice<T, Key extends keyof T>(
