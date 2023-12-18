@@ -5,9 +5,10 @@ import clsx from "clsx";
 
 export interface IconProps extends Omit<SpriteProps, "src" | "color" | "crisp"> {
   type: IconType;
+  alt?: string;
 }
 
-export default function Icon({ className, width, height, size, type, style, alpha, ...props }: IconProps) {
+export default function Icon({ className, width, height, size, type, style, alpha, alt, ...props }: IconProps) {
   let sheet = sheets.find(s => type in s.offsets);
   if (!sheet) {
     console.warn(`Icon of type "${type}" could not be found.`);
@@ -16,9 +17,14 @@ export default function Icon({ className, width, height, size, type, style, alph
   }
   const offset = sheet.offsets[type];
 
+  const Elem = alt ? "img" : "span";
+
   return (
-    <span
+    <Elem
       role="icon"
+      src={alt ? tiniestEmptyGif : undefined}
+      alt={alt || undefined}
+      draggable={alt ? "false" : undefined}
       className={clsx(styles.icon, sheet.className, className)}
       style={{
         width: width ?? size,
@@ -28,9 +34,11 @@ export default function Icon({ className, width, height, size, type, style, alph
         ...style,
       }}
       {...props}
-    ></span>
+    />
   );
 }
+
+const tiniestEmptyGif = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
 
 const commonIcons = createSpriteSheet({
   className: styles.common,
