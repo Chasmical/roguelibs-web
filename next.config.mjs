@@ -9,6 +9,12 @@ const nextConfig = {
     { source: "/m/:mod_slug", destination: "/mods/:mod_slug" },
     { source: "/u/:user_slug", destination: "/users/:user_slug" },
   ],
+  redirects: async () => [
+    // wiki redirects
+    { source: "/mods/:path*", destination: "https://roguelibs.com/mods/:path*", permanent: true },
+    { source: "/docs/:path*", destination: "https://roguelibs.com/docs/:path*", permanent: true },
+    { source: "/tools/:path*", destination: "https://roguelibs.com/tools/:path*", permanent: true },
+  ],
 
   webpack: config => {
     const rules = config.module.rules
