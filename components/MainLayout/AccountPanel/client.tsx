@@ -74,7 +74,7 @@ export function AccountInfo() {
   }
 
   const popupId = useId();
-  const popupSelector = "#" + CSS.escape(popupId);
+  const popupSelector = "#" + popupId.replaceAll(":", "\\:");
   const signOutId = useId();
 
   const accountInfoOpen = useState(false);
