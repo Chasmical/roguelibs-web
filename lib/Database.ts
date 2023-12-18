@@ -18,6 +18,10 @@ export interface DatabaseTables {
   upload_refs: DbUploadRef[];
 
   mdx_previews: DbMdxPreview[];
+
+  wiki_pages: DbWikiPage[];
+  wiki_page_slugs: DbWikiPageSlug[];
+  wiki_page_revisions: DbWikiPageRevision[];
 }
 
 export interface DatabaseViews {
@@ -181,4 +185,24 @@ export interface DbMdxPreview {
   created_at: string; // timestamptz = now()
   source: string; // text
   is_verified: boolean; // bool = false
+}
+
+export interface DbWikiPage {
+  id: number; // int8 pk identity
+}
+export interface DbWikiPageSlug {
+  slug: string; // citext pk
+  created_at: string; // timestamptz = now()
+  created_by: string; // uuid fk(users / set default) = '00000000-0000-0000-0000-000000000000'
+  page_id: number; // int8 fk(wiki_pages / cascade)
+  comment: string; // text null
+  is_primary: boolean; // bool = false
+}
+export interface DbWikiPageRevision {
+  page_id: number; // int8 fk(wiki_pages / cascade)
+  created_at: string; // timestamptz = now()
+  created_by: string; // uuid fk(users / set default) = '00000000-0000-0000-0000-000000000000'
+  is_verified: boolean; // bool = false
+  title: string; // text { length [1;64] }
+  content: string; // text { length [0;10000] }
 }
