@@ -16,7 +16,7 @@ export default function MainLayout({ className, children, ...props }: MainLayout
     <div className={styles.container}>
       <div className={styles.header}>
         <Link href="/" underline={false} className={styles.logo}>
-          <img src="/logo-long.png" alt="RogueLibs' logo" />
+          <img src="/wiki-logo.png" alt="SoR2 Wiki's logo" />
         </Link>
         <AccountPanel />
       </div>

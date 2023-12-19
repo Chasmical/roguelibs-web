@@ -1,6 +1,14 @@
 .container {
-
+  background-color: var(--color-background);
+  border-radius: 1rem;
 }
 .content {
-
+  display: block;
+}
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 2rem;
 }

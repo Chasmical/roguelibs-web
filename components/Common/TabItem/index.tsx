@@ -15,13 +15,13 @@ export interface TabItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>,
   default?: boolean | number | string;
 }
 
-export default function TabItem({ className, children, ...otherProps }: TabItemProps) {
+export default function TabItem({ className, children, hidden, ...otherProps }: TabItemProps) {
   // eslint-disable-next-line unused-imports/no-unused-vars
   const { value, values, label, labels, icon, default: d, ...props } = otherProps;
 
   return (
-    <div role="tabpanel" className={clsx(styles.container, className)} {...props}>
-      {typeof children === "function" ? children() : children}
+    <div role="tabpanel" className={clsx(styles.container, className)} hidden={hidden} {...props}>
+      {typeof children === "function" ? (hidden ? null : children()) : children}
     </div>
   );
 }

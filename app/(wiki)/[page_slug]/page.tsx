@@ -21,6 +21,8 @@ async function fetchPage(api: RogueLibsApi, slug: string) {
   const page = res.data?.page as
     | (DbWikiPage & { slugs: DbWikiPageSlug[]; revisions: DbWikiPageRevision[] })
     | undefined;
+
+  page?.revisions.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
   return page;
 }
 

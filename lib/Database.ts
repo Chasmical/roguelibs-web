@@ -26,6 +26,7 @@ export interface DatabaseTables {
 
 export interface DatabaseViews {
   latest_releases: DbRelease[];
+  verified_wiki_page_revisions: DbWikiPageRevision[];
 }
 
 export interface DatabaseFunctions {

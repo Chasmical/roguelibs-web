@@ -1,6 +1,6 @@
 import { ScrollControllerProvider } from "@lib/hooks/useScrollPositionBlocker";
 import { CustomSearchParamsProvider } from "@lib/hooks/useSearchParams";
-import MainLayout from "@components/MainLayout";
+import WikiLayout from "@components/WikiLayout";
 import type { Metadata, Viewport } from "next";
 import { ApiProvider } from "@lib/API.Hooks";
 import localFont from "next/font/local";
@@ -60,7 +60,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
         <ApiProvider>
           <ScrollControllerProvider>
             <CustomSearchParamsProvider>
-              <MainLayout>{children}</MainLayout>
+              <WikiLayout>{children}</WikiLayout>
             </CustomSearchParamsProvider>
           </ScrollControllerProvider>
         </ApiProvider>
