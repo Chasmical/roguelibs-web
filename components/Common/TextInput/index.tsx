@@ -13,12 +13,14 @@ export interface TextInputProps {
   suffix?: React.ReactNode;
   autoTrimEnd?: boolean;
   error?: ((value: string) => string | null | undefined | void) | string | null | undefined;
+  onFocus?: () => void;
+  onBlur?: () => void;
   // ...props
   style?: React.CSSProperties;
 }
 
 const TextInput = forwardRef(function TextInput(
-  { className, value, placeholder, onChange, prefix, suffix, autoTrimEnd, error, ...props }: TextInputProps,
+  { className, value, placeholder, onChange, prefix, suffix, autoTrimEnd, error, onFocus, onBlur, ...props }: TextInputProps,
   forwardedRef: React.ForwardedRef<HTMLInputElement>,
 ) {
   const inputOnChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
@@ -32,6 +34,7 @@ const TextInput = forwardRef(function TextInput(
       const value = e.target.value;
       const trimmed = value.trimEnd();
       trimmed.length !== value.length && onChange?.(trimmed);
+      onBlur?.();
     },
     [autoTrimEnd, onChange],
   );
@@ -59,6 +62,7 @@ const TextInput = forwardRef(function TextInput(
           value={value ?? ""}
           placeholder={placeholder ?? ""}
           onChange={inputOnChange}
+          onFocus={onFocus}
           onBlur={inputOnBlur}
         />
         {suffix && <span className={styles.suffix}>{suffix}</span>}

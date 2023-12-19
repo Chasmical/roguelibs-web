@@ -2,7 +2,8 @@ import Link from "@components/Common/Link";
 import styles from "./index.module.scss";
 import clsx from "clsx";
 import AccountPanel from "@components/AccountPanel";
-import DiscordLink from "@components/MainLayout/DiscordLink";
+import DiscordLink from "./DiscordLink";
+import WikiSearchBar from "./SearchBar";
 
 export interface MainLayoutProps {
   className?: string;
@@ -18,6 +19,7 @@ export default function MainLayout({ className, children, ...props }: MainLayout
         <Link href="/" underline={false} className={styles.logo}>
           <img src="/wiki-logo.png" alt="SoR2 Wiki's logo" />
         </Link>
+        <WikiSearchBar />
         <AccountPanel />
       </div>
       <div className={clsx(styles.body, className)} {...props}>

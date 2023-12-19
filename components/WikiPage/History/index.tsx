@@ -2,5 +2,5 @@
 
 export default function WikiPageHistory() {
 
-  return <></>;
+  return <>{"Revision history will be here."}</>;
 }

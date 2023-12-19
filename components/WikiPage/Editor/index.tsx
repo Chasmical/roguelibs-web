@@ -1,12 +1,8 @@
-import { useEffect } from "react";
 import TextArea from "@components/Common/TextArea";
 import { useWikiPage, useWikiPageDispatch } from "@components/WikiPage/redux";
-import styles from "./index.module.scss";
-import IconButton from "@components/Common/IconButton";
-import Button from "@components/Common/Button";
-import Icon from "@components/Common/Icon";
 import useBeforeUnload from "@lib/hooks/useBeforeUnload";
 import { diff } from "@lib/utils/diff";
+import styles from "./index.module.scss";
 
 export default function WikiPageEditor() {
   const dispatch = useWikiPageDispatch();
@@ -38,7 +34,7 @@ export default function WikiPageEditor() {
         className="mono-font"
         minHeight="600px"
         error={value => {
-          if (value.length > 16000) return "Wiki page content cannot exceed 16 000 characters.";
+          if (value.length > 16000) return "Wiki page content cannot exceed 16k characters.";
         }}
       />
     </div>

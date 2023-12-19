@@ -1,0 +1,37 @@
+.wrapper {
+  display: flex;
+  flex-flow: column;
+  margin: 0 auto !important;
+}
+
+.search-bar {
+  display: flex;
+  flex-flow: row;
+}
+
+.search-results {
+  display: flex;
+  flex-flow: column;
+  gap: 0.5rem;
+  width: 300px;
+}
+.search-result {
+  display: flex;
+  flex-flow: column;
+  border-radius: 0.5rem;
+  background-color: var(--color-background);
+  padding: 0.5rem;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.random-page-link {
+  align-self: flex-start;
+  margin-top: 0.25rem;
+  margin-left: 1rem;
+}

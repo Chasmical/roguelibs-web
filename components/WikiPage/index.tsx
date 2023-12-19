@@ -7,6 +7,8 @@ import Tabs from "@components/Common/Tabs";
 import Icon from "@components/Common/Icon";
 import styles from "./index.module.scss";
 import clsx from "clsx";
+import MdxPreview from "@components/Specialized/MdxPreview";
+import Admonition from "@components/Common/Admonition";
 
 const LazyEditor = lazy(() => import("./Editor"));
 const LazyHistory = lazy(() => import("./History"));
@@ -22,9 +24,7 @@ export default function WikiPage({ page, rscRevision }: WikiPageProps) {
     <WikiPageProvider store={store}>
       <div className={styles.container}>
         <Tabs lazy>
-          <TabItem label="Read">
-            <ReadSection rscRevision={rscRevision} />
-          </TabItem>
+          <TabItem label="Read">{() => <ReadSection rscRevision={rscRevision} />}</TabItem>
           <TabItem label="View source">
             {() => (
               <Suspense
@@ -61,15 +61,25 @@ export interface ReadSectionProps {
   rscRevision: React.ReactNode;
 }
 export function ReadSection({ rscRevision }: ReadSectionProps) {
-  const revision = useWikiPage(s => s.revisions.find(r => r.is_verified)!);
+  const revision = useWikiPage(s => s.revisions.find(r => r.created_at && r.is_verified)!);
+  const draft = useWikiPage(s => s.revisions.find(r => !r.created_at)!);
 
   return (
     <>
-      {/* {hasChanges && <Admonition type="caution">{"You have unsaved changes!"}</Admonition>} */}
-      <div className={clsx(styles.content, "markdown")}>
-        <h1>{revision.title}</h1>
-        {rscRevision}
-      </div>
+      {draft.content !== revision.content ? (
+        <>
+          <div className={clsx(styles.content, "markdown")}>
+            <Admonition type="caution">{"You have unsaved changes!"}</Admonition>
+            <h1>{revision.title}</h1>
+            <MdxPreview source={draft.content} />
+          </div>
+        </>
+      ) : (
+        <div className={clsx(styles.content, "markdown")}>
+          <h1>{revision.title}</h1>
+          {rscRevision}
+        </div>
+      )}
     </>
   );
 }

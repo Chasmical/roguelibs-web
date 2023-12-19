@@ -37,6 +37,8 @@ export interface DatabaseFunctions {
   get_user_badges: (e: DbUser) => string[];
   upsert_mdx_preview: (e: { _source: string; _is_verified: boolean }) => string;
   search_users: (e: { _term: string; _limit: number }) => UserSearchResult[];
+  get_random_wiki_page_id: (e: {}) => number;
+  get_random_wiki_page_slug: (e: {}) => string;
 }
 
 export type UserSearchResult = DbUser & { similarity: number };
