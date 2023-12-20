@@ -1,5 +1,5 @@
 "use client";
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import TextInput from "@components/Common/TextInput";
 import useThrottle from "@lib/hooks/useThrottle";
 import styles from "./index.module.scss";
@@ -13,15 +13,11 @@ import useLatest from "@lib/hooks/useLatest";
 import { useApi } from "@lib/hooks";
 
 export default function WikiSearchBar() {
-  const api = useApi();
-  const router = useRouter();
-
   const [query, setQuery] = useState("");
   const latestQuery = useLatest(query);
   const [shown, setShown] = useState(false);
   const [waiting, setWaiting] = useState(false);
   const [results, setResults] = useState<SearchResult[]>([]);
-  const [loadingRnd, setLoadingRnd] = useState(false);
 
   const searchBarRef = useRef<HTMLDivElement | null>(null);
 
@@ -51,17 +47,6 @@ export default function WikiSearchBar() {
       setShown(false);
     }
   });
-
-  async function navigateRandom() {
-    if (loadingRnd) return;
-    setLoadingRnd(true);
-    try {
-      const slug = await api.rpc("get_random_wiki_page_slug", {});
-      router.push(`/${slug}`);
-    } finally {
-      setTimeout(() => setLoadingRnd(false), 1000);
-    }
-  }
 
   return (
     <div className={styles.wrapper}>
@@ -93,14 +78,7 @@ export default function WikiSearchBar() {
           )}
         </Popup>
       </div>
-      <span className={styles.randomPageLink}>
-        {loadingRnd && (
-          <>
-            <Icon type="loading" size={16} />{" "}
-          </>
-        )}
-        <Link onClick={navigateRandom}>{"Random page"}</Link>
-      </span>
+      <RandomPageLink />
     </div>
   );
 }
@@ -110,4 +88,38 @@ interface SearchResult {
   slug: string;
   title: string;
   description: string;
+}
+
+export function RandomPageLink() {
+  const api = useApi();
+  const router = useRouter();
+  const [loadingRnd, setLoadingRnd] = useState(false);
+  const [lastSlug, setLastSlug] = useState("");
+
+  useEffect(() => {
+    setLastSlug(location.pathname.split("/").find(Boolean)!);
+  }, []);
+
+  async function navigateRandom() {
+    if (loadingRnd) return;
+    setLoadingRnd(true);
+    try {
+      const slug = await api.rpc("get_random_wiki_page_slug", { _except: lastSlug });
+      setLastSlug(slug);
+      router.push(`/${slug}`);
+    } finally {
+      setTimeout(() => setLoadingRnd(false), 1000);
+    }
+  }
+
+  return (
+    <span className={styles.randomPageLink}>
+      {loadingRnd && (
+        <>
+          <Icon type="loading" size={16} />{" "}
+        </>
+      )}
+      <Link onClick={navigateRandom}>{"Random page"}</Link>
+    </span>
+  );
 }

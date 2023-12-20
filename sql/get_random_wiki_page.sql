@@ -32,3 +32,18 @@ begin
   );
 end;
 $$ language plpgsql volatile;
+
+create or replace function public.get_random_wiki_page_slug(_except text)
+returns text as
+$$
+declare
+  _slug text;
+begin
+  loop
+    _slug := public.get_random_wiki_page_slug();
+    if _slug != _except then
+      return _slug;
+    end if;
+  end loop;
+end;
+$$ language plpgsql volatile;
