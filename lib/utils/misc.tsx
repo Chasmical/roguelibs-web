@@ -92,3 +92,9 @@ export function fastHash(str: string) {
   }
   return hash;
 }
+
+export function attempt<T>(action: () => T): T | undefined {
+  try {
+    return action();
+  } catch {}
+}

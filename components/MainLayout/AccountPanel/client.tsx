@@ -21,9 +21,10 @@ export function SignInPanel() {
   const tooltipId = useId();
 
   async function signIn(provider: SupabaseAuthProvider) {
+    const then = encodeURIComponent(location.pathname + location.search + location.hash);
     await supabase.auth.signInWithOAuth({
       provider,
-      options: { redirectTo: `${location.origin}/api/auth/callback` },
+      options: { redirectTo: `${location.origin}/api/auth/callback?then=${then}` },
     });
     router.refresh();
   }

@@ -1,5 +1,5 @@
 "use client";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export interface SetCanonicalUrl {
@@ -7,10 +7,10 @@ export interface SetCanonicalUrl {
 }
 export default function SetCanonicalUrl({ url }: SetCanonicalUrl) {
   const router = useRouter();
-  const params = useSearchParams();
   useEffect(() => {
-    const paramsStr = params.toString();
-    router.replace(url + (paramsStr ? "?" + paramsStr : ""), { scroll: false });
+    if (location.pathname !== url) {
+      router.replace(url + location.search + location.hash, { scroll: false });
+    }
   }, []);
   return null;
 }
