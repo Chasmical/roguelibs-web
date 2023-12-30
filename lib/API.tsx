@@ -1,15 +1,6 @@
 import { createRouteHandlerClient, createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { SupabaseClient, createClient as createSupabaseClient } from "@supabase/supabase-js";
-import {
-  DbMdxPreview,
-  DbMod,
-  DbModAuthor,
-  DbRelease,
-  DbReleaseFile,
-  DbUpload,
-  DbUser,
-  DbUserNotification,
-} from "./Database";
+import { DbMod, DbModAuthor, DbRelease, DbReleaseFile, DbUpload, DbUser, DbUserNotification } from "./Database";
 import { WrappedSupabaseClient, from } from "./API.Statement";
 import { BadgeName } from "@lib/badges";
 import { triggerDownload } from "@lib/utils/misc";
@@ -88,12 +79,6 @@ const selectModWithReleases = from("mods").select<RestModWithReleases>({
   authors: selectModAuthor.multiple,
   releases: selectRelease.multiple,
 });
-
-//
-
-//
-
-const selectMdxPreview = from("mdx_previews").select<DbMdxPreview>({});
 
 //
 
@@ -181,13 +166,6 @@ export class RogueLibsApi extends WrappedSupabaseClient {
   public async downloadFile(upload: DbUpload) {
     const { data } = this.Supabase.storage.from("uploads").getPublicUrl("" + upload.id, { download: upload.filename! });
     triggerDownload(document, data!.publicUrl, upload.filename!);
-  }
-
-  public fetchMdxPreview(uid: string) {
-    return this.selectOne(selectMdxPreview, p => p.eq("uid", uid));
-  }
-  public upsertMdxPreview(source: string, is_verified = false) {
-    return this.rpc("upsert_mdx_preview", { _source: source, _is_verified: is_verified });
   }
 }
 

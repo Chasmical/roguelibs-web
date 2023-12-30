@@ -8,11 +8,6 @@
   display: flex;
   flex-flow: column;
   gap: 0.5rem;
-
-  &.editing-mod {
-    opacity: 0.5;
-    pointer-events: none;
-  }
 }
 .release-card {
   display: flex;
@@ -23,9 +18,12 @@
   overflow: hidden;
 }
 
-.release-title {
+.release-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   font-size: 1.5rem;
-  padding: 1rem;
+  padding: 0.5rem;
   cursor: pointer;
 
   transition: all 0.2s var(--smooth-transition);
@@ -39,9 +37,14 @@
     background-color: var(--color-overlay-2);
   }
 }
+
+.release-title {
+  padding: 0 1rem;
+  line-height: 34px;
+}
 .release-contents {
   height: auto;
-  transition: height 1s ease;
+  transition: height 0.5s ease;
 }
 
 .release-changelog {

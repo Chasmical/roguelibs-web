@@ -1,5 +1,5 @@
 import { RestUser } from "@lib/API";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { UserPageContext } from "@components/UserPage";
 import Popup from "@components/Common/Popup";
 import IconButton from "@components/Common/IconButton";
@@ -7,7 +7,7 @@ import TextInput from "@components/Common/TextInput";
 import indexStyles from "./index.module.scss";
 import styles from "./Details.module.scss";
 import TextArea from "@components/Common/TextArea";
-import MdxPreview from "@components/Specialized/MdxPreview";
+import MdxPreview, { MdxPreviewProps } from "@components/Specialized/MdxPreview";
 
 export default function UserPageDetails(context: DescriptionSectionProps) {
   return (
@@ -67,11 +67,11 @@ export function UsernameSection({ user, original, mutateUser, canEdit }: UserPag
             <TextInput
               value={user.username}
               onChange={v => mutateUser(u => void (u.username = v))}
-              error={(() => {
-                if (user.username.length < 1) return "The username must not be empty.";
-                if (user.username.length > 64) return "The username must not exceed 64 characters.";
+              error={username => {
+                if (username.length < 1) return "The username must not be empty.";
+                if (username.length > 64) return `Exceeded length limit (${username.length}/64).`;
                 return null;
-              })()}
+              }}
             />
             <IconButton
               type={loading ? "loading" : "save"}
@@ -117,21 +117,23 @@ export function DescriptionSection({ user, original, mutateUser, canEdit, rscDes
     }
   }
 
+  const mdxConfig = useMemo<MdxPreviewProps["config"]>(() => ({}), []);
+
   return (
     <div className={indexStyles.partition}>
       {isEditing ? (
         <TextArea
           value={user.description}
           onChange={d => mutateUser(u => void (u.description = d))}
-          error={value => {
-            if (value.length > 4000) return "Description cannot exceed 4000 characters!";
+          error={description => {
+            if (description.length > 400) return `Exceeded length limit (${description.length}/400).`;
             return null;
           }}
         />
       ) : user.description === rscSource ? (
         <div className="markdown">{rscDescription}</div>
       ) : (
-        <MdxPreview source={user.description} />
+        <MdxPreview source={user.description} config={mdxConfig} />
       )}
     </div>
   );

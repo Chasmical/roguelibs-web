@@ -10,7 +10,7 @@
   line-height: 2;
 
   height: 100%;
-  padding: 0.5rem;
+  overflow: hidden;
 
   cursor: text;
   &:focus-within {
@@ -26,8 +26,11 @@
   max-width: 100%;
   background-color: transparent;
   border: none;
+  padding: 0.5rem;
   outline: none;
   color: var(--color-main);
+  font-family: var(--mono-font);
+  font-size: 0.8em;
   resize: vertical;
   line-height: 1.15;
 }

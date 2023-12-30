@@ -88,42 +88,28 @@ function diffArray<T, O extends ArrayDiffOptions<T> = ArrayDiffOptions<T>>(
   return hasActualChanges ? res : undefined;
 }
 
-export function apply<T>(original: T, diff: Diff<T, DiffOptions<T>>): T;
-export function apply<T>(original: T, diff: T): T {
-  if (diff === undefined) return original;
-  if ((original as any) === undefined) return diff;
-  if (Array.isArray(diff)) {
-    const key = "id" as keyof T;
-    const idBy = (item: T) => item[key];
+export function applySafe<T>(a: T, b: Partial<T> | undefined): T {
+  if (b === undefined) return a;
+  if (Array.isArray(a)) {
+    if (!Array.isArray(b)) return a;
 
-    return diff.map(item => {
+    const idBy = (item: any) => item.id;
+
+    const array: unknown[] = b.map(item => {
       const id = idBy(item);
-      const prev = (original as any[]).find(o => idBy(o) === id);
-      return apply(prev, item);
-    }) as T;
-  }
-  if (typeof diff === "object" && diff) {
-    const clone: Partial<T> = {};
-    for (const key in original) {
-      clone[key] = apply(original[key], diff[key] as never);
+      const prev = a.find(i => idBy(i) === id);
+      return prev ? applySafe(prev, item) : item;
+    });
+
+    return array as T;
+  } else if (typeof a === "object" && a !== null) {
+    if (typeof b !== "object" || b === null) return a;
+
+    const clone: T = { ...a };
+    for (const key in a) {
+      clone[key] = applySafe<T[any]>(a[key], b[key]);
     }
-    return clone as T;
+    return clone;
   }
-  return diff;
+  return b as T;
 }
-
-const c: DiffOptions<RestMod> = {
-  guid: false,
-  authors: { idBy: "id", user: false },
-};
-
-const a: RestMod = null!;
-const b: RestMod = null!;
-
-const d = diff(a, b, c);
-
-d?.guid;
-
-const author = d?.authors![0];
-author?.credit;
-author?.user;

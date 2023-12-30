@@ -16,8 +16,6 @@ export interface DatabaseTables {
 
   uploads: DbUpload[];
   upload_refs: DbUploadRef[];
-
-  mdx_previews: DbMdxPreview[];
 }
 
 export interface DatabaseViews {
@@ -30,7 +28,6 @@ export interface DatabaseFunctions {
   get_user_nuggets: (e: DbUser) => number[];
   get_user_subscriptions: (e: DbUser) => number[];
   get_user_badges: (e: DbUser) => string[];
-  upsert_mdx_preview: (e: { _source: string; _is_verified: boolean }) => string;
   search_users: (e: { _term: string; _limit: number }) => UserSearchResult[];
 }
 
@@ -78,7 +75,7 @@ export interface DbMod {
   created_at: string; // timestamptz = now()
   edited_at: string | null; // timestamptz null = null
   title: string; // text { length [1;64] }
-  description: string; // text = '' { length <= 4000 }
+  description: string; // text = '' { length <= 16000 }
   banner_url: string | null; // text null = null { length [1;255] }
   banner_layout: ImageLayout; // int2 = 5 { [1;7] }
   is_public: boolean; // bool = false
@@ -124,7 +121,7 @@ export interface DbRelease {
   version: string | null; // text null = null { length <= 32, satisfy is_compatible_semver function }
   slug: string | null; // citext null = null { unique(mod_id), length [1;32], match /^[0-9a-zA-Z._-]+$/, not match /^\d+$/ }
   title: string | null; // text null = null { length [1;128] }
-  changelog: string; // text = '' { length <= 1000 }
+  changelog: string; // text = '' { length <= 4000 }
   is_public: boolean; // bool = false
 }
 export interface DbReleaseFile {
@@ -173,12 +170,4 @@ export interface DbUploadRef {
 }
 export enum DbResourceRefType {
   ReleaseFile = 1,
-}
-
-export interface DbMdxPreview {
-  uid: string; // uuid pk = uuid_generate_v4()
-  created_by: string; // uuid fk(users / cascade)
-  created_at: string; // timestamptz = now()
-  source: string; // text
-  is_verified: boolean; // bool = false
 }

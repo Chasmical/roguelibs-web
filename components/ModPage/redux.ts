@@ -3,6 +3,7 @@ import { configureStore, createSelector } from "@reduxjs/toolkit";
 import { RestMod, RestRelease } from "@lib/API";
 import { produce } from "immer";
 import { diff } from "@lib/utils/diff";
+import { MdxPreviewProps } from "@components/Specialized/MdxPreview";
 
 export { Provider as ModPageProvider } from "react-redux";
 
@@ -11,6 +12,7 @@ export function createStore(mod: RestMod, releases: RestRelease[]) {
     mod,
     original: mod,
     releases,
+    original_releases: releases,
     mode: null,
   };
 
@@ -29,7 +31,7 @@ export function createStore(mod: RestMod, releases: RestRelease[]) {
   });
 }
 
-export const selectChanges = createSelector(
+export const selectModChanges = createSelector(
   (s: ModPageState) => s.original,
   (s: ModPageState) => s.mod,
   (original: RestMod, mod: RestMod) => {
@@ -40,7 +42,27 @@ export const selectChanges = createSelector(
     });
   },
 );
-export const selectHasChanges = createSelector(selectChanges, changes => !!changes);
+export const selectReleaseChanges = createSelector(
+  (s: ModPageState) => s.original_releases,
+  (s: ModPageState) => s.releases,
+  (originals: RestRelease[], releases: RestRelease[]) => {
+    const diffs = releases.map(release => {
+      const original = originals.find(o => o.id === release.id)!;
+      return diff(original, release, {
+        files: false,
+      });
+    });
+    return diffs.some(Boolean) ? diffs : undefined;
+  },
+);
+export const selectHasChanges = createSelector(selectModChanges, selectReleaseChanges, (a, b) => !!a || !!b);
+
+export const selectMdxConfig = createSelector(
+  (s: ModPageState) => s.mod.github_repo,
+  (github_repo: string | null): MdxPreviewProps["config"] => {
+    return { gitHubRepo: github_repo };
+  },
+);
 
 export type ModPageMode = "edit" | "preview" | null;
 
@@ -48,6 +70,7 @@ export interface ModPageState {
   mod: RestMod;
   original: RestMod;
   releases: RestRelease[];
+  original_releases: RestRelease[];
   mode: ModPageMode;
 }
 

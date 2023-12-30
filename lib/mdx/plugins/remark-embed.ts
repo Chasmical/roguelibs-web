@@ -22,7 +22,8 @@ function processProviders(providers: oEmbedProvider[]) {
 }
 
 export async function fetchOEmbedProviders() {
-  const res = await fetch("https://oembed.com/providers.json");
+  const url = typeof window === "undefined" ? "https://oembed.com/providers.json" : "/api/oembed/default_providers";
+  const res = await fetch(url);
   return (await res.json()) as oEmbedProvider[];
 }
 
@@ -35,15 +36,21 @@ export interface RemarkEmbedOptions {
 }
 
 export default function remarkEmbed(options?: RemarkEmbedOptions): Transformer {
-  return async tree => {
-    options ??= {};
-    const getProviders = options.providers ?? fetchOEmbedProviders;
-    const providers = processProviders(Array.isArray(getProviders) ? getProviders : await getProviders());
+  let providers: oEmbedProviderInternal[] = [];
 
-    const extraProviders = options.extraProviders;
+  const initProvidersPromise = (async () => {
+    const getProviders = options?.providers ?? fetchOEmbedProviders;
+    providers = processProviders(Array.isArray(getProviders) ? getProviders : await getProviders());
+
+    const extraProviders = options?.extraProviders;
     if (extraProviders != null) {
       providers.push(...processProviders(Array.isArray(extraProviders) ? extraProviders : extraProviders()));
     }
+  })();
+
+  return async tree => {
+    options ??= {};
+    await initProvidersPromise;
 
     for (const pair of options.componentNames ?? []) {
       const provider = providers.find(p => p.provider_name === pair[0]);

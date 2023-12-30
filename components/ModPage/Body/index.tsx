@@ -8,7 +8,7 @@ import Icon, { IconType } from "@components/Common/Icon";
 import TextInput from "@components/Common/TextInput";
 import Tabs from "@components/Common/Tabs";
 import TabItem from "@components/Common/TabItem";
-import { useModPage, useModPageDispatch } from "../redux";
+import { selectMdxConfig, useModPage, useModPageDispatch } from "../redux";
 import ModPageReleases from "./ReleaseList";
 import clsx from "clsx";
 
@@ -45,13 +45,13 @@ function ModPageDescription({ rscSource, rscDescription }: ModPageBodyProps) {
   const dispatch = useModPageDispatch();
   const mode = useModPage(s => s.mode);
   const description = useModPage(s => s.mod.description);
-  const is_verified = useModPage(s => s.mod.is_verified);
+  const mdxConfig = useModPage(selectMdxConfig);
 
   if (mode !== "edit") {
     if (description === rscSource) {
       return <div className="markdown">{rscDescription}</div>;
     }
-    return <MdxPreview source={description} is_verified={is_verified} />;
+    return <MdxPreview source={description} config={mdxConfig} />;
   }
 
   return (
@@ -63,7 +63,7 @@ function ModPageDescription({ rscSource, rscDescription }: ModPageBodyProps) {
       autoTrimEnd={false}
       onChange={v => dispatch(s => (s.mod.description = v))}
       error={description => {
-        if (description.length > 4000) return `Exceeded length limit (${description.length}/4000).`;
+        if (description.length > 16000) return `Exceeded length limit (${description.length}/16000).`;
       }}
     />
   );

@@ -25,7 +25,11 @@ export default function ModPageEditorOverlay() {
 
   function onCancel() {
     if (hasChanges) {
-      dispatch(s => ((s.mod = s.original), (s.mode = "edit")));
+      dispatch(s => {
+        s.mod = s.original;
+        s.releases = s.original_releases;
+        s.mode = "edit";
+      });
     } else {
       dispatch(s => (s.mode = null));
     }
@@ -48,28 +52,43 @@ export default function ModPageEditorOverlay() {
     if (!hasChanges) return;
     try {
       setSaving(true);
-      const original = store.getState().original;
-      const mod = store.getState().mod;
+      const state = store.getState();
+      const originalMod = state.original;
+      const mod = state.mod;
 
-      const changes = diff(original, mod, {
+      const modChanges = diff(originalMod, mod, {
         nugget_count: false,
         subscription_count: false,
         authors: { user: false },
       });
 
-      const response = await fetch(`${location.origin}/api/update_mod`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: mod.id, ...changes }),
-      });
-      if (!response.ok) throw new Error(await response.text());
-      const newMod = (await response.json()) as RestMod;
+      if (modChanges) {
+        const response = await fetch(`${location.origin}/api/mods/${mod.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...modChanges }),
+        });
+        if (!response.ok) throw new Error(await response.text());
+        const newMod = (await response.json()) as RestMod;
 
-      dispatch(s => {
-        s.mode = null;
-        s.original = newMod;
-        s.mod = newMod;
-      });
+        dispatch(s => (s.original = s.mod = newMod));
+      }
+
+      for (const release of state.releases) {
+        const originalRelease = state.original_releases.find(r => r.id === release.id);
+        const releaseChanges = diff(originalRelease, release, {
+          files: false,
+        });
+        if (releaseChanges) {
+          const response = await fetch(`${location.origin}/api/releases/${release.id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...releaseChanges }),
+          });
+        }
+      }
+
+      dispatch(s => (s.mode = null));
     } finally {
       setSaving(false);
     }
