@@ -3,13 +3,6 @@ const nextConfig = {
   reactStrictMode: true,
   experimental: {},
 
-  rewrites: async () => [
-    { source: "/tos", destination: "/terms-of-service" },
-    { source: "/privacy", destination: "/privacy-policy" },
-    { source: "/m/:mod_slug", destination: "/mods/:mod_slug" },
-    { source: "/u/:user_slug", destination: "/users/:user_slug" },
-  ],
-
   webpack: config => {
     const rules = config.module.rules
       .find(rule => typeof rule.oneOf === "object")
