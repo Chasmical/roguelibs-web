@@ -17,6 +17,7 @@
     "@supabase/supabase-js": "^2.39.0",
     "@twemoji/parser": "^15.0.0",
     "clsx": "^2.0.0",
+    "fflate": "^0.8.1",
     "gemoji": "^8.1.0",
     "immer": "^10.0.3",
     "js-yaml": "^4.1.0",

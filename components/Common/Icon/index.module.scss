@@ -1,0 +1,29 @@
+.icon {
+  display: inline-block;
+  flex-shrink: 0;
+  outline: none;
+  transition: opacity 0.2s var(--smooth-transition);
+  max-width: none !important;
+  margin-bottom: 0 !important;
+  image-rendering: pixelated;
+  vertical-align: middle;
+}
+
+.common {
+  width: 32px;
+  height: 32px;
+  background-image: url("/icons/common.png");
+  background-size: 800% 800%;
+}
+.tiny {
+  width: 16px;
+  height: 16px;
+  background-image: url("/icons/tiny.png");
+  background-size: 400% 400%;
+}
+.animated {
+  width: 32px;
+  height: 32px;
+  background-image: url("/icons/animated.gif");
+  background-size: 400% 400%;
+}

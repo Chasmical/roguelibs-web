@@ -1,0 +1,12 @@
+.code {
+  display: inline;
+  background-color: var(--color-background-darker);
+
+  font-size: 0.8em;
+  font-family: var(--mono-font);
+  white-space: pre;
+
+  border: 0.15em solid;
+  border-image: url("/frame.png") 8 / 0.3em;
+  padding: 0.15em 0.3em;
+}

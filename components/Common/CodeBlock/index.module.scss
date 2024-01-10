@@ -1,0 +1,97 @@
+.block {
+  background-color: var(--color-background-darker);
+  background-clip: padding-box;
+  border: 2px solid;
+  border-image: url("/frame.png") 8 / 4px;
+}
+
+.title {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--color-background-lighter);
+  color: var(--color-secondary);
+  font-weight: 500;
+  font-family: var(--standard-font);
+  font-size: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.contents {
+  position: relative;
+  margin-bottom: 2px;
+  &:hover, &:focus-within {
+    .buttons {
+      opacity: 1;
+    }
+  }
+}
+
+.pre {
+  overflow-x: auto;
+  outline: none !important;
+}
+.code {
+  display: table;
+  padding: 0.75rem 1rem;
+  width: 100%;
+  white-space: pre;
+  &.wrap {
+    white-space: pre-wrap;
+  }
+  &.with-line-numbers {
+    padding-left: 0;
+  }
+}
+
+.line {
+  display: table-row;
+  counter-increment: line-count;
+
+  &:hover .line-number::before {
+    opacity: 1;
+  }
+  span::selection {
+    background-color: #007acc99;
+  }
+}
+.line-number {
+  display: table-cell;
+  padding: 0 1rem 0 0.5rem;
+  width: 0;
+  text-align: right;
+  position: sticky;
+  left: 0;
+  background-color: var(--color-background-darker);
+}
+.line-number::before {
+  content: counter(line-count);
+  opacity: 0.4;
+  transition: opacity 0.2s var(--smooth-transition);
+}
+
+.buttons {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.2s var(--smooth-transition);
+}
+.copy-button {
+  border-radius: 4px;
+  border: 1px solid var(--color-background-lighter);
+}
+
+.tooltip {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  transition: opacity 0.2s var(--smooth-transition);
+
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-danger);
+  background-color: var(--color-background-darker);
+  bottom: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+}

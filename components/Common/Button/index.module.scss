@@ -1,0 +1,27 @@
+.button {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  text-align: center;
+  padding: 8px 12px;
+  gap: 8px;
+
+  color: var(--color-main);
+  background-color: var(--color-background);
+  border: 2px solid var(--color-background-lightest);
+  border-radius: 0.5rem;
+
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+
+  &:hover {
+    background-color: var(--color-background-light);
+  }
+  &:active:not([disabled]) {
+    background-color: var(--color-background-lightest);
+  }
+  &[disabled] {
+    cursor: default;
+    opacity: 0.5;
+  }
+}
