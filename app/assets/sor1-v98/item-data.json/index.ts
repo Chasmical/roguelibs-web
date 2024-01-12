@@ -1,10 +1,7 @@
-import { NextResponse } from "next/server";
-import data from "./data.json";
+import { fetchAssetJson } from "@lib/utils/fetch";
 
-export function GET() {
-  return NextResponse.json<ItemInfo>(data as any, {
-    headers: { "Cache-Control": "public, max-age=31536000, immutable" },
-  });
+export default function getItemData() {
+  return fetchAssetJson<ItemInfo>("assets", "item-data.json");
 }
 
 export interface ItemInfo {

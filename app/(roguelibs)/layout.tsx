@@ -53,7 +53,7 @@ if (process.env.NODE_ENV === "development") {
 export default function RootLayout({ children }: React.PropsWithChildren) {
   return (
     <html lang="en" className={munroFont.className} suppressHydrationWarning>
-      <body>
+      <body style={{ maxWidth: 1000, margin: "0 auto" }}>
         {/* <ApiProvider>
           <ScrollControllerProvider>
             <CustomSearchParamsProvider>
