@@ -55,12 +55,11 @@ function stringifyChildren(children: any, results: string[] = []) {
       if ((child as any).type === "code") {
         stringifyChildren((child as any).props.children, results);
       } else {
-        const lines = ("" + child).split("\n");
-        if (lines.length > 1 && !lines.at(-1)) lines.pop();
-        results.push(...lines);
+        results.push(...("" + child).split("\n"));
       }
     }
   }
+  if (results.length > 1 && !results.at(-1)) results.pop();
   return results;
 }
 
