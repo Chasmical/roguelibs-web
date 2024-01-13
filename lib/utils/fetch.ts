@@ -14,9 +14,11 @@ export function fetchAsset(bucket: string, path: string, init?: RequestInit) {
   const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucket}/${path}`;
   return fetch(url, init);
 }
-export async function fetchAssetJson<T>(bucket: string, path: string, init?: RequestInit) {
-  const res = await fetchAsset(bucket, path, init);
-  return (await res.json()) as T;
+export function fetchAssetJson<T>(bucket: string, path: string, init?: RequestInit) {
+  return cacheAlways(async () => {
+    const res = await fetchAsset(bucket, path, init);
+    return (await res.json()) as T;
+  });
 }
 export function fetchAssetBundle(bucket: string, path: string, init?: RequestInit) {
   return cacheAlways(async () => {

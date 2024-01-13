@@ -1,0 +1,96 @@
+.container {
+  display: flex;
+  gap: 1rem;
+}
+
+.panels {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+.item-panel {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  .sprite {
+    width: 64px;
+    height: 64px;
+    image-rendering: pixelated;
+  }
+  .countInput {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    margin-bottom: 21px;
+
+    input {
+      font-size: 1.5rem;
+      text-align: center;
+      padding: 4px;
+      width: 80px;
+    }
+  }
+}
+
+.traders {
+  display: flex;
+  gap: 2rem;
+}
+
+.output {
+  display: flex;
+  flex-flow: column;
+  width: 400px;
+}
+.output-window {
+  background-color: var(--color-background);
+  cursor: default;
+}
+.output-line {
+  > td {
+    border: 1px dotted var(--color-background-light);
+    padding: 4px 8px;
+    line-height: 1.15;
+    transition: border 0.2s var(--smooth-transition);
+
+    &:nth-child(2) {
+      min-width: 60px;
+    }
+    &:last-child {
+      width: 100%;
+      border-left: 1px solid var(--color-main);
+    }
+  }
+
+  &:first-child > td {
+    border-bottom: 1px solid var(--color-main);
+  }
+  &:last-child > td {
+    border-top: 1px solid var(--color-main);
+  }
+
+  &.inactive {
+    opacity: 0.5;
+  }
+
+}
+.multiplier-line:hover {
+  .prev-cost {
+    opacity: 1;
+  }
+  + .multiplier-line {
+    > td {
+      border-top: 1px solid var(--color-secondary-dark);
+    }
+    .prev-cost {
+      opacity: 1;
+    }
+  }
+}
+
+.prev-cost {
+  opacity: 0;
+  user-select: none;
+  min-width: 54px;
+}

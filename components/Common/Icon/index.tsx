@@ -3,7 +3,7 @@ import { SpriteSheet, createSpriteSheet } from "./spritesheet";
 import styles from "./index.module.scss";
 import clsx from "clsx";
 
-type SpriteProps = any;
+type SpriteProps = React.HTMLProps<HTMLImageElement> & { alpha?: number };
 
 export interface IconProps extends Omit<SpriteProps, "src" | "color" | "crisp"> {
   type: IconType;
@@ -49,7 +49,7 @@ const commonIcons = createSpriteSheet({
     ["download", "upload", "options", "options_vert", "door", "bell", "check", "cross"],
     ["person", "not_found"],
     [],
-    ["nugget", "discord", "gamebanana", "website", "google", "github"],
+    ["nugget", "money", "discord", "gamebanana", "website", "google", "github"],
     ["info", "note", "lightbulb", "caution", "danger"],
     ["align1", "align2", "align3", "align4", "align5", "align6", "align7"],
   ],

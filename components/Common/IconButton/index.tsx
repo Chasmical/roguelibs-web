@@ -8,10 +8,12 @@ import clsx from "clsx";
 type HTMLButtonProps = React.HTMLAttributes<HTMLButtonElement>;
 export interface IconButtonProps extends Omit<HTMLButtonProps, "type"> {
   type?: IconType;
+  square?: boolean;
+  active?: boolean;
 }
 
 const IconButton = forwardRef(function IconButton(
-  { type, className, children, ...props }: IconButtonProps,
+  { type, square, active, className, children, ...props }: IconButtonProps,
   ref: React.ForwardedRef<HTMLButtonElement>,
 ) {
   const [fakeActive, startFakeActive] = useDebounce((button: HTMLButtonElement) => button.blur(), 100);
@@ -19,7 +21,13 @@ const IconButton = forwardRef(function IconButton(
   return (
     <button
       ref={ref}
-      className={clsx(styles.iconButton, fakeActive && styles.fakeActive, className)}
+      className={clsx(
+        styles.iconButton,
+        fakeActive && styles.fakeActive,
+        active && styles.active,
+        square && styles.square,
+        className,
+      )}
       onPointerDown={e => startFakeActive(e.currentTarget)}
       {...props}
     >

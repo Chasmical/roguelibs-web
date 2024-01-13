@@ -1,12 +1,10 @@
 import { fetchAssetJson } from "@lib/utils/fetch";
 
-export default function getItemData() {
-  return fetchAssetJson<ItemInfo>("assets", "item-data.json");
-}
+export const fetchItemData = fetchAssetJson<ItemData>("assets", "item-data.json");
 
-export interface ItemInfo {
-  baseline: Partial<Item>;
-  entries: Partial<Item>[];
+export interface ItemData {
+  baseline: Partial<ItemInfo>;
+  entries: Partial<ItemInfo>[];
 }
 
 type ItemType =
@@ -35,7 +33,7 @@ type float = number;
 type int = number;
 type bool = boolean;
 
-export interface Item {
+export interface ItemInfo {
   accuracyMod: int;
   armorDepletionType: ArmorDepletionType | null;
   behindHair: bool;
