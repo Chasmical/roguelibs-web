@@ -84,7 +84,7 @@ function CopyButton({ code }: { code: string }) {
   const onCopy = () => navigator.clipboard.writeText(code);
 
   return (
-    <IconButton className={styles.toolbarButton} data-tooltip-id={id} onClick={onCopy}>
+    <IconButton square className={styles.toolbarButton} data-tooltip-id={id} onClick={onCopy}>
       <Icon type="copy" size={24} alpha={0.5} />
       <Tooltip id={id} openOnClick content="Copied!" place="top" />
     </IconButton>
@@ -92,7 +92,7 @@ function CopyButton({ code }: { code: string }) {
 }
 function WrapButton({ wrap, toggleWrap }: { wrap?: boolean; toggleWrap: () => void }) {
   return (
-    <IconButton className={styles.toolbarButton} onClick={toggleWrap}>
+    <IconButton square className={styles.toolbarButton} onClick={toggleWrap}>
       <Icon type="options" size={24} alpha={wrap ? 1 : 0.5} />
     </IconButton>
   );

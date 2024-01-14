@@ -8,12 +8,14 @@ import clsx from "clsx";
 type HTMLButtonProps = React.HTMLAttributes<HTMLButtonElement>;
 export interface IconButtonProps extends Omit<HTMLButtonProps, "type"> {
   type?: IconType;
+  size?: number;
   square?: boolean;
   active?: boolean;
+  value?: string | number; // used in <IconButtonGroup>
 }
 
 const IconButton = forwardRef(function IconButton(
-  { type, square, active, className, children, ...props }: IconButtonProps,
+  { type, size, square, active, className, children, ...props }: IconButtonProps,
   ref: React.ForwardedRef<HTMLButtonElement>,
 ) {
   const [fakeActive, startFakeActive] = useDebounce((button: HTMLButtonElement) => button.blur(), 100);
@@ -31,7 +33,7 @@ const IconButton = forwardRef(function IconButton(
       onPointerDown={e => startFakeActive(e.currentTarget)}
       {...props}
     >
-      {type && <Icon type={type} />}
+      {type && <Icon type={type} size={size} />}
       {children}
     </button>
   );
