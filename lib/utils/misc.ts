@@ -35,3 +35,11 @@ export function fastHash(str: string) {
   }
   return hash;
 }
+
+export function clamp(value: number, min: number, max: number) {
+  return value < min ? min : value > max ? max : value;
+}
+export function round(value: number, digits: number) {
+  const exp = Math.pow(10, digits);
+  return Math.round(value * exp) / exp;
+}
