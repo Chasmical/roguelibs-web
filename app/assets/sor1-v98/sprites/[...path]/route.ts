@@ -4,6 +4,7 @@ import { fetchAssetBundle } from "@lib/utils/fetch";
 
 const assetBundleMap = {
   Items: fetchAssetBundle("assets", "Items.zip"),
+  Bodies: fetchAssetBundle("assets", "Bodies.zip"),
 };
 
 interface RouteInfo {

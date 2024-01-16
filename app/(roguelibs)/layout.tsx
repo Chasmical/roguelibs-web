@@ -1,8 +1,10 @@
+import { CustomSearchParamsProvider } from "@lib/hooks/useSearchParams";
+import { ScrollControllerProvider } from "@lib/hooks/useScrollPositionBlocker";
+import { ApiProvider } from "@lib/hooks/useApi";
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "../global.scss";
 import "normalize.css";
-import { CustomSearchParamsProvider } from "@lib/hooks/useSearchParams";
 
 const munroFont = localFont({
   src: "../Munro.woff2",
@@ -53,15 +55,12 @@ if (process.env.NODE_ENV === "development") {
 export default function RootLayout({ children }: React.PropsWithChildren) {
   return (
     <html lang="en" className={munroFont.className} suppressHydrationWarning>
-      <body style={{ maxWidth: 1000, margin: "0 auto" }}>
-        {/* <ApiProvider>
+      <body>
+        <ApiProvider>
           <ScrollControllerProvider>
-            <CustomSearchParamsProvider>
-              <MainLayout>{children}</MainLayout>
-            </CustomSearchParamsProvider>
+            <CustomSearchParamsProvider>{children}</CustomSearchParamsProvider>
           </ScrollControllerProvider>
-        </ApiProvider> */}
-        <CustomSearchParamsProvider>{children}</CustomSearchParamsProvider>
+        </ApiProvider>
       </body>
     </html>
   );

@@ -5,13 +5,16 @@ import { sample } from "@lib/utils/random";
 import CodeBlock from "@components/Common/CodeBlock";
 import { fetchItemData } from "@app/assets/sor1-v98/item-data.json";
 import ItemInfoBoxServer from "@components/Wiki/ItemInfoBox/server";
+import AgentInfoBoxServer from "@components/Wiki/AgentInfoBox/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function LandingPage() {
   const data = await fetchItemData();
-  const entries = sample(data.entries, 10);
+  const entries = sample(data.entries, 3);
   const items = entries.map(e => e.invItemName!);
+
+  const agents = ["Shopkeeper", "Mafia", "Slumdweller"];
 
   return (
     <div style={{ padding: "1rem" }}>
@@ -19,6 +22,12 @@ export default async function LandingPage() {
         <Tabs query="os">
           <TabItem value="win" label="Windows" icon="copy">
             <p>{"This is Windows."}</p>
+            {agents.map(name => (
+              <AgentInfoBoxServer key={name} agentName={name!} />
+            ))}
+          </TabItem>
+          <TabItem values="unix;macos" labels="Unix;macOS">
+            <p>{"This is Unix or macOS."}</p>
             <CodeBlock lang="csharp" title="/MySolution/MyProject/Program.cs">
               {"using System;"}
               {""}
@@ -43,9 +52,6 @@ export default async function LandingPage() {
             <CodeBlock lang="json" title="/MySolution/MyProject/item-data.json">
               {JSON.stringify(entries, null, 2)}
             </CodeBlock>
-          </TabItem>
-          <TabItem values="unix;macos" labels="Unix;macOS">
-            <p>{"This is Unix or macOS."}</p>
           </TabItem>
         </Tabs>
       </MdxContainer>

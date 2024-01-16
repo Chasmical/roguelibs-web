@@ -1,0 +1,13 @@
+.wrapper {
+  width: 128px;
+  height: 128px;
+}
+.anchor {
+  position: relative;
+  left: 50%;
+  top: 50%;
+}
+.part {
+  position: absolute;
+  transform: translate(-50%, -50%);
+}

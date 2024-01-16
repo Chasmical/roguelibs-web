@@ -1,0 +1,44 @@
+.wrapper {
+  display: block;
+  flex-shrink: 0;
+  border-radius: 50%;
+  backdrop-filter: brightness(80%);
+  outline: 1px solid var(--color-background-lighter);
+  transition: outline 0.5s ease;
+  overflow: hidden;
+
+  &:hover, &:focus-within {
+    outline: 1px solid var(--color-primary-lightest);
+
+    .overlay { opacity: 1; }
+    .overlay-backdrop { backdrop-filter: brightness(50%); }
+  }
+}
+
+.avatar {
+  display: block;
+  border-radius: 50%;
+  aspect-ratio: 1;
+}
+.overlay {
+  position: absolute; inset: 0;
+  border: none; border-radius: 50%;
+  z-index: 2;
+
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.overlay-backdrop {
+  cursor: pointer;
+  position: absolute; inset: 0;
+  border: none; border-radius: 50%;
+  z-index: 1;
+  backdrop-filter: none;
+  transition: backdrop-filter 0.5s ease;
+}
+
+.link-wrapper {
+  border: none;
+  border-radius: 50%;
+  line-height: 0;
+}

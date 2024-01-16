@@ -69,7 +69,22 @@ export default CalculatorOutput;
 type AddModifier = (type: "multiply" | "add" | "min", value: number, message: string, formula?: string) => void;
 type Modifier = { type: "multiply" | "add" | "min"; value: number; message: string; formula?: string };
 
-function calculateModifiers(cxt: CostContext) {
+export function applyModifiers(itemValue: number, mods: Modifier[]) {
+  let cost = itemValue;
+
+  for (const mod of mods) {
+    if (mod.type === "multiply") {
+      cost *= mod.value;
+    } else if (mod.type === "add") {
+      cost += mod.value;
+    } else if (mod.type === "min") {
+      cost = Math.max(cost, mod.value);
+    }
+  }
+  return Math.floor(cost);
+}
+
+export function calculateModifiers(cxt: CostContext) {
   const mods: Modifier[] = [];
   const mod: AddModifier = (type, value, message, formula) => {
     mods.push({ type, value, message, formula });
@@ -179,16 +194,6 @@ function calculateModifiersGeneric({ interactee, traits, ...cxt }: CostContext, 
   mod("multiply", 1 + (level - 1) * 0.075, "Floor difficulty adjustment");
 
   if (interactee) {
-    // TODO: properly check that it's an agent
-    if (
-      cxt.mutators.includes("SuperSpecialAbilities") &&
-      cxt.player === "Shopkeeper" &&
-      cxt.transaction !== "AgentItemSale" &&
-      cxt.transaction !== "ArtOfTheDealSale"
-    ) {
-      mod("multiply", 0.6, "Shopkeeper's Super Special Ability");
-    }
-
     const mult = [1, 0.9, 0.8, 0.7, 0.6][relationships.indexOf(cxt.relationship)];
     mod("multiply", mult, `${cxt.relationship} relationship multiplier`);
   }
