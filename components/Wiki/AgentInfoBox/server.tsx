@@ -1,4 +1,5 @@
 import { AgentInfo, fetchAgentData } from "@app/assets/sor1-v98/agent-data.json";
+import select, { treeRandom } from "@app/assets/sor1-v98/agent-data.json/select";
 import { fetchLocale } from "@app/assets/sor1-v98/locale";
 import AgentInfoBox from "@components/Wiki/AgentInfoBox";
 
@@ -11,6 +12,10 @@ export default async function AgentInfoBoxServer({ agentName }: { agentName: str
   const name = locale.Categories["Agent"][agentName];
   const description = locale?.Categories["Description"][agentName];
 
-  const info = agentEntry as AgentInfo;
-  return <AgentInfoBox info={info} name={name} description={description} />;
+  const info = { ...agentData.baseline, ...agentEntry } as AgentInfo;
+  info.legsColor = treeRandom(info.legsColor, [agentData.colors]);
+
+  const selection = select(agentData, info);
+
+  return <AgentInfoBox info={info} name={name} description={description} selection={selection} />;
 }

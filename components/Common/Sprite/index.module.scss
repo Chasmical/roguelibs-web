@@ -1,0 +1,18 @@
+.sprite {
+  display: block;
+  user-select: none;
+  flex-shrink: 0;
+  outline: none;
+  // transition: all 1s ease, opacity 0.2s var(--smooth-transition);
+  max-width: none !important;
+  margin-bottom: 0 !important;
+}
+.crisp {
+  image-rendering: pixelated;
+}
+
+.filter-svg {
+  visibility: hidden;
+  pointer-events: none;
+  user-select: none;
+}
