@@ -3,10 +3,10 @@ import TabItem from "@components/Common/TabItem";
 import Tabs from "@components/Common/Tabs";
 import { sample } from "@lib/utils/random";
 import CodeBlock from "@components/Common/CodeBlock";
-import { fetchItemData } from "@app/assets/sor1-v98/item-data.json";
+import { fetchItemData } from "@app/assets/sor1-v98/items.json";
 import ItemInfoBoxServer from "@components/Wiki/ItemInfoBox/server";
 import AgentInfoBoxServer from "@components/Wiki/AgentInfoBox/server";
-import { fetchAgentData } from "@app/assets/sor1-v98/agent-data.json";
+import { fetchAgentData } from "@app/assets/sor1-v98/agents.json";
 
 export const dynamic = "force-dynamic";
 

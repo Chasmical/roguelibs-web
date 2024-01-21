@@ -1,5 +1,5 @@
-import { AgentInfo, fetchAgentData } from "@app/assets/sor1-v98/agent-data.json";
-import select, { treeRandom } from "@app/assets/sor1-v98/agent-data.json/select";
+import { AgentInfo, fetchAgentData } from "@app/assets/sor1-v98/agents.json";
+import select, { treeRandom } from "@app/assets/sor1-v98/agents.json/select";
 import { fetchLocale } from "@app/assets/sor1-v98/locale";
 import AgentInfoBox from "@components/Wiki/AgentInfoBox";
 

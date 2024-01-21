@@ -1,6 +1,6 @@
 import { fetchAssetJson } from "@lib/utils/fetch";
 
-export const fetchItemData = fetchAssetJson<ItemData>("assets", "item-data.json");
+export const fetchItemData = fetchAssetJson<ItemData>("assets", "items.json");
 
 export interface ItemData {
   baseline: Partial<ItemInfo>;

@@ -12,6 +12,8 @@
 }
 
 .filter-svg {
+  width: 0;
+  height: 0;
   visibility: hidden;
   pointer-events: none;
   user-select: none;

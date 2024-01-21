@@ -1,5 +1,5 @@
 "use client";
-import type { ItemInfo } from "@app/assets/sor1-v98/item-data.json";
+import type { ItemInfo } from "@app/assets/sor1-v98/items.json";
 import Icon from "@components/Common/Icon";
 import Link from "@components/Common/Link";
 import styles from "./index.module.scss";

@@ -1,12 +1,12 @@
 import { fetchAssetJson } from "@lib/utils/fetch";
 import { WeightedArray, WeightedMap } from "@lib/utils/random";
 
-const agentDataJson = fetchAssetJson<AgentData>("assets", "agent-data.json");
-
-export const fetchAgentData = async () => {
-  const json = await agentDataJson();
-  return json;
-};
+export const fetchAgentData = fetchAssetJson<AgentData>("assets", "agents.json", data => {
+  [data.baseline, ...data.entries].forEach(e => {
+    delete e.lines;
+    delete e.notes;
+  });
+});
 
 export type WeightedString = string | string[] | WeightedArray<string> | WeightedMap<string>;
 
@@ -55,7 +55,6 @@ export interface AgentInfo {
   hackable: bool;
   copBot: bool;
   wontFlee: bool;
-  ambientAudio: string | null;
   canTakeDrugs: bool;
   mustBeGuilty: bool;
   firefighter: bool;
@@ -74,32 +73,33 @@ export interface AgentInfo {
   originalWerewolf: bool;
   shirtless: bool;
   zombified: bool;
+  usesNewHead: bool;
 
+  ambientAudio: string | null;
   startingHeadPiece: string | null;
   moneyTier: int;
 
-  defaultGoal: string | null | string[];
+  defaultGoal: string | string[] | null;
 
   agentCategories: string[];
   desires: string[];
   traits: string[];
-  items: [invItemName: string, count: number][];
-  jobs: [jobName: string, number][];
+  items: [invItemName: string, count: int][];
+  jobs: [jobName: string, int][];
 
-  usesNewHead: bool;
-
+  headType: string;
   hairType: WeightedString;
   facialHairType: WeightedString;
   bodyType: WeightedString;
   eyesType: WeightedString;
 
   hairColor: WeightedString;
+  eyesColor: WeightedString;
   facialHairColor: WeightedString;
   bodyColor: WeightedString;
   legsColor: WeightedString;
   skinColor: WeightedString;
 
+  lines?: string[];
   notes?: string[];
 }
-
-// "lines", "setupInitialCategories", "agentColorDirty"

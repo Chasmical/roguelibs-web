@@ -3,9 +3,11 @@ import { notFound } from "next/navigation";
 import { fetchAssetBundle } from "@lib/utils/fetch";
 
 const assetBundleMap = {
-  Items: fetchAssetBundle("assets", "Items.zip"),
-  Bodies: fetchAssetBundle("assets", "Bodies.zip"),
-  Agents: fetchAssetBundle("assets", "Agents.zip"),
+  Items: fetchAssetBundle("assets", "sprites/Items.zip"),
+  Bodies: fetchAssetBundle("assets", "sprites/Bodies.zip"),
+  Hair: fetchAssetBundle("assets", "sprites/Hair.zip"),
+  FacialHair: fetchAssetBundle("assets", "sprites/FacialHair.zip"),
+  Agents: fetchAssetBundle("assets", "sprites/Agents.zip"),
 };
 
 interface RouteInfo {

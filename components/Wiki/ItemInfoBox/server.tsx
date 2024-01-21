@@ -1,4 +1,4 @@
-import { ItemInfo, fetchItemData } from "@app/assets/sor1-v98/item-data.json";
+import { ItemInfo, fetchItemData } from "@app/assets/sor1-v98/items.json";
 import { fetchLocale } from "@app/assets/sor1-v98/locale";
 import ItemInfoBox from "@components/Wiki/ItemInfoBox";
 

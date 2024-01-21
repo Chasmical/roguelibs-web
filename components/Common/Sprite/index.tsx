@@ -12,7 +12,11 @@ export interface SpriteProps {
   alpha?: number;
   className?: string;
   style?: React.CSSProperties;
+  dir8?: Dir8;
 }
+
+const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"] as const;
+type Dir8 = (typeof directions)[number];
 
 export default function Sprite({
   src,
@@ -24,6 +28,7 @@ export default function Sprite({
   alpha,
   className,
   style,
+  dir8,
   ...props
 }: SpriteProps) {
   width ??= size;
@@ -31,18 +36,44 @@ export default function Sprite({
 
   const filterId = useId().replaceAll(":", "");
 
-  const image = (
-    <img
-      src={src}
-      alt=""
-      width={width}
-      height={height}
-      className={clsx(styles.sprite, crisp && styles.crisp, className)}
-      style={{ opacity: alpha, filter: color ? `url(#${filterId})` : undefined, ...style }}
-      draggable="false"
-      {...props}
-    />
-  );
+  let image: React.ReactNode;
+  if (dir8) {
+    const index = directions.indexOf(dir8);
+    const ox = index >= 5 ? "0%" : index >= 1 && index <= 3 ? "-200%" : "-100%";
+    const oy = index <= 1 || index === 7 ? "0%" : index >= 3 && index <= 5 ? "-200%" : "-100%";
+
+    image = (
+      <div
+        className={clsx(styles.sprite, crisp && styles.crisp, className)}
+        style={{
+          opacity: alpha,
+          filter: color ? `url(#${filterId})` : undefined,
+          width,
+          height,
+          backgroundImage: `url("${src}")`,
+          backgroundSize: "300% 300%",
+          backgroundPositionX: ox,
+          backgroundPositionY: oy,
+          ...style,
+        }}
+        draggable="false"
+        {...props}
+      />
+    );
+  } else {
+    image = (
+      <img
+        src={src}
+        alt=""
+        width={width}
+        height={height}
+        className={clsx(styles.sprite, crisp && styles.crisp, className)}
+        style={{ opacity: alpha, filter: color ? `url(#${filterId})` : undefined, ...style }}
+        draggable="false"
+        {...props}
+      />
+    );
+  }
 
   return (
     <>

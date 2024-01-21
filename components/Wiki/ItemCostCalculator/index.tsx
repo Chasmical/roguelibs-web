@@ -1,6 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
-import { ItemInfo } from "@app/assets/sor1-v98/item-data.json";
+import { ItemInfo } from "@app/assets/sor1-v98/items.json";
 import IconButtonGroup from "@components/Common/IconButtonGroup";
 import IconButton from "@components/Common/IconButton";
 import CalculatorOutput, { Relationship } from "./CalculatorOutput";
